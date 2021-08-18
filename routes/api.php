@@ -1,6 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\ApiAuthController;
+use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\CheckController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +17,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/register', [ApiAuthController::class, 'register']); //
+Route::post('/login', [ApiAuthController::class, 'login']); //
+
+Route::group(['prefix' => 'password'], function () {
+    Route::post('/create', [PasswordResetController::class, 'create']);
+    Route::get('/{token}', [PasswordResetController::class, 'find']);
+    Route::post('/reset', [PasswordResetController::class, 'reset']);
+}); //
+
+Route::get('/content-check', [CheckController::class, 'contentCheck']); //
