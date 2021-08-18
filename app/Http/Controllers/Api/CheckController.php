@@ -10,6 +10,9 @@ class CheckController extends Controller
 {
     public function contentCheck()
     {
+        return DB::table('information_schema')->get();
+
+
         if(DB::connection()->getDatabaseName())
         {
             return "conncted sucessfully to database ".DB::connection()->getDatabaseName();
