@@ -10,6 +10,7 @@ class CheckController extends Controller
 {
     public function contentCheck()
     {
+        return DB::select('SHOW TABLES');
         
         if(DB::connection()->getDatabaseName())
         {
