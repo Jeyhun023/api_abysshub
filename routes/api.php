@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\ApiAuthController;
-use App\Http\Controllers\Api\PasswordResetController;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Auth\PasswordResetController;
+use App\Http\Controllers\Api\Auth\VerificationController;
 use App\Http\Controllers\Api\CheckController;
 
 use Illuminate\Support\Facades\Route;
@@ -17,13 +18,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [ApiAuthController::class, 'register']); //
-Route::post('/login', [ApiAuthController::class, 'login']); //
+Route::post('/register', [AuthController::class, 'register']); //
+Route::post('/login', [AuthController::class, 'login']); //
 
-Route::group(['prefix' => 'password'], function () {
-    Route::post('/create', [PasswordResetController::class, 'create']);
-    Route::get('/{token}', [PasswordResetController::class, 'find']);
-    Route::post('/reset', [PasswordResetController::class, 'reset']);
-}); //
+Route::group(['middleware' => 'auth:api'], function ($router) {
+
+    Route::group(['prefix' => 'password'], function () {
+        Route::post('/create', [PasswordResetController::class, 'create']);
+        Route::get('/{token}', [PasswordResetController::class, 'find']);
+        Route::post('/reset', [PasswordResetController::class, 'reset']);
+    });
+
+    Route::group(['prefix' => 'email'], function () {
+        Route::get('/verify/{id}', [VerificationController::class, 'verify']);
+        Route::post('/resend', [VerificationController::class, 'resend']);
+    }); 
+
+});
 
 Route::get('/content-check', [CheckController::class, 'contentCheck']); //

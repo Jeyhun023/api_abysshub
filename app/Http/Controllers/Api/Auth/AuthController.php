@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RegisterRequest;
@@ -11,9 +11,11 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ApiAuthController extends Controller
-{
+use Snipe\BanBuilder\CensorWords;
+use App\Models\BadWord;
 
+class AuthController extends Controller
+{
     use ApiResponser;
 
     /**
@@ -32,11 +34,20 @@ class ApiAuthController extends Controller
             'name' => $request->name,
             'password' => bcrypt($request->password),
         ]);
+
+        $censor = new CensorWords;
+        $string = $censor->censorString($request->name);
+
+        if ($string["isProfanity"]) {
+            return $this->sendError('Profanity', ['Profanity detected'], 401);
+        }
+
         $user->save();
         $tokenResult = $user->createToken($this->pac);
         $success['access_token'] = $tokenResult->accessToken;
         $success['token_type'] = 'Bearer';
         $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
+        
         return $this->sendResponse($success, 'User successfully created!', 201);
     }
 
@@ -52,7 +63,7 @@ class ApiAuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $credentials = request(['email', 'password']);
+        $credentials = request()->only(['email', 'password']);
         if (!Auth::attempt($credentials)) {
             return $this->sendError('Unauthorized', ['Crendentials do not match'], 401);
         }
@@ -82,31 +93,6 @@ class ApiAuthController extends Controller
         $request->user()->token()->revoke();
         return $this->sendResponse(null, 'Successfully logged out');
 
-    }
-
-    public function create(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|string|max:255|exists:users,email',
-        ]);
-        $user = User::where('email', $request->email)->first();
-        try {
-            $passwordReset = PasswordReset::updateOrCreate(
-                [
-                    'email' => $user->email,
-                ],
-                [
-                    'email' => $user->email,
-                    'token' => rand(100000, 999999),
-                ]
-            );
-            $user->notify(
-                new PasswordResetRequest($passwordReset->token)
-            );
-            return $this->sendResponse(null, 'We have e-mailed your password reset link!', 201);
-        } catch (\Exception $e) {
-            return $this->sendError(null, $e->getMessage(), 500);
-        }
     }
 
 }
