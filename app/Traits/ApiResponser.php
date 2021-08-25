@@ -31,7 +31,7 @@ trait ApiResponser
     function sendError($message, $errors = [], $code = 404):JsonResponse
     {
         $response = [
-            'data' => null,
+            // 'data' => null,
             'message' => $message,
             'errors' => $errors,
         ];

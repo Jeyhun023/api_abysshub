@@ -45,6 +45,8 @@ class AuthController extends Controller
 
         $user->save();
         $tokenResult = $user->createToken($this->pac);
+
+        $success['user'] = new UserResource($user);
         $success['access_token'] = $tokenResult->accessToken;
         $success['token_type'] = 'Bearer';
         $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
@@ -64,25 +66,34 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $credentials = request()->only(['email', 'password']);
-        if (!Auth::attempt($credentials)) {
-            return $this->sendError('Unauthorized', ['Crendentials do not match'], 401);
+        try {
+            $credentials = request()->only(['email', 'password']);
+
+            if (!Auth::attempt($credentials)) {
+                return $this->sendError('The given data was invalid', ["password" => ['Password is wrong'] ], 401);
+            }
+    
+            $user = $request->user();
+    
+            $tokenResult = $user->createToken($this->pac);
+            if ($request->remember_me) {
+                $token = $tokenResult->token;
+                $token->expires_at = Carbon::now()->addWeeks(1);
+                $token->save();
+            }
+    
+            $success['user'] = new UserResource($user);
+            $success['access_token'] = $tokenResult->accessToken;
+            $success['token_type'] = 'Bearer';
+            $success['expires_at'] = Carbon::parse($tokenResult->token->expires_at)->toDateTimeString();
+            
+            return $this->sendResponse($success, 'User login successfully.');
+            
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
-        $user = $request->user();
 
-        $tokenResult = $user->createToken($this->pac);
-        if ($request->remember_me) {
-            $token = $tokenResult->token;
-            $token->expires_at = Carbon::now()->addWeeks(1);
-            $token->save();
-        }
-
-        $success['user'] = new UserResource($user);
-        $success['access_token'] = $tokenResult->accessToken;
-        $success['token_type'] = 'Bearer';
-        $success['expires_at'] = Carbon::parse($tokenResult->token->expires_at)->toDateTimeString();
-        return $this->sendResponse($success, 'User login successfully.');
     }
 
     public function getUser(Request $request)
