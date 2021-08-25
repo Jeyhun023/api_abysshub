@@ -30,28 +30,32 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $user = new User([
-            'email' => $request->email,
-            'name' => $request->name,
-            'password' => bcrypt($request->password),
-        ]);
+        try {
+            $user = new User([
+                'email' => $request->email,
+                'name' => $request->name,
+                'password' => bcrypt($request->password),
+            ]);
 
-        $censor = new CensorWords;
-        $string = $censor->censorString($request->name);
+            $censor = new CensorWords;
+            $string = $censor->censorString($request->name);
 
-        if ($string["isProfanity"]) {
-            return $this->sendError('Profanity', ['Profanity detected'], 401);
+            if ($string["isProfanity"]) {
+                return $this->sendError('The given data was invalid', ["profanity" => ['Profanity detected'] ], 401);
+            }
+
+            $user->save();
+            $tokenResult = $user->createToken($this->pac);
+
+            $success['user'] = new UserResource($user);
+            $success['access_token'] = $tokenResult->accessToken;
+            $success['token_type'] = 'Bearer';
+            $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
+            
+            return $this->sendResponse($success, 'User successfully created!', 201);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        $user->save();
-        $tokenResult = $user->createToken($this->pac);
-
-        $success['user'] = new UserResource($user);
-        $success['access_token'] = $tokenResult->accessToken;
-        $success['token_type'] = 'Bearer';
-        $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
-        
-        return $this->sendResponse($success, 'User successfully created!', 201);
     }
 
     /**
@@ -88,7 +92,7 @@ class AuthController extends Controller
             $success['expires_at'] = Carbon::parse($tokenResult->token->expires_at)->toDateTimeString();
             
             return $this->sendResponse($success, 'User login successfully.');
-            
+
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
