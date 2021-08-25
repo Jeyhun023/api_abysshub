@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\Api\LoginRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
@@ -81,6 +82,12 @@ class AuthController extends Controller
         $success['token_type'] = 'Bearer';
         $success['expires_at'] = Carbon::parse($tokenResult->token->expires_at)->toDateTimeString();
         return $this->sendResponse($success, 'User login successfully.');
+    }
+
+    public function getUser(Request $request)
+    {
+        $user = User::find($request->user()->id);
+        return new UserResource($user);
     }
 
     /**

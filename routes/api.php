@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']); //
-Route::post('/login', [AuthController::class, 'login']); //
+Route::post('/register', [AuthController::class, 'register']); 
+Route::post('/login', [AuthController::class, 'login']); 
 
 Route::group(['middleware' => 'auth:api'], function ($router) {
+
+    Route::get('/user', [AuthController::class, 'getUser']);
 
     Route::group(['prefix' => 'password'], function () {
         Route::post('/create', [PasswordResetController::class, 'create']);
@@ -36,4 +38,4 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
 
 });
 
-Route::get('/content-check', [CheckController::class, 'contentCheck']); //
+Route::get('/content-check', [CheckController::class, 'contentCheck']); 

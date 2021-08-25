@@ -24,7 +24,7 @@ class SendVerificationMailListener implements ShouldQueue
      */
     public function retryUntil()
     {
-        return now()->addMinutes(3);
+        return now()->addMinutes(1);
     }
 
     /**
