@@ -78,6 +78,7 @@ class AuthController extends Controller
             $token->save();
         }
 
+        $success['user'] = new UserResource($user);
         $success['access_token'] = $tokenResult->accessToken;
         $success['token_type'] = 'Bearer';
         $success['expires_at'] = Carbon::parse($tokenResult->token->expires_at)->toDateTimeString();
@@ -99,7 +100,6 @@ class AuthController extends Controller
     {
         $request->user()->token()->revoke();
         return $this->sendResponse(null, 'Successfully logged out');
-
     }
 
 }

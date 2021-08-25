@@ -24,6 +24,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:api'], function ($router) {
 
     Route::get('/user', [AuthController::class, 'getUser']);
+    Route::get('/logout', [AuthController::class, 'logout']);
 
     Route::group(['prefix' => 'password'], function () {
         Route::post('/create', [PasswordResetController::class, 'create']);
