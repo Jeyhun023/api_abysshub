@@ -6,7 +6,7 @@ use App\Events\NewUserRegisteredEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendVerificationMailListener implements ShouldQueue
+class SendVerificationMailListener
 {
     use InteractsWithQueue;
 
