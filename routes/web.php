@@ -17,5 +17,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
 
+Auth::routes();
