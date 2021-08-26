@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use App\Events\NewUserRegisteredEvent;
+use App\Events\UserVerifiedMailEvent;
 
 class VerificationController extends Controller
 {
@@ -15,16 +16,19 @@ class VerificationController extends Controller
     public function verify($id, Request $request)
     {
         if(!$request->hasValidSignature()){
-            return $this->sendError(null, 'Email verification token is invalid.', 404);
+            return $this->sendError('Has valid signature', ["token" => ['Email verification token is invalid.'] ] , 404);
         }
 
         $user = User::findOrFail($id);
         
         if($user->hasVerifiedEmail()){
-            return $this->sendError(null, 'User has already verified.', 404);
+            return $this->sendError('Has verified email', ["user" => ['User has already verified.'] ], 404);
         }
 
         $user->markEmailasVerified();
+        
+        event(new UserVerifiedMailEvent($user));
+
         return $this->sendResponse(null, 'User successfully verified!', 201);
 
     }
@@ -34,7 +38,7 @@ class VerificationController extends Controller
         $user = auth('api')->user();
 
         if($user->hasVerifiedEmail()){
-            return $this->sendError(null, 'User has already verified.', 404);
+            return $this->sendError('Has verified email', ["user" => ['User has already verified.'] ], 404);
         }
         
         event(new NewUserRegisteredEvent($user));

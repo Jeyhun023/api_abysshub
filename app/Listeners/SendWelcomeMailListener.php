@@ -2,11 +2,13 @@
 
 namespace App\Listeners;
 
-use App\Events\NewUserRegisteredEvent;
+use App\Events\UserVerifiedMailEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
 
-class SendVerificationMailListener implements ShouldQueue
+class SendWelcomeMailListener implements ShouldQueue
 {
     use InteractsWithQueue;
 
@@ -15,14 +17,14 @@ class SendVerificationMailListener implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 3;
-
+    public $tries = 5;
+    
     /**
      * The name of the queue the job should be sent to.
      *
      * @var string|null
      */
-    public $queue = 'high';
+    public $queue = 'medium';
 
     /**
      * Handle the event.
@@ -30,8 +32,8 @@ class SendVerificationMailListener implements ShouldQueue
      * @param  object  $event
      * @return void
      */
-    public function handle(NewUserRegisteredEvent $event)
+    public function handle(UserVerifiedMailEvent $event)
     {
-        $event->user->sendEmailVerificationNotification();
+        Mail::to($event->user->email)->send(new WelcomeMail($event->user));
     }
 }

@@ -91,8 +91,8 @@ class AuthController extends Controller
             $success['token_type'] = 'Bearer';
             $success['expires_at'] = Carbon::parse($tokenResult->token->expires_at)->toDateTimeString();
             
-            return $this->sendResponse($success, 'User login successfully.');
 
+            return $this->sendResponse($success, 'User login successfully.');
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
