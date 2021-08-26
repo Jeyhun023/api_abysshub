@@ -30,7 +30,6 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        return $this->sendError('The given data was invalid', null, 401);
         try {
             $user = new User([
                 'email' => $request->email,
