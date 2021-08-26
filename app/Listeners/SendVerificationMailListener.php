@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendVerificationMailListener implements ShouldQueue
 {
+    use InteractsWithQueue;
 
     /**
      * The number of times the queued listener may be attempted.
@@ -16,15 +17,7 @@ class SendVerificationMailListener implements ShouldQueue
      */
     public $tries = 2;
 
-    /**
-     * Determine the time at which the listener should timeout.
-     *
-     * @return \DateTime
-     */
-    public function retryUntil()
-    {
-        return now()->addMinutes(1);
-    }
+  
 
     /**
      * The name of the queue the job should be sent to.
