@@ -8,7 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendVerificationMailListener implements ShouldQueue
 {
-    use InteractsWithQueue;
 
     /**
      * The number of times the queued listener may be attempted.
