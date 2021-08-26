@@ -15,7 +15,7 @@ class SendVerificationMailListener implements ShouldQueue
      *
      * @var int
      */
-    public $tries = 3;
+    public $tries = 2;
 
     /**
      * Determine the time at which the listener should timeout.
@@ -32,7 +32,7 @@ class SendVerificationMailListener implements ShouldQueue
      *
      * @var string|null
      */
-    public $queue = 'verification';
+    public $queue = 'high';
 
     /**
      * Handle the event.
