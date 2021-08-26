@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
     });
 
     Route::group(['prefix' => 'email'], function () {
-        Route::get('/verify/{id}', [VerificationController::class, 'verify']);
+        Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
         Route::post('/resend', [VerificationController::class, 'resend']);
     }); 
 
