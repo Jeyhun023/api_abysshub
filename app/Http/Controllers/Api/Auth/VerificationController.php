@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Traits\ApiResponser;
 use App\Events\NewUserRegisteredEvent;
-use App\Events\UserVerifiedMailEvent;
+use App\Notifications\Auth\WelcomeMail;
 
 class VerificationController extends Controller
 {
@@ -26,8 +26,7 @@ class VerificationController extends Controller
         }
 
         $user->markEmailasVerified();
-        
-        event(new UserVerifiedMailEvent($user));
+        $user->notify((new WelcomeMail($user))->onQueue("medium"));
 
         return $this->sendResponse(null, 'User successfully verified!', 201);
 
@@ -40,7 +39,7 @@ class VerificationController extends Controller
         if($user->hasVerifiedEmail()){
             return $this->sendError('Has verified email', ["user" => ['User has already verified.'] ], 404);
         }
-        
+
         event(new NewUserRegisteredEvent($user));
         
         return $this->sendResponse(null, 'Verification link has sent successfully', 201);

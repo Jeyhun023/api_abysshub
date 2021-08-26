@@ -34,12 +34,12 @@ class PasswordResetController extends Controller
                 ],
                 [
                     'email' => $user->email,
-                    'token' => md5( time().$request->email ),
+                    'token' => Str::random(128)
                 ]
             );
-            // $user->notify(
-            //     new PasswordResetRequest($passwordReset->token)
-            // );
+
+            $user->notify((new PasswordResetRequest($passwordReset->token))->onQueue("high"));
+
             return $this->sendResponse(null, 'We have e-mailed your password reset link!', 201);
         } catch (\Exception $e) {
             return $this->sendError(null, $e->getMessage(), 500);
@@ -61,7 +61,7 @@ class PasswordResetController extends Controller
             $passwordReset->delete();
             return $this->sendError(null, 'This password reset token is invalid.', 404);
         }
-        return $this->sendResponse($passwordReset, '');
+        return $this->sendResponse($passwordReset, 'Token is correct',201);
     }
 
     /**
@@ -95,7 +95,7 @@ class PasswordResetController extends Controller
             $user->password = bcrypt($request->password);
             $user->save();
             $passwordReset->delete();
-            // $user->notify(new PasswordResetSuccess($passwordReset));
+            $user->notify((new PasswordResetSuccess($passwordReset))->onQueue("medium"));
             return $this->sendResponse($user, '');
         } catch (\Exception $e) {
             return $this->sendError(null, $e->getMessage(), 500);

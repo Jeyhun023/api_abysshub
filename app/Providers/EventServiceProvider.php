@@ -6,8 +6,6 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Events\NewUserRegisteredEvent;
 use App\Listeners\SendVerificationMailListener;
-use App\Events\UserVerifiedMailEvent;
-use App\Listeners\SendWelcomeMailListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -19,9 +17,6 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         NewUserRegisteredEvent::class => [
             SendVerificationMailListener::class,
-        ],
-        UserVerifiedMailEvent::class => [
-            SendWelcomeMailListener::class,
         ]
     ];
 
