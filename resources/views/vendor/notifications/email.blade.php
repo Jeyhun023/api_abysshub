@@ -1,3 +1,7 @@
+@php 
+$displayableActionUrl = str_replace("https://api.abysshub.com/api/","https://abysshub.com/", $displayableActionUrl);
+@endphp
+
 @component('mail::message')
 {{-- Greeting --}}
 @if (! empty($greeting))
