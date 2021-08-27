@@ -21,16 +21,16 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']); 
 Route::post('/login', [AuthController::class, 'login']); 
 
+Route::group(['prefix' => 'password'], function () {
+    Route::post('/create', [PasswordResetController::class, 'create']);
+    Route::get('/{token}', [PasswordResetController::class, 'find']);
+    Route::post('/reset', [PasswordResetController::class, 'reset']);
+});
+
 Route::group(['middleware' => 'auth:api'], function ($router) {
 
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::get('/logout', [AuthController::class, 'logout']);
-
-    Route::group(['prefix' => 'password'], function () {
-        Route::post('/create', [PasswordResetController::class, 'create']);
-        Route::get('/{token}', [PasswordResetController::class, 'find']);
-        Route::post('/reset', [PasswordResetController::class, 'reset']);
-    });
 
     Route::group(['prefix' => 'email'], function () {
         Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');

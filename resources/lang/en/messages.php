@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'failed' => 'Operation failed',
+    'failed' => 'Unknown Error',
+    'operation_fail' => 'Operation Failed',
     'profanity' => 'Profanity detected in :attribute',
     'sent_reset_link' => 'We have e-mailed your password reset link!',
     'token_wrong' => 'This password reset token is invalid',

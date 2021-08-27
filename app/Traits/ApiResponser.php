@@ -35,7 +35,7 @@ trait ApiResponser
     protected function errorResponse($errors): JsonResponse
     {
         return response()->json([
-            'message' => trans('messages.failed'), 
+            'message' => trans('messages.operation_fail'), 
             'errors' => $errors, 
         ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR );
     }
