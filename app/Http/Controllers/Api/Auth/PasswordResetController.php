@@ -76,8 +76,9 @@ class PasswordResetController extends Controller
     {
         $passwordReset = PasswordReset::where([
             'token' => $request->token,
-            'email'=> $user->email
+            'email'=> $request->email
         ])->first();
+        $user = User::where('email', $request->email)->first();
 
         if (!$passwordReset) {
             return $this->errorResponse(["token" => trans('messages.token_wrong')]);
