@@ -30,10 +30,10 @@ class PasswordResetController extends Controller
         ]);
         
         try {
-            $passwordReset = PasswordReset::updateOrCreate(
-                ['email' => $request->email],
-                ['token' => Str::random(128)]
-            );
+            $passwordReset = PasswordReset::updateOrCreate([
+                'email' => $request->email,
+                'token' => Str::random(128)
+            ]);
 
             $user->notify((new PasswordResetToken($passwordReset->token))->onQueue("high"));
 
