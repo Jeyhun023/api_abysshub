@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\RegisterRequest;
-use App\Http\Requests\Api\LoginRequest;
+use App\Http\Requests\Api\Auth\RegisterRequest;
+use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Traits\ApiResponser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use Snipe\BanBuilder\CensorWords;
-use App\Models\BadWord;
+use App\Traits\ApiResponser;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -37,13 +35,6 @@ class AuthController extends Controller
                 'password' => bcrypt($request->password),
             ]);
 
-            $censor = new CensorWords;
-            $string = $censor->censorString($request->name);
-
-            if ($string["isProfanity"]) {
-                return $this->sendError('The given data was invalid', ["profanity" => ['Profanity detected'] ], 401);
-            }
-
             $user->save();
             $tokenResult = $user->createToken($this->pac);
 
@@ -52,10 +43,11 @@ class AuthController extends Controller
             $success['token_type'] = 'Bearer';
             $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
             
-            return $this->sendResponse($success, 'User successfully created!', 201);
+            return $this->successResponse($success);
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return $this->errorResponse(["failed" => trans('messages.failed')]);
         }
+        
     }
 
     /**
@@ -74,9 +66,9 @@ class AuthController extends Controller
             $credentials = request()->only(['email', 'password']);
 
             if (!Auth::attempt($credentials)) {
-                return $this->sendError('The given data was invalid', ["password" => ['Password is wrong'] ], 401);
-            }
-    
+                return $this->errorResponse(["password" => trans('auth.password')]);
+            }            
+            
             $user = $request->user();
     
             $tokenResult = $user->createToken($this->pac);
@@ -85,25 +77,23 @@ class AuthController extends Controller
                 $token->expires_at = Carbon::now()->addWeeks(1);
                 $token->save();
             }
-    
+        
             $success['user'] = new UserResource($user);
             $success['access_token'] = $tokenResult->accessToken;
             $success['token_type'] = 'Bearer';
             $success['expires_at'] = Carbon::parse($tokenResult->token->expires_at)->toDateTimeString();
             
-
-            return $this->sendResponse($success, 'User login successfully.');
+            return $this->successResponse($success);
         } catch (Exception $e) {
-            return $this->sendError('Unknown Error', ["unknown" => ['Unknown error happened'] ], 500);
+            return $this->errorResponse(["failed" => trans('messages.failed')]);
         }
-
-
     }
 
     public function getUser(Request $request)
     {
         $user = User::find($request->user()->id);
-        return new UserResource($user);
+
+        return $this->successResponse(new UserResource($user));
     }
 
     /**
@@ -114,7 +104,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
-        return $this->sendResponse(null, 'Successfully logged out');
+        return $this->successResponse(null);
     }
 
 }

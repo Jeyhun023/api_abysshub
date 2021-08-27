@@ -1,41 +1,71 @@
 <?php
 
+
 namespace App\Traits;
 
+
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 trait ApiResponser
 {
-    /**
-     * success response method.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    function sendResponse($data = [], $message = '', $code = 200):JsonResponse
-    {
-        $response = [
-            'data' => $data,
-            'message' => $message,
-            'errors' => null,
-        ];
+    protected $status = JsonResponse::HTTP_OK;
+    protected $message = null;
+    protected $data = [];
 
-        return response()->json($response, $code);
+    /**
+     * @param $data
+     * @param $code
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function successResponse($data, $message = null): JsonResponse
+    {
+        return response()->json([
+            'data' => $data, 
+            'message' => $message, 
+            'errors' => null
+        ], JsonResponse::HTTP_OK );
     }
 
     /**
-     * return error response.
-     *
-     * @return \Illuminate\Http\Response
+     * @param $message
+     * @param $code
+     * @return \Illuminate\Http\JsonResponse
      */
-    function sendError($message, $errors = [], $code = 404):JsonResponse
+    protected function errorResponse($errors): JsonResponse
     {
-        $response = [
-            // 'data' => null,
-            'message' => $message,
-            'errors' => $errors,
-        ];
+        return response()->json([
+            'message' => trans('messages.failed'), 
+            'errors' => $errors, 
+        ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR );
+    }
+    
+    protected function sendResponse(): JsonResponse
+    {
+        return $this->status == JsonResponse::HTTP_OK || $this->status == JsonResponse::HTTP_CREATED ?
+            $this->successResponse($this->message, $this->data, $this->status) :
+            $this->errorResponse($this->message , $this->data, $this->status);
+    }
 
-        return response()->json($response, $code);
+    protected function sendResourceResponse(array $response,$resource, $collection = true)
+    {
+            return $response['code'] == JsonResponse::HTTP_OK || $response['code'] == JsonResponse::HTTP_CREATED ?
+                 $this->getResponseData($response,$resource,$collection):
+                 $this->errorResponse($response['message'],$response['code']);
+    }
+
+    private function setResourceCollection($data,$resource,$collection){
+        return $collection ? $resource::collection($data) : new $resource($data);
+    }
+
+    private function getResponseData($response,$resource,$collection)
+    {
+        return isset($response['data']) && !is_null($response['data']) ?
+            $this->setResourceCollection($response['data'],$resource,$collection)->additional(['code' => $response['code'], 'message' => $response['message']]) :
+            $this->successResponse(['data' => $response['data'],'message' => $response['message']],$response['code']);
+    }
+    protected function returnData(): array
+    {
+        return ['data' => $this->data,'message' => $this->message,'code' => $this->status];
     }
 }

@@ -16,20 +16,19 @@ class VerificationController extends Controller
     public function verify($id, Request $request)
     {
         if(!$request->hasValidSignature()){
-            return $this->sendError('Has valid signature', ["token" => ['Email verification token is invalid.'] ] , 404);
+            return $this->errorResponse(["token" => trans('messages.token_wrong')]);
         }
 
         $user = User::findOrFail($id);
         
         if($user->hasVerifiedEmail()){
-            return $this->sendError('Has verified email', ["user" => ['User has already verified.'] ], 404);
+            return $this->errorResponse(["user" => trans('messages.user_verified')]);
         }
 
         $user->markEmailasVerified();
         $user->notify((new WelcomeMail($user))->onQueue("medium"));
 
-        return $this->sendResponse(null, 'User successfully verified!', 201);
-
+        return $this->successResponse(null, trans('messages.verified_success'));
     }
 
     public function resend()
@@ -37,11 +36,11 @@ class VerificationController extends Controller
         $user = auth('api')->user();
 
         if($user->hasVerifiedEmail()){
-            return $this->sendError('Has verified email', ["user" => ['User has already verified.'] ], 404);
+            return $this->errorResponse(["user" => trans('messages.user_verified')]);
         }
 
         event(new NewUserRegisteredEvent($user));
         
-        return $this->sendResponse(null, 'Verification link has sent successfully', 201);
+        return $this->successResponse(null, trans('messages.link_sent'));
     }
 }

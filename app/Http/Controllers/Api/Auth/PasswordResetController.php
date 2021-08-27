@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\PasswordReset;
 use App\Models\User;
-use App\Notifications\Auth\PasswordResetRequest;
+use App\Notifications\Auth\PasswordResetToken;
 use App\Notifications\Auth\PasswordResetSuccess;
+use App\Http\Requests\Api\Auth\PasswordResetRequest;
 use App\Traits\ApiResponser;
+use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -26,24 +28,21 @@ class PasswordResetController extends Controller
         $request->validate([
             'email' => 'required|string|max:255|exists:users,email',
         ]);
-        $user = User::where('email', $request->email)->firstOrFail();
+        
         try {
             $passwordReset = PasswordReset::updateOrCreate(
-                [
-                    'email' => $user->email,
-                ],
-                [
-                    'email' => $user->email,
-                    'token' => Str::random(128)
-                ]
+                ['email' => $request->email],
+                ['token' => Str::random(128)]
             );
 
-            $user->notify((new PasswordResetRequest($passwordReset->token))->onQueue("high"));
+            $user->notify((new PasswordResetToken($passwordReset->token))->onQueue("high"));
 
-            return $this->sendResponse(null, 'We have e-mailed your password reset link!', 201);
+            return $this->successResponse($success, trans('messages.sent_reset_link'));
         } catch (\Exception $e) {
-            return $this->sendError('Unknown Error', ["unknown" => ['Unknown error happened'] ], 500);
+            return $this->errorResponse(["failed" => trans('messages.failed')]);
         }
+
+        return $this->sendResponse();
     }
 
     /**
@@ -56,12 +55,12 @@ class PasswordResetController extends Controller
     public function find($token)
     {
         $passwordReset = PasswordReset::where('token', $token)
-            ->first();
-        if (!$passwordReset || Carbon::parse($passwordReset->updated_at)->addMinutes(180)->isPast()) {
-            $passwordReset?->delete();
-            return $this->sendError('The given data was invalid', ["token" => ['This password reset token is invalid'] ], 404);
+            ->firstOrFail();
+        if (Carbon::parse($passwordReset->updated_at)->addMinutes(180)->isPast()) {
+            $passwordReset->delete();
+            return $this->errorResponse(["token" => trans('messages.token_wrong')]);
         }
-        return $this->sendResponse($passwordReset, 'Token is correct', 201);
+        return $this->successResponse($passwordReset);
     }
 
     /**
@@ -74,21 +73,15 @@ class PasswordResetController extends Controller
      * @return [string] message
      * @return [json] user object
      */
-    public function reset(Request $request)
+    public function reset(PasswordResetRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|exists:users,email',
-            'password' => ['required', 'string', 'min:7', 'regex:/^[a-zA-Z0-9]*([a-zA-Z][0-9]|[0-9][a-zA-Z])[a-zA-Z0-9]*$/'],
-            'token' => 'required|string',
-        ]);
-        $user = User::where('email', $request->email)->firstOrFail();
         $passwordReset = PasswordReset::where([
-            ['token', $request->token],
-            ['email', $user->email],
+            'token' => $request->token,
+            'email'=> $user->email
         ])->first();
 
         if (!$passwordReset) {
-            return $this->sendError('The given data was invalid', ["token" => ['This password reset token is invalid'] ], 404);
+            return $this->errorResponse(["token" => trans('messages.token_wrong')]);
         }
 
         try {
@@ -96,9 +89,10 @@ class PasswordResetController extends Controller
             $user->save();
             $passwordReset->delete();
             $user->notify((new PasswordResetSuccess($passwordReset))->onQueue("medium"));
-            return $this->sendResponse($user, '');
+
+            return $this->successResponse($user, trans('messages.password_changed'));
         } catch (\Exception $e) {
-            return $this->sendError('Unknown Error', ["unknown" => ['Unknown error happened'] ], 500);
+            return $this->errorResponse(["failed" => trans('messages.failed')]);
         }
 
     }
