@@ -28,6 +28,7 @@ class PasswordResetController extends Controller
         $request->validate([
             'email' => 'required|string|max:255|exists:users,email',
         ]);
+        $user = User::where('email', $request->email)->first();
         
         try {
             $passwordReset = PasswordReset::updateOrCreate([
@@ -37,12 +38,10 @@ class PasswordResetController extends Controller
 
             $user->notify((new PasswordResetToken($passwordReset->token))->onQueue("high"));
 
-            return $this->successResponse($success, trans('messages.sent_reset_link'));
+            return $this->successResponse(null, trans('messages.sent_reset_link'));
         } catch (\Exception $e) {
             return $this->errorResponse(["failed" => trans('messages.failed')]);
         }
-
-        return $this->sendResponse();
     }
 
     /**

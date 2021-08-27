@@ -23,7 +23,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['prefix' => 'password'], function () {
     Route::post('/create', [PasswordResetController::class, 'create']);
-    Route::get('/{token}', [PasswordResetController::class, 'find']);
+    Route::get('/check/{token}', [PasswordResetController::class, 'find']);
     Route::post('/reset', [PasswordResetController::class, 'reset']);
 });
 
