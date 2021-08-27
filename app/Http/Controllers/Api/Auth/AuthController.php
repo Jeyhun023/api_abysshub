@@ -94,7 +94,7 @@ class AuthController extends Controller
 
             return $this->sendResponse($success, 'User login successfully.');
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return $this->sendError('Unknown Error', ["unknown" => ['Unknown error happened'] ], 500);
         }
 
 

@@ -42,7 +42,7 @@ class PasswordResetController extends Controller
 
             return $this->sendResponse(null, 'We have e-mailed your password reset link!', 201);
         } catch (\Exception $e) {
-            return $this->sendError(null, $e->getMessage(), 500);
+            return $this->sendError('Unknown Error', ["unknown" => ['Unknown error happened'] ], 500);
         }
     }
 
@@ -59,9 +59,9 @@ class PasswordResetController extends Controller
             ->first();
         if (!$passwordReset || Carbon::parse($passwordReset->updated_at)->addMinutes(180)->isPast()) {
             $passwordReset->delete();
-            return $this->sendError(null, 'This password reset token is invalid.', 404);
+            return $this->sendError('The given data was invalid', ["token" => ['This password reset token is invalid'] ], 404);
         }
-        return $this->sendResponse($passwordReset, 'Token is correct',201);
+        return $this->sendResponse($passwordReset, 'Token is correct', 201);
     }
 
     /**
@@ -88,7 +88,7 @@ class PasswordResetController extends Controller
         ])->first();
 
         if (!$passwordReset) {
-            return $this->sendError(null, 'This password reset token is invalid.', 404);
+            return $this->sendError('The given data was invalid', ["token" => ['This password reset token is invalid'] ], 404);
         }
 
         try {
@@ -98,7 +98,7 @@ class PasswordResetController extends Controller
             $user->notify((new PasswordResetSuccess($passwordReset))->onQueue("medium"));
             return $this->sendResponse($user, '');
         } catch (\Exception $e) {
-            return $this->sendError(null, $e->getMessage(), 500);
+            return $this->sendError('Unknown Error', ["unknown" => ['Unknown error happened'] ], 500);
         }
 
     }
