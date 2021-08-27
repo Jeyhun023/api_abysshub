@@ -56,9 +56,9 @@ class PasswordResetController extends Controller
     public function find($token)
     {
         $passwordReset = PasswordReset::where('token', $token)
-            ->first();
+            ->firstOrFail();
         if (!$passwordReset || Carbon::parse($passwordReset->updated_at)->addMinutes(180)->isPast()) {
-            $passwordReset->delete();
+            $passwordReset?->delete();
             return $this->sendError('The given data was invalid', ["token" => ['This password reset token is invalid'] ], 404);
         }
         return $this->sendResponse($passwordReset, 'Token is correct', 201);
