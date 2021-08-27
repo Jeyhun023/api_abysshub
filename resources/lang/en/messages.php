@@ -11,6 +11,7 @@ return [
     'user_verified' => 'User has already verified.',
     'verified_success' => 'User successfully verified!',
     'link_sent' => 'Verification link has sent successfully',
-
+    'model_not_found' => 'Record not found',
+    'relation_not_found' => 'Relation not found',
     
 ];

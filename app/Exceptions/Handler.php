@@ -2,11 +2,16 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Traits\ApiResponser;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponser;
     /**
      * A list of the exception types that are not reported.
      *
@@ -35,7 +40,12 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+            $this->renderable(function (NotFoundHttpException  $e, $request) {
+                return $this->errorResponse(trans('messages.model_not_found'));
+            });
+            $this->renderable(function (RelationNotFoundException  $e, $request) {
+                return $this->errorResponse(trans('messages.relation_not_found'));
+            });
         });
     }
 
@@ -50,6 +60,6 @@ class Handler extends ExceptionHandler
     {
         return $exception->redirectTo()
                     ? redirect()->guest($exception->redirectTo())
-                    : response()->json(['message' => $exception->getMessage()], 401);
+                    : $this->errorResponse(["token" => trans('auth.unauthorized')]);
     }
 }
