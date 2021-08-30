@@ -40,7 +40,7 @@ class PasswordResetController extends Controller
 
             return $this->successResponse(null, trans('messages.sent_reset_link'));
         } catch (\Exception $e) {
-            return $this->errorResponse(["failed" => trans('messages.failed')]);
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
 
@@ -57,7 +57,7 @@ class PasswordResetController extends Controller
             ->firstOrFail();
         if (Carbon::parse($passwordReset->updated_at)->addMinutes(180)->isPast()) {
             $passwordReset->delete();
-            return $this->errorResponse(["token" => trans('messages.token_wrong')]);
+            return $this->errorResponse(["token" => [trans('messages.token_wrong')] ]);
         }
         return $this->successResponse($passwordReset);
     }
@@ -81,7 +81,7 @@ class PasswordResetController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$passwordReset) {
-            return $this->errorResponse(["token" => trans('messages.token_wrong')]);
+            return $this->errorResponse(["token" => [trans('messages.token_wrong')] ]);
         }
 
         try {
@@ -92,7 +92,7 @@ class PasswordResetController extends Controller
 
             return $this->successResponse($user, trans('messages.password_changed'));
         } catch (\Exception $e) {
-            return $this->errorResponse(["failed" => trans('messages.failed')]);
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
 
     }

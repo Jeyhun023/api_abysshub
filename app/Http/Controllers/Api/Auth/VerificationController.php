@@ -16,13 +16,13 @@ class VerificationController extends Controller
     public function verify($id, Request $request)
     {
         if(!$request->hasValidSignature()){
-            return $this->errorResponse(["token" => trans('messages.token_wrong')]);
+            return $this->errorResponse(["token" => [trans('messages.token_wrong')] ]);
         }
 
         $user = User::findOrFail($id);
         
         if($user->hasVerifiedEmail()){
-            return $this->errorResponse(["user" => trans('messages.user_verified')]);
+            return $this->errorResponse(["user" => [trans('messages.user_verified')] ]);
         }
 
         $user->markEmailasVerified();
@@ -36,7 +36,7 @@ class VerificationController extends Controller
         $user = auth('api')->user();
 
         if($user->hasVerifiedEmail()){
-            return $this->errorResponse(["user" => trans('messages.user_verified')]);
+            return $this->errorResponse(["user" => [trans('messages.user_verified')] ]);
         }
 
         event(new NewUserRegisteredEvent($user));

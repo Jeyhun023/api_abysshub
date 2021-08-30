@@ -45,7 +45,7 @@ class AuthController extends Controller
             
             return $this->successResponse($success);
         } catch (Exception $e) {
-            return $this->errorResponse(["failed" => trans('messages.failed')]);
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
         
     }
@@ -66,7 +66,7 @@ class AuthController extends Controller
             $credentials = request()->only(['email', 'password']);
 
             if (!Auth::attempt($credentials)) {
-                return $this->errorResponse(["password" => trans('auth.password')]);
+                return $this->errorResponse(["password" => [trans('auth.password')] ]);
             }            
             
             $user = $request->user();
@@ -85,7 +85,7 @@ class AuthController extends Controller
             
             return $this->successResponse($success);
         } catch (Exception $e) {
-            return $this->errorResponse(["failed" => trans('messages.failed')]);
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
 
