@@ -54,11 +54,17 @@ class PasswordResetController extends Controller
     public function find($token)
     {
         $passwordReset = PasswordReset::where('token', $token)
-            ->firstOrFail();
-        if (Carbon::parse($passwordReset->updated_at)->addMinutes(180)->isPast()) {
-            $passwordReset->delete();
+            ->first();
+
+        if(!$passwordReset){
             return $this->errorResponse(["token" => [trans('messages.token_wrong')] ]);
         }
+
+        if (Carbon::parse($passwordReset->updated_at)->addMinutes(180)->isPast()) {
+            $passwordReset->delete();
+            return $this->errorResponse(["token" => [trans('messages.token_expired')] ]);
+        }
+        
         return $this->successResponse($passwordReset);
     }
 

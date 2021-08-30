@@ -13,5 +13,4 @@ class PasswordReset extends Model
         'email', 'token',
     ];
 
-    public $timestamps = false;
 }

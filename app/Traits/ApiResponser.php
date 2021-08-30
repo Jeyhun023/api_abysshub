@@ -32,12 +32,12 @@ trait ApiResponser
      * @param $code
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function errorResponse($errors): JsonResponse
+    protected function errorResponse($errors, $code = JsonResponse::HTTP_INTERNAL_SERVER_ERROR): JsonResponse
     {
         return response()->json([
             'message' => trans('messages.operation_fail'), 
             'errors' => $errors, 
-        ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR );
+        ], $code );
     }
     
     protected function sendResponse(): JsonResponse
