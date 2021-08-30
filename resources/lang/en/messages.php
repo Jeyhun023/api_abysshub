@@ -16,4 +16,5 @@ return [
     'relation_not_found' => 'Relation not found',
     'not_found' => 'Provided record not found',
     'relation_not_found' => 'Provided relational record not found',
+    'too_many_attempt' => 'Too Many Attempts',
 ];

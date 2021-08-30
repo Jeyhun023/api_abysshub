@@ -22,7 +22,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']); 
 
 Route::group(['prefix' => 'password'], function () {
-    Route::post('/create', [PasswordResetController::class, 'create']);
+    Route::post('/create', [PasswordResetController::class, 'create'])->middleware('throttle:2,1');
     Route::get('/check/{token}', [PasswordResetController::class, 'find']);
     Route::post('/reset', [PasswordResetController::class, 'reset']);
 });
@@ -34,9 +34,10 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
 
     Route::group(['prefix' => 'email'], function () {
         Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-        Route::post('/resend', [VerificationController::class, 'resend']);
+        Route::post('/resend', [VerificationController::class, 'resend'])->middleware('throttle:2,1');
     }); 
 
+    Route::group(['middleware' => 'verified'], function ($router) {
+        Route::get('/content-check', [CheckController::class, 'contentCheck']); 
+    });
 });
-
-Route::get('/content-check', [CheckController::class, 'contentCheck']); 

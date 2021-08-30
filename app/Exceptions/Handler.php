@@ -8,6 +8,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\RelationNotFoundException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 
 class Handler extends ExceptionHandler
 {
@@ -52,6 +53,10 @@ class Handler extends ExceptionHandler
     
         if ($exception instanceof RelationNotFoundException && $request->wantsJson()) {
             return $this->errorResponse(["not_found" => [trans('messages.relation_not_found')] ], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        if ($exception instanceof ThrottleRequestsException && $request->wantsJson()) {
+            return $this->errorResponse(["attempt" => [trans('messages.too_many_attempt')] ]);
         }
 
         return parent::render($request, $exception);
