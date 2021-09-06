@@ -18,6 +18,7 @@ class ThreadCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($thread) {
             return [
+                'id' => $thread->id,
                 'user' => new UserResource($thread->user),
                 'category' => new CategoryResource($thread->category),
                 'title' => $thread->title,

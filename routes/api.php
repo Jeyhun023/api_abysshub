@@ -49,4 +49,5 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
 //Forum
 Route::group(['prefix' => 'forum'], function () {
     Route::get('/', [ForumController::class, 'index']); 
+    Route::get('/{slug}', [ForumController::class, 'show']); 
 });
