@@ -27,6 +27,7 @@ class ThreadFactory extends Factory
             'user_id' => mt_rand(1, 50),
             'category_id' => mt_rand(1, 5),
             'title' => $this->faker->sentences(1, true),
+            'slug' => $this->faker->sentences(1, true),
             'content' => $this->faker->paragraph(),
             'tags' => $this->faker->name(),
             'last_active_at' => now(),
