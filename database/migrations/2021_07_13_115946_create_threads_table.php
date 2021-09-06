@@ -17,11 +17,22 @@ class CreateThreadsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('category_id');
+            $table->string('title', 255);
             $table->text('content');
+            $table->string('tags', 75);
+            $table->string('slug', 300)->unique();
+            
+            $table->integer('answer_count')->default(0);
+            $table->integer('comment_count')->default(0);
+            $table->integer('view_count')->default(0);
+            $table->integer('score')->default(0);
+
+            $table->datetime('last_active_at');
+            $table->datetime('closed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories');
         });
     }

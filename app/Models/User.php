@@ -60,4 +60,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Role::class);
     }
+
+    public function threads()
+    {
+        return $this->hasMany(Thread::class);
+    }
 }

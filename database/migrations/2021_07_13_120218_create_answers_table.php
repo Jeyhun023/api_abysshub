@@ -17,13 +17,14 @@ class CreateAnswersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('thread_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('parent_id');
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->text('content');
-            $table->string('type');
+            $table->integer('score')->default(0);
             $table->timestamps();
+            $table->softDeletes();
             
-            $table->foreign('thread_id')->references('id')->on('threads');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('thread_id')->references('id')->on('threads')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

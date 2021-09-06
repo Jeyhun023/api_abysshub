@@ -1,10 +1,12 @@
 <?php
-
+//Auth
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\Auth\VerificationController;
-use App\Http\Controllers\Api\CheckController;
+//Forum
+use App\Http\Controllers\Api\Forum\ForumController;
 
+use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+//Auth
 
 Route::post('/register', [AuthController::class, 'register']); 
 Route::post('/login', [AuthController::class, 'login']); 
@@ -40,4 +44,9 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
     Route::group(['middleware' => 'verified'], function ($router) {
         Route::get('/content-check', [CheckController::class, 'contentCheck']); 
     });
+});
+
+//Forum
+Route::group(['prefix' => 'forum'], function () {
+    Route::get('/', [ForumController::class, 'index']); 
 });
