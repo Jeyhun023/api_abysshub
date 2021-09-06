@@ -49,5 +49,9 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
 //Forum
 Route::group(['prefix' => 'forum'], function () {
     Route::get('/', [ForumController::class, 'index']); 
-    Route::get('/{slug}', [ForumController::class, 'show']); 
+    Route::get('/{id}/{slug}', [ForumController::class, 'show']); 
+    
+    Route::group(['middleware' => ['auth:api','verified']], function ($router) {
+        Route::post('/create', [ForumController::class, 'store']); 
+    });
 });
