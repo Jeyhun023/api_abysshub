@@ -53,5 +53,6 @@ Route::group(['prefix' => 'forum'], function () {
     
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
         Route::post('/create', [ForumController::class, 'store']); 
+        Route::post('/{id}/answer/submit', [ForumController::class, 'answer']); 
     });
 });

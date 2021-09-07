@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api\Forum;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Forum\ThreadRequest;
+use App\Http\Requests\Api\Forum\AnswerRequest;
 use App\Http\Resources\ThreadCollection;
 use App\Http\Resources\ThreadResource;
+use App\Http\Resources\AnswerResource;
 use App\Models\Thread;
+use App\Models\Answer;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
@@ -47,6 +50,21 @@ class ForumController extends Controller
             ]);
 
             return $this->successResponse(new ThreadResource($thread));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+    
+    public function answer($id, AnswerRequest $request)
+    {
+        try {
+            $answer = Answer::query()->create([
+                'thread_id' => $id, 
+                'user_id' => auth()->user()->id, 
+                'content' => $request->content
+            ]);
+
+            return $this->successResponse(new AnswerResource($answer));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
