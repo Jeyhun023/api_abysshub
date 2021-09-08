@@ -20,7 +20,7 @@ class CreateThreadsTable extends Migration
             $table->string('title', 255);
             $table->text('content');
             $table->string('tags', 75);
-            $table->string('slug', 300)->unique();
+            $table->string('slug', 300);
             
             $table->integer('answer_count')->default(0);
             $table->integer('comment_count')->default(0);

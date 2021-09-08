@@ -37,7 +37,7 @@ class ThreadController extends Controller
             ])
             ->firstOrFail();
 
-        return $this->successResponse(new ThreadResource($thread));
+        return $this->successResponse(new ThreadResource($thread), trans('messages.thread_store_success'));
     }
 
     public function store(ThreadRequest $request)
