@@ -30,7 +30,7 @@ class ThreadResource extends JsonResource
             'answer_count' => $this->answer_count,
             'comment_count' => $this->comment_count,
             'view_count' => $this->view_count,
-            'score' => $this->score,
+            'upvote' => $this->upvote,
             'last_active_at' => $this->last_active_at,
             'closed_at' => $this->closed_at,
             'created_at' => $this->created_at->format('d/m/Y'),

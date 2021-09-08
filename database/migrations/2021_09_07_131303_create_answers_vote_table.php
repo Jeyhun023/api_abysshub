@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnswersTable extends Migration
+class CreateAnswersVoteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateAnswersTable extends Migration
      */
     public function up()
     {
-        Schema::create('answers', function (Blueprint $table) {
+        Schema::create('answers_vote', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('thread_id');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('parent_id')->nullable();
-            $table->text('content');
-            $table->integer('upvote')->default(0);
+            $table->unsignedBigInteger('answer_id');
+            $table->enum('type', ['upvote']);
             $table->timestamps();
-            $table->softDeletes();
             
-            $table->foreign('thread_id')->references('id')->on('threads')->onDelete('cascade');
+            $table->unique('user_id', 'answer_id', 'type');
+            $table->foreign('answer_id')->references('id')->on('answers')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
@@ -35,6 +33,6 @@ class CreateAnswersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('answers');
+        Schema::dropIfExists('answers_vote');
     }
 }

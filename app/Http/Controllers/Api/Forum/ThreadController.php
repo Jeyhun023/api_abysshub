@@ -4,18 +4,15 @@ namespace App\Http\Controllers\Api\Forum;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Forum\ThreadRequest;
-use App\Http\Requests\Api\Forum\AnswerRequest;
 use App\Http\Resources\ThreadCollection;
 use App\Http\Resources\ThreadResource;
-use App\Http\Resources\AnswerResource;
 use App\Models\Thread;
-use App\Models\Answer;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
-class ForumController extends Controller
+class ThreadController extends Controller
 {
     use ApiResponser;
 
@@ -27,12 +24,16 @@ class ForumController extends Controller
     
     public function show($id, $slug)
     {
-        $thread = Thread::with(['answers.user', 'category', 'user'])
+        $thread = Thread::with(['answers' => function($query){
+                $query->with('user');
+                $query->with('userVotes');
+            }, 'category', 'user'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
             ])
             ->firstOrFail();
+
         return $this->successResponse(new ThreadResource($thread));
     }
 
@@ -55,18 +56,4 @@ class ForumController extends Controller
         }
     }
     
-    public function answer($id, AnswerRequest $request)
-    {
-        try {
-            $answer = Answer::query()->create([
-                'thread_id' => $id, 
-                'user_id' => auth()->user()->id, 
-                'content' => $request->content
-            ]);
-
-            return $this->successResponse(new AnswerResource($answer));
-        } catch (Exception $e) {
-            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-        }
-    }
 }

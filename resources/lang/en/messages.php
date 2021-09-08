@@ -18,4 +18,6 @@ return [
     'relation_not_found' => 'Provided relational record not found',
     'too_many_attempt' => 'Too Many Attempts',
     'email_not_verified' => 'Your email address is not verified.',
+    'unvote_success' => 'Successfully unvoted',
+    'answer_store_success' => 'Successfully answered',
 ];

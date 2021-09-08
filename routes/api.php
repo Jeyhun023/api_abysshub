@@ -4,7 +4,8 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\Auth\VerificationController;
 //Forum
-use App\Http\Controllers\Api\Forum\ForumController;
+use App\Http\Controllers\Api\Forum\ThreadController;
+use App\Http\Controllers\Api\Forum\AnswerController;
 
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
@@ -48,11 +49,13 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
 
 //Forum
 Route::group(['prefix' => 'forum'], function () {
-    Route::get('/', [ForumController::class, 'index']); 
-    Route::get('/{id}/{slug}', [ForumController::class, 'show']); 
+    Route::get('/', [ThreadController::class, 'index']); 
+    Route::get('/{thread}/{slug}', [ThreadController::class, 'show']); 
     
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
-        Route::post('/create', [ForumController::class, 'store']); 
-        Route::post('/{id}/answer/submit', [ForumController::class, 'answer']); 
+        Route::post('/create', [ThreadController::class, 'store']); 
+        Route::post('/{thread}/answer/submit', [AnswerController::class, 'store']); 
+        Route::post('/{answer}/answer/vote', [AnswerController::class, 'vote']); 
+        Route::post('/{answer}/answer/unvote', [AnswerController::class, 'unvote']); 
     });
 });

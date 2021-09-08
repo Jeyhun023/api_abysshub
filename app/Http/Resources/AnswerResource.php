@@ -19,7 +19,7 @@ class AnswerResource extends JsonResource
             'id' => $this->id,
             'user' => new UserResource($this->user),
             'content' => $this->content,
-            'score' => $this->score,
+            'upvote' => $this->upvote,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y')
         ];

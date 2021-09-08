@@ -17,10 +17,10 @@ class AnswerCollection extends ResourceCollection
         return $this->collection->transform(function ($answer) {
             return [
                 'id' => $answer->id,
-                'parent_id' => $answer->parent_id,
                 'user' => new UserResource($answer->user),
                 'content' => $answer->content,
-                'score' => $answer->score,
+                'upvote' => $answer->upvote,
+                'user_votes' => $answer->userVotes,
                 'created_at' => $answer->created_at->format('d/m/Y'),
                 'updated_at' => $answer->updated_at->format('d/m/Y')
             ];

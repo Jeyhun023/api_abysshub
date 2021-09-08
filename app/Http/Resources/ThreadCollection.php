@@ -29,7 +29,7 @@ class ThreadCollection extends ResourceCollection
                 'answer_count' => $thread->answer_count,
                 'comment_count' => $thread->comment_count,
                 'view_count' => $thread->view_count,
-                'score' => $thread->score,
+                'upvote' => $thread->upvote,
                 'last_active_at' => $thread->last_active_at,
                 'closed_at' => $thread->closed_at,
                 'created_at' => $thread->created_at->format('d/m/Y'),

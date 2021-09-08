@@ -11,8 +11,8 @@ class Answer extends Model
 
     public $table = "answers";
 
-    protected $fillable = ['thread_id','user_id','parent_id','content'];
-    protected $guarded = ['score']; 
+    protected $fillable = ['thread_id','user_id','content'];
+    protected $guarded = ['upvote']; 
 
     public function thread()
     {
@@ -24,4 +24,8 @@ class Answer extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function userVotes()
+    {
+        return $this->hasOne(AnswersVote::class)->where('user_id', auth()->guard('api')->user()?->id);
+    }
 }
