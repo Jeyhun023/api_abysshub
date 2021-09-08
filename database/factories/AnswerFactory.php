@@ -24,7 +24,7 @@ class AnswerFactory extends Factory
     public function definition()
     {
         return [
-            'thread_id' => mt_rand(1, 250),
+            'thread_id' => mt_rand(1, 15),
             'user_id' => mt_rand(1, 50),
             'parent_id' => null,
             'content' => $this->faker->paragraph(),

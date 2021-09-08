@@ -24,7 +24,7 @@ class ThreadFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => mt_rand(1, 50),
+            'user_id' => mt_rand(1, 15),
             'category_id' => mt_rand(1, 5),
             'title' => $this->faker->sentences(1, true),
             'slug' => $this->faker->sentences(1, true),

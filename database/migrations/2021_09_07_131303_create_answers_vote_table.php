@@ -20,7 +20,7 @@ class CreateAnswersVoteTable extends Migration
             $table->enum('type', ['upvote']);
             $table->timestamps();
             
-            $table->unique(['user_id', 'answer_id', 'type']);
+            $table->unique(['user_id', 'answer_id']);
             $table->foreign('answer_id')->references('id')->on('answers')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
