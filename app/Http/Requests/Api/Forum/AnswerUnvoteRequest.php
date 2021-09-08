@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Models\AnswersVote;
 use Illuminate\Validation\Rule;
 
-class AnswerVoteRequest extends FormRequest
+class AnswerUnvoteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +31,7 @@ class AnswerVoteRequest extends FormRequest
     {
         return [
             'type' => ['required', Rule::in(AnswersVote::VOTE_TYPE_SELECT)],
-            'answer_id' => ['required', Rule::unique('answers_vote')->where('answer_id', $this->answer_id)->where('user_id', $this->user_id)]
+            'answer_id' => ['required', Rule::exists('answers_vote')->where('answer_id', $this->answer_id)->where('user_id', $this->user_id)]
         ];
     }
 
@@ -45,7 +45,7 @@ class AnswerVoteRequest extends FormRequest
     public function messages()
     {
         return [
-            'answer_id.unique' => trans('messages.have_voted'),
+            'answer_id.exists' => trans('messages.havent_voted'),
         ];
     }
 }

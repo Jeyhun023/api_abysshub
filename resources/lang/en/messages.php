@@ -20,4 +20,6 @@ return [
     'email_not_verified' => 'Your email address is not verified.',
     'unvote_success' => 'Successfully unvoted',
     'answer_store_success' => 'Successfully answered',
+    'have_voted' => 'You have already voted',
+    'havent_voted' => 'You have not voted yet',
 ];

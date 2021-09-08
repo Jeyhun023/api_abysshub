@@ -9,8 +9,10 @@ use App\Models\AnswersVote;
 use App\Http\Resources\AnswerResource;
 use App\Http\Requests\Api\Forum\AnswerRequest;
 use App\Http\Requests\Api\Forum\AnswerVoteRequest;
+use App\Http\Requests\Api\Forum\AnswerUnvoteRequest;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\Rule;
 
 class AnswerController extends Controller
 {
@@ -48,7 +50,7 @@ class AnswerController extends Controller
     }
 
     
-    public function unvote(Answer $answer, AnswerVoteRequest $request)
+    public function unvote(Answer $answer, AnswerUnvoteRequest $request)
     {
         try {
             $answerVote = AnswersVote::query()->where([
