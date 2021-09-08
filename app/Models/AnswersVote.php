@@ -9,7 +9,7 @@ class AnswersVote extends Model
 {
     use HasFactory;
 
-    const VOTE_TYPE_SELECT = ['upwote'];
+    const VOTE_TYPE_SELECT = ['upvote'];
 
     public $table = "answers_vote";
 
