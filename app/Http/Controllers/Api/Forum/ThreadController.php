@@ -37,7 +37,7 @@ class ThreadController extends Controller
             ])
             ->firstOrFail();
 
-        return $this->successResponse(new ThreadResource($thread), trans('messages.thread_store_success'));
+        return $this->successResponse(new ThreadResource($thread));
     }
 
     public function store(ThreadRequest $request)
@@ -53,7 +53,7 @@ class ThreadController extends Controller
                 'last_active_at' => now(),
             ]);
 
-            return $this->successResponse(new ThreadResource($thread));
+            return $this->successResponse(new ThreadResource($thread), trans('messages.thread_store_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
