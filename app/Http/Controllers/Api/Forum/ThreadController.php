@@ -30,7 +30,7 @@ class ThreadController extends Controller
         $thread = Thread::with(['answers' => function($query){
                 $query->with('user');
                 $query->with('userVotes');
-            }, 'category', 'user'])
+            }, 'category', 'user', 'userVotes'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
