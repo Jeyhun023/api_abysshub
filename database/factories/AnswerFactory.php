@@ -25,7 +25,7 @@ class AnswerFactory extends Factory
     {
         return [
             'thread_id' => mt_rand(1, 15),
-            'user_id' => mt_rand(1, 50),
+            'user_id' => mt_rand(1, 15),
             'parent_id' => null,
             'content' => $this->faker->paragraph(),
         ];
