@@ -49,7 +49,6 @@ class AnswerController extends Controller
         }
     }
 
-    
     public function unvote(Answer $answer, AnswerUnvoteRequest $request)
     {
         try {

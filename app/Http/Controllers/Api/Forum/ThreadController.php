@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api\Forum;
 
 use App\Http\Controllers\Controller;
+use App\Models\Thread;
+use App\Models\ThreadsVote;
+use App\Http\Requests\Api\Forum\ThreadVoteRequest;
+use App\Http\Requests\Api\Forum\ThreadUnvoteRequest;
 use App\Http\Requests\Api\Forum\ThreadRequest;
+use Illuminate\Http\Request;
 use App\Http\Resources\ThreadCollection;
 use App\Http\Resources\ThreadResource;
-use App\Models\Thread;
-use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
@@ -56,4 +59,35 @@ class ThreadController extends Controller
         }
     }
     
+    public function vote(Thread $thread, ThreadVoteRequest $request)
+    {
+        try {
+            $threadVote = ThreadsVote::query()->create([
+                'thread_id' => $thread->id, 
+                'user_id' => auth()->user()->id, 
+                'type' => $request->type
+            ]);
+            $thread->increment($request->type);
+
+            return $this->successResponse($threadVote);
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function unvote(Thread $thread, ThreadUnvoteRequest $request)
+    {
+        try {
+            $threadVote = ThreadsVote::query()->where([
+                'thread_id' => $thread->id, 
+                'user_id' => auth()->user()->id, 
+                'type' => $request->type
+            ])->delete();
+            $thread->decrement($request->type);
+
+            return $this->successResponse(null, trans('messages.unvote_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
 }

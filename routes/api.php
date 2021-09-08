@@ -53,7 +53,11 @@ Route::group(['prefix' => 'forum'], function () {
     Route::get('/{thread}/{slug}', [ThreadController::class, 'show']); 
     
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
+        //Thread
         Route::post('/create', [ThreadController::class, 'store']); 
+        Route::post('/{thread}/thread/vote', [ThreadController::class, 'vote']); 
+        Route::post('/{thread}/thread/unvote', [ThreadController::class, 'unvote']); 
+        //Answer
         Route::post('/{thread}/answer/submit', [AnswerController::class, 'store']); 
         Route::post('/{answer}/answer/vote', [AnswerController::class, 'vote']); 
         Route::post('/{answer}/answer/unvote', [AnswerController::class, 'unvote']); 

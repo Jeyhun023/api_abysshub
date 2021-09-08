@@ -31,7 +31,11 @@ class AnswerUnvoteRequest extends FormRequest
     {
         return [
             'type' => ['required', Rule::in(AnswersVote::VOTE_TYPE_SELECT)],
-            'answer_id' => ['required', Rule::exists('answers_vote')->where('answer_id', $this->answer_id)->where('user_id', $this->user_id)]
+            'answer_id' => ['required', Rule::exists('answers_vote')
+                    ->where('answer_id', $this->answer_id)
+                    ->where('user_id', $this->user_id)
+                    ->where('type', $this->type)
+                ]
         ];
     }
 
