@@ -8,6 +8,7 @@ use App\Models\Answer;
 use App\Models\AnswersVote;
 use App\Models\AnswersComment;
 use App\Http\Resources\AnswerResource;
+use App\Http\Resources\AnswerCommentCollection;
 use App\Http\Requests\Api\Forum\AnswerRequest;
 use App\Http\Requests\Api\Forum\AnswerVoteRequest;
 use App\Http\Requests\Api\Forum\AnswerUnvoteRequest;
@@ -80,5 +81,11 @@ class AnswerController extends Controller
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
+    }
+    
+    public function getComment($answer)
+    {
+        $answerComments = AnswersComment::where('answer_id', $answer)->with('user')->orderBy('id','DESC')->get();
+        return $this->successResponse(new AnswerCommentCollection($answerComments));
     }
 }

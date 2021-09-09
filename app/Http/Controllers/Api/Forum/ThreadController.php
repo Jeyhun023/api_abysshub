@@ -12,6 +12,7 @@ use App\Http\Requests\Api\Forum\ThreadCommentRequest;
 use App\Http\Requests\Api\Forum\ThreadRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\ThreadCollection;
+use App\Http\Resources\ThreadCommentCollection;
 use App\Http\Resources\ThreadResource;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
@@ -106,5 +107,11 @@ class ThreadController extends Controller
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
+    }
+
+    public function getComment($thread)
+    {
+        $threadComments = ThreadsComment::where('thread_id', $thread)->with('user')->orderBy('id','DESC')->get();
+        return $this->successResponse(new ThreadCommentCollection($threadComments));
     }
 }

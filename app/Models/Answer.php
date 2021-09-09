@@ -28,4 +28,9 @@ class Answer extends Model
     {
         return $this->hasOne(AnswersVote::class)->where('user_id', auth()->guard('api')->user()?->id);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(AnswersComment::class);
+    }
 }

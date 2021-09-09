@@ -35,4 +35,9 @@ class Thread extends Model
     {
         return $this->hasOne(ThreadsVote::class)->where('user_id', auth()->guard('api')->user()?->id);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(ThreadsComment::class);
+    }
 }
