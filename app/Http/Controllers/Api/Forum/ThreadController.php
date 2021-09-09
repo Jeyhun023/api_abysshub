@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\Forum;
 use App\Http\Controllers\Controller;
 use App\Models\Thread;
 use App\Models\ThreadsVote;
+use App\Models\ThreadsComment;
 use App\Http\Requests\Api\Forum\ThreadVoteRequest;
 use App\Http\Requests\Api\Forum\ThreadUnvoteRequest;
+use App\Http\Requests\Api\Forum\ThreadCommentRequest;
 use App\Http\Requests\Api\Forum\ThreadRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\ThreadCollection;
@@ -86,6 +88,21 @@ class ThreadController extends Controller
             $thread->decrement($request->type);
 
             return $this->successResponse(null, trans('messages.unvote_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function comment(Thread $thread, ThreadCommentRequest $request)
+    {
+        try {
+            $threadComment = ThreadsComment::query()->create([
+                'thread_id' => $thread->id, 
+                'user_id' => auth()->user()->id, 
+                'content' => $request->content
+            ]);
+
+            return $this->successResponse($threadComment);
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

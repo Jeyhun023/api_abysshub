@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Answer;
 use App\Models\AnswersVote;
+use App\Models\AnswersComment;
 use App\Http\Resources\AnswerResource;
 use App\Http\Requests\Api\Forum\AnswerRequest;
 use App\Http\Requests\Api\Forum\AnswerVoteRequest;
 use App\Http\Requests\Api\Forum\AnswerUnvoteRequest;
+use App\Http\Requests\Api\Forum\AnswerCommentRequest;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\Rule;
@@ -59,7 +61,22 @@ class AnswerController extends Controller
             ])->delete();
             $answer->decrement($request->type);
 
-            return $this->successResponse(null, trans('messages.unvote_success'));
+            return $this->successResponse($answerVote, trans('messages.unvote_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function comment(Answer $answer, AnswerCommentRequest $request)
+    {
+        try {
+            $answerComment = AnswersComment::query()->create([
+                'answer_id' => $answer->id, 
+                'user_id' => auth()->user()->id, 
+                'content' => $request->content
+            ]);
+
+            return $this->successResponse($answerComment);
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

@@ -56,10 +56,12 @@ Route::group(['prefix' => 'forum'], function () {
         //Thread
         Route::post('/create', [ThreadController::class, 'store']); 
         Route::post('/{thread}/thread/vote', [ThreadController::class, 'vote']); 
-        Route::post('/{thread}/thread/unvote', [ThreadController::class, 'unvote']); 
+        Route::post('/{thread}/thread/unvote', [ThreadController::class, 'unvote']);
+        Route::post('/{thread}/thread/comment', [ThreadController::class, 'comment']);  
         //Answer
         Route::post('/{thread}/answer/submit', [AnswerController::class, 'store']); 
         Route::post('/{answer}/answer/vote', [AnswerController::class, 'vote']); 
         Route::post('/{answer}/answer/unvote', [AnswerController::class, 'unvote']); 
+        Route::post('/{answer}/answer/comment', [AnswerController::class, 'comment']); 
     });
 });
