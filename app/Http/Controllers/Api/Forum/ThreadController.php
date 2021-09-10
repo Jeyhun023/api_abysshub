@@ -13,6 +13,7 @@ use App\Http\Requests\Api\Forum\ThreadRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\ThreadCollection;
 use App\Http\Resources\ThreadCommentCollection;
+use App\Http\Resources\ThreadCommentResource;
 use App\Http\Resources\ThreadResource;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
@@ -39,6 +40,7 @@ class ThreadController extends Controller
                 'slug' => $slug
             ])
             ->firstOrFail();
+        $thread->increment('view_count');
 
         return $this->successResponse(new ThreadResource($thread));
     }
@@ -102,8 +104,9 @@ class ThreadController extends Controller
                 'user_id' => auth()->user()->id, 
                 'content' => $request->content
             ]);
+            $thread->increment('comment_count');
 
-            return $this->successResponse($threadComment);
+            return $this->successResponse(new ThreadCommentResource($threadComment));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

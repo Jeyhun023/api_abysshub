@@ -11,8 +11,8 @@ class Answer extends Model
 
     public $table = "answers";
 
-    protected $fillable = ['thread_id','user_id','content'];
-    protected $guarded = ['upvote']; 
+    protected $fillable = ['user_id', 'thread_id','content'];
+    protected $guarded = ['upvote', 'comment_count']; 
 
     public function thread()
     {

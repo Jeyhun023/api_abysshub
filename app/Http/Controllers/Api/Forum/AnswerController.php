@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Forum;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Answer;
+use App\Models\Thread;
 use App\Models\AnswersVote;
 use App\Models\AnswersComment;
 use App\Http\Resources\AnswerResource;
 use App\Http\Resources\AnswerCommentCollection;
+use App\Http\Resources\AnswerCommentResource;
 use App\Http\Requests\Api\Forum\AnswerRequest;
 use App\Http\Requests\Api\Forum\AnswerVoteRequest;
 use App\Http\Requests\Api\Forum\AnswerUnvoteRequest;
@@ -21,14 +23,15 @@ class AnswerController extends Controller
 {
     use ApiResponser;
 
-    public function store($id, AnswerRequest $request)
+    public function store(Thread $thread, AnswerRequest $request)
     {
         try {
             $answer = Answer::query()->create([
-                'thread_id' => $id, 
+                'thread_id' => $thread->id, 
                 'user_id' => auth()->user()->id, 
                 'content' => $request->content
             ]);
+            $thread->increment('answer_count');
 
             return $this->successResponse(new AnswerResource($answer), trans('messages.answer_store_success'));
         } catch (Exception $e) {
@@ -76,8 +79,9 @@ class AnswerController extends Controller
                 'user_id' => auth()->user()->id, 
                 'content' => $request->content
             ]);
+            $answer->increment('comment_count');
 
-            return $this->successResponse($answerComment);
+            return $this->successResponse(new AnswerCommentResource($answerComment));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

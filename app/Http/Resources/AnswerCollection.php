@@ -20,6 +20,7 @@ class AnswerCollection extends ResourceCollection
                 'user' => new UserResource($answer->user),
                 'content' => $answer->content,
                 'upvote' => $answer->upvote,
+                'comment_count' => $answer->comment_count,
                 'user_votes' => $answer->userVotes,
                 'created_at' => $answer->created_at->format('d/m/Y'),
                 'updated_at' => $answer->updated_at->format('d/m/Y')
