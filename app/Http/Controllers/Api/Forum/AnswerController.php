@@ -89,7 +89,7 @@ class AnswerController extends Controller
     
     public function getComment($answer)
     {
-        $answerComments = AnswersComment::where('answer_id', $answer)->with('user')->orderBy('id','DESC')->get();
+        $answerComments = AnswersComment::where('answer_id', $answer)->with('user')->get();
         return $this->successResponse(new AnswerCommentCollection($answerComments));
     }
 }

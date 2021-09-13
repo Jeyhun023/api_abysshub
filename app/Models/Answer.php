@@ -31,6 +31,6 @@ class Answer extends Model
 
     public function comments()
     {
-        return $this->hasMany(AnswersComment::class)->orderBy('id','DESC');
+        return $this->hasMany(AnswersComment::class);
     }
 }

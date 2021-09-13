@@ -114,7 +114,7 @@ class ThreadController extends Controller
 
     public function getComment($thread)
     {
-        $threadComments = ThreadsComment::where('thread_id', $thread)->with('user')->orderBy('id','DESC')->get();
+        $threadComments = ThreadsComment::where('thread_id', $thread)->with('user')->get();
         return $this->successResponse(new ThreadCommentCollection($threadComments));
     }
 }

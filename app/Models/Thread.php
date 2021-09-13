@@ -38,6 +38,6 @@ class Thread extends Model
 
     public function comments()
     {
-        return $this->hasMany(ThreadsComment::class)->orderBy('id','DESC');
+        return $this->hasMany(ThreadsComment::class);
     }
 }
