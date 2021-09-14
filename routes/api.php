@@ -55,6 +55,7 @@ Route::group(['prefix' => 'forum'], function () {
     Route::get('/{thread}/thread/getcomment', [ThreadController::class, 'getComment']);
     //Answer
     Route::get('/{answer}/answer/getcomment', [AnswerController::class, 'getComment']); 
+    Route::get('/{thread}/answer/loadanswers', [AnswerController::class, 'loadAnswers']);
     
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
         //Thread

@@ -28,7 +28,7 @@ class Thread extends Model
 
     public function answers()
     {
-        return $this->hasMany(Answer::class)->limit(5);
+        return $this->hasMany(Answer::class);
     }
 
     public function userVotes()

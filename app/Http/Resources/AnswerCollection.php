@@ -23,9 +23,16 @@ class AnswerCollection extends ResourceCollection
                 'comment_count' => $answer->comment_count,
                 'user_votes' => $answer->userVotes,
                 'created_at' => $answer->created_at->format('d/m/Y'),
-                'updated_at' => $answer->updated_at->format('d/m/Y')
+                'updated_at' => $answer->updated_at->format('d/m/Y'),
             ];
         })->toArray();
         return parent::toArray($request);
+    }
+
+    public function withResponse($request, $response)
+    {
+        $jsonResponse = json_decode($response->getContent(), true);
+        unset($jsonResponse['links'],$jsonResponse['meta']['links'],$jsonResponse['meta']['path']);
+        $response->setContent(json_encode($jsonResponse));
     }
 }

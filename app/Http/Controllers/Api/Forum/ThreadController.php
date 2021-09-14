@@ -31,10 +31,7 @@ class ThreadController extends Controller
     
     public function show($id, $slug)
     {
-        $thread = Thread::with(['answers' => function($query){
-                $query->with('user');
-                $query->with('userVotes');
-            }, 'category', 'user', 'userVotes'])
+        $thread = Thread::with(['category', 'user', 'userVotes'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
@@ -117,4 +114,5 @@ class ThreadController extends Controller
         $threadComments = ThreadsComment::where('thread_id', $thread)->with('user')->get();
         return $this->successResponse(new ThreadCommentCollection($threadComments));
     }
+
 }

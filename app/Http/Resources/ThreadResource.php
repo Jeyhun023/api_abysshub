@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\UserResource;
 use App\Http\Resources\CategoryResource;
-use App\Http\Resources\AnswerCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ThreadResource extends JsonResource
@@ -21,7 +20,6 @@ class ThreadResource extends JsonResource
             'id' => $this->id,
             'user' => new UserResource($this->user),
             'category' => new CategoryResource($this->category),
-            'answers' => new AnswerCollection($this->answers),
             'title' => $this->title,
             'slug' => $this->slug,
             'content' => $this->content,

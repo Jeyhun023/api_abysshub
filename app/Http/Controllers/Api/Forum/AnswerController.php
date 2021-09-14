@@ -9,6 +9,7 @@ use App\Models\Thread;
 use App\Models\AnswersVote;
 use App\Models\AnswersComment;
 use App\Http\Resources\AnswerResource;
+use App\Http\Resources\AnswerCollection;
 use App\Http\Resources\AnswerCommentCollection;
 use App\Http\Resources\AnswerCommentResource;
 use App\Http\Requests\Api\Forum\AnswerRequest;
@@ -91,5 +92,12 @@ class AnswerController extends Controller
     {
         $answerComments = AnswersComment::where('answer_id', $answer)->with('user')->get();
         return $this->successResponse(new AnswerCommentCollection($answerComments));
+    }
+    
+    public function loadAnswers($thread)
+    {
+        $loadAnswers = Answer::where('thread_id', $thread)->paginate(5);
+        
+        return $this->successResponse(new AnswerCollection($loadAnswers));
     }
 }
