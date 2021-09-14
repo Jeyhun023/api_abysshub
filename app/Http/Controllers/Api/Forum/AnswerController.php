@@ -98,6 +98,6 @@ class AnswerController extends Controller
     {
         $loadAnswers = Answer::where('thread_id', $thread)->paginate(5);
         
-        return $this->successResponse(new AnswerCollection($loadAnswers));
+        return new AnswerCollection($loadAnswers);
     }
 }
