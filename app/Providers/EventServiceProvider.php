@@ -6,6 +6,8 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Events\NewUserRegisteredEvent;
 use App\Listeners\SendVerificationMailListener;
+use App\Events\NewChatMessageEvent;
+use App\Listeners\SendMessageNotificationListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -16,7 +18,10 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         NewUserRegisteredEvent::class => [
-            SendVerificationMailListener::class,
+            SendVerificationMailListener::class
+        ],
+        NewChatMessageEvent::class => [
+            SendMessageNotificationListener::class
         ]
     ];
 

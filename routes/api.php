@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Auth\VerificationController;
 //Forum
 use App\Http\Controllers\Api\Forum\ThreadController;
 use App\Http\Controllers\Api\Forum\AnswerController;
+//Chat
+use App\Http\Controllers\Api\Chat\ChatController;
 
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
@@ -70,3 +72,12 @@ Route::group(['prefix' => 'forum'], function () {
         Route::post('/{answer}/answer/comment', [AnswerController::class, 'comment']); 
     });
 });
+
+//Chat
+Route::group(['prefix' => 'chat', 'middleware' => ['auth:api','verified']], function ($router) {
+    Route::get('/{user}/check', [ChatController::class, 'check']); 
+    Route::post('/{chat}/send', [ChatController::class, 'sendMessage']); 
+    Route::get('/{chat}/{limit}/load', [ChatController::class, 'loadMessage']); 
+});
+
+

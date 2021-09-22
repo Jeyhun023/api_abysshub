@@ -23,4 +23,5 @@ return [
     'thread_store_success' => 'Successfully created question',
     'have_voted' => 'You have already voted',
     'havent_voted' => 'You have not voted yet',
+    'have_not_permission' => 'You have not permission',
 ];

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Forum;
 
-use App\Http\Resources\UserResource;
-use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Auth\UserResource;
+use App\Http\Resources\Other\CategoryResource;
 
 class ThreadResource extends JsonResource
 {

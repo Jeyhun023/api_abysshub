@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Forum;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\Auth\UserResource;
 
 class AnswerCollection extends ResourceCollection
 {

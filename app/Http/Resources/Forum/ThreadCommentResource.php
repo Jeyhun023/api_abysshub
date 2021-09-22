@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Forum;
 
-use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Auth\UserResource;
 
-class AnswerCommentResource extends JsonResource
+class ThreadCommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +18,7 @@ class AnswerCommentResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => new UserResource($this->user),
-            'answer_id' => $this->answer_id,
+            'thread_id' => $this->thread_id,
             'content' => $this->content,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y')

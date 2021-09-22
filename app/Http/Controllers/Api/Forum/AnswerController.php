@@ -8,17 +8,16 @@ use App\Models\Answer;
 use App\Models\Thread;
 use App\Models\AnswersVote;
 use App\Models\AnswersComment;
-use App\Http\Resources\AnswerResource;
-use App\Http\Resources\AnswerCollection;
-use App\Http\Resources\AnswerCommentCollection;
-use App\Http\Resources\AnswerCommentResource;
+use App\Http\Resources\Forum\AnswerResource;
+use App\Http\Resources\Forum\AnswerCollection;
+use App\Http\Resources\Forum\AnswerCommentCollection;
+use App\Http\Resources\Forum\AnswerCommentResource;
 use App\Http\Requests\Api\Forum\AnswerRequest;
 use App\Http\Requests\Api\Forum\AnswerVoteRequest;
 use App\Http\Requests\Api\Forum\AnswerUnvoteRequest;
 use App\Http\Requests\Api\Forum\AnswerCommentRequest;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\Rule;
 
 class AnswerController extends Controller
 {

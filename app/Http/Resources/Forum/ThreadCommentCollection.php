@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Forum;
 
-use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\Auth\UserResource;
 
 class ThreadCommentCollection extends ResourceCollection
 {
