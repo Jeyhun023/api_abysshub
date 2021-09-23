@@ -43,7 +43,7 @@ class AuthController extends Controller
             $success['token_type'] = 'Bearer';
             $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
             
-            return $this->successResponse($success);
+            return $this->successResponse($success, trans('messages.register_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -83,7 +83,7 @@ class AuthController extends Controller
             $success['token_type'] = 'Bearer';
             $success['expires_at'] = Carbon::parse($tokenResult->token->expires_at)->toDateTimeString();
             
-            return $this->successResponse($success);
+            return $this->successResponse($success, trans('messages.login_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -104,7 +104,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
-        return $this->successResponse(null);
+        return $this->successResponse(null, trans('messages.logout_success'));
     }
 
 }

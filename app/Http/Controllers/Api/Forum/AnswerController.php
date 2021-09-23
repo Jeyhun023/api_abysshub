@@ -49,7 +49,7 @@ class AnswerController extends Controller
             ]);
             $answer->increment($request->type);
 
-            return $this->successResponse($answerVote);
+            return $this->successResponse($answerVote, trans('messages.vote_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -81,7 +81,7 @@ class AnswerController extends Controller
             ]);
             $answer->increment('comment_count');
 
-            return $this->successResponse(new AnswerCommentResource($answerComment));
+            return $this->successResponse(new AnswerCommentResource($answerComment), trans('messages.comment_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

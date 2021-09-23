@@ -71,7 +71,7 @@ class ThreadController extends Controller
             ]);
             $thread->increment($request->type);
 
-            return $this->successResponse($threadVote);
+            return $this->successResponse($threadVote, trans('messages.vote_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -103,7 +103,7 @@ class ThreadController extends Controller
             ]);
             $thread->increment('comment_count');
 
-            return $this->successResponse(new ThreadCommentResource($threadComment));
+            return $this->successResponse(new ThreadCommentResource($threadComment), trans('messages.comment_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
