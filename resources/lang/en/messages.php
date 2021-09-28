@@ -29,4 +29,5 @@ return [
     'vote_success' => 'You have successfully voted',
     'unvote_success' => 'You have successfully unvoted',
     'comment_success' => 'You have successfully commented',
+    'unauthorized'  => 'Your are not authorized',
 ];

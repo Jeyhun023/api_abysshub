@@ -11,6 +11,7 @@ use App\Http\Requests\Api\Chat\ChatCheckRequest;
 use App\Http\Requests\Api\Chat\ChatMessageRequest;
 use App\Http\Requests\Api\Chat\ChatLoadRequest;
 use App\Http\Resources\Chat\ChatResource;
+use App\Http\Resources\Chat\ChatCollection;
 use App\Http\Resources\Chat\MessageResource;
 use App\Http\Resources\Chat\MessageCollection;
 use App\Traits\ApiResponser;
@@ -24,6 +25,18 @@ class ChatController extends Controller
     public function __construct()
     {
         $this->user = auth('api')->user();
+    }
+
+    public function index()
+    {
+        $chats = ChatUser::has('messages')
+            ->where('user_id_from', $this->user->id)
+            ->orWhere('user_id_to' , $this->user->id)
+            ->with(['user_to','user_from'])
+            ->orderBy('last_activity', 'DESC')
+            ->get();
+
+        return $this->successResponse(new ChatCollection($chats));
     }
 
     public function check(ChatCheckRequest $request)

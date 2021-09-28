@@ -73,6 +73,6 @@ class Handler extends ExceptionHandler
     {
         return $exception->redirectTo()
                     ? redirect()->guest($exception->redirectTo())
-                    : $this->errorResponse(["token" => [trans('auth.unauthorized')] ]);
+                    : $this->errorResponse(["token" => [trans('messages.unauthorized')] ]);
     }
 }

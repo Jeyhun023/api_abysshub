@@ -75,6 +75,7 @@ Route::group(['prefix' => 'forum'], function () {
 
 //Chat
 Route::group(['prefix' => 'chat', 'middleware' => ['auth:api','verified']], function ($router) {
+    Route::get('/', [ChatController::class, 'index']);
     Route::get('/{user}/check', [ChatController::class, 'check']); 
     Route::post('/{chat}/send', [ChatController::class, 'sendMessage']); 
     Route::get('/{chat}/{limit}/load', [ChatController::class, 'loadMessage']); 
