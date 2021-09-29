@@ -4,7 +4,7 @@ namespace App\Http\Resources\Forum;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\Auth\UserResource;
-use App\Http\Resources\Forum\CategoryResource;
+use App\Http\Resources\Other\CategoryResource;
 
 class ThreadCollection extends ResourceCollection
 {

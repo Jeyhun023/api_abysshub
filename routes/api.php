@@ -62,20 +62,28 @@ Route::group(['prefix' => 'forum'], function () {
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
         //Thread
         Route::post('/create', [ThreadController::class, 'store']); 
+        Route::put('/{thread}/thread/edit', [ThreadController::class, 'update']); 
+        Route::delete('/{thread}/thread/delete', [ThreadController::class, 'delete']); 
         Route::post('/{thread}/thread/vote', [ThreadController::class, 'vote']); 
         Route::post('/{thread}/thread/unvote', [ThreadController::class, 'unvote']);
         Route::post('/{thread}/thread/comment', [ThreadController::class, 'comment']);  
+        Route::put('/{comment}/thread/comment/edit', [ThreadController::class, 'commentUpdate']); 
+        Route::delete('/{comment}/thread/comment/delete', [ThreadController::class, 'commentDelete']);
         //Answer
         Route::post('/{thread}/answer/submit', [AnswerController::class, 'store']); 
+        Route::put('/{answer}/answer/edit', [AnswerController::class, 'update']); 
+        Route::delete('/{answer}/answer/delete', [AnswerController::class, 'delete']); 
         Route::post('/{answer}/answer/vote', [AnswerController::class, 'vote']); 
         Route::post('/{answer}/answer/unvote', [AnswerController::class, 'unvote']); 
         Route::post('/{answer}/answer/comment', [AnswerController::class, 'comment']); 
+        Route::put('/{comment}/answer/comment/edit', [AnswerController::class, 'commentUpdate']); 
+        Route::delete('/{comment}/answer/comment/delete', [AnswerController::class, 'commentDelete']);
     });
 });
 
 //Chat
 Route::group(['prefix' => 'chat', 'middleware' => ['auth:api','verified']], function ($router) {
-    Route::get('/', [ChatController::class, 'index']);
+    Route::get('/', [ChatController::class, 'index']); 
     Route::get('/{user}/check', [ChatController::class, 'check']); 
     Route::post('/{chat}/send', [ChatController::class, 'sendMessage']); 
     Route::get('/{chat}/{limit}/load', [ChatController::class, 'loadMessage']); 

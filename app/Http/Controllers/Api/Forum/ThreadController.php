@@ -2,22 +2,26 @@
 
 namespace App\Http\Controllers\Api\Forum;
 
-use App\Http\Controllers\Controller;
 use App\Models\Thread;
 use App\Models\ThreadsVote;
 use App\Models\ThreadsComment;
 use App\Http\Requests\Api\Forum\ThreadVoteRequest;
 use App\Http\Requests\Api\Forum\ThreadUnvoteRequest;
 use App\Http\Requests\Api\Forum\ThreadCommentRequest;
+use App\Http\Requests\Api\Forum\ThreadCommentUpdateRequest;
+use App\Http\Requests\Api\Forum\ThreadCommentDeleteRequest;
 use App\Http\Requests\Api\Forum\ThreadRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\Api\Forum\ThreadUpdateRequest;
+use App\Http\Requests\Api\Forum\ThreadDeleteRequest;
 use App\Http\Resources\Forum\ThreadCollection;
 use App\Http\Resources\Forum\ThreadCommentCollection;
 use App\Http\Resources\Forum\ThreadCommentResource;
 use App\Http\Resources\Forum\ThreadResource;
-use App\Traits\ApiResponser;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
+use App\Traits\ApiResponser;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
 
 class ThreadController extends Controller
 {
@@ -61,6 +65,33 @@ class ThreadController extends Controller
         }
     }
     
+    public function update(Thread $thread, ThreadUpdateRequest $request)
+    {
+        try {
+            $thread->category_id = $request->category_id;
+            $thread->title = $request->title;
+            $thread->slug = Str::slug($request->title);
+            $thread->content = $request->content;
+            $thread->tags = $request->tags;
+            $thread->save();
+
+            return $this->successResponse(new ThreadResource($thread), trans('messages.thread_update_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function delete(Thread $thread, ThreadDeleteRequest $request)
+    {
+        try {
+            $thread->delete();
+
+            return $this->successResponse(null, trans('messages.thread_delete_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
     public function vote(Thread $thread, ThreadVoteRequest $request)
     {
         try {
@@ -104,6 +135,30 @@ class ThreadController extends Controller
             $thread->increment('comment_count');
 
             return $this->successResponse(new ThreadCommentResource($threadComment), trans('messages.comment_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function commentUpdate(ThreadsComment $comment, ThreadCommentUpdateRequest $request)
+    {
+        try {
+            $comment->content = $request->content;
+            $comment->save();
+            
+            return $this->successResponse(new ThreadCommentResource($comment), trans('messages.comment_update_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function commentDelete(ThreadsComment $comment, ThreadCommentDeleteRequest $request)
+    {
+        try {
+            $comment->thread->decrement('comment_count');
+            $comment->delete();
+            
+            return $this->successResponse(null, trans('messages.comment_delete_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
