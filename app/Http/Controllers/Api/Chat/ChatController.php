@@ -31,7 +31,9 @@ class ChatController extends Controller
     {
         $chats = ChatUser::has('messages')
             ->where('user_id_from', $this->user->id)
-            ->orWhere('user_id_to' , $this->user->id)
+            ->orWhere(function ($query)  {
+                $query->where('user_id_to' , $this->user->id);
+            })
             ->with(['user_to','user_from'])
             ->orderBy('last_activity', 'DESC')
             ->get();
@@ -42,7 +44,9 @@ class ChatController extends Controller
     public function check(ChatCheckRequest $request)
     {
         $newChat = ChatUser::where(['user_id_from' => $this->user->id, 'user_id_to' => $request->user])
-            ->orWhere(['user_id_from' => $request->user, 'user_id_to' => $this->user->id])
+            ->orWhere(function ($query) use ($request) {
+                $query->where(['user_id_from' => $request->user, 'user_id_to' => $this->user->id]);
+            })    
             ->with('messages.user')
             ->first();
         

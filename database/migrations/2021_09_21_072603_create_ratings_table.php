@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHelpfulsTable extends Migration
+class CreateRatingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,17 @@ class CreateHelpfulsTable extends Migration
      */
     public function up()
     {
-        Schema::create('helpfuls', function (Blueprint $table) {
+        Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('thread_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('value');
+            $table->unsignedBigInteger('product_id');
+            $table->decimal('value');
+            $table->string('content')->nullable();
             $table->timestamps();
-            
-            $table->foreign('thread_id')->references('id')->on('threads');
+
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->unique(['user_id', 'product_id']);
         });
     }
 
@@ -32,6 +34,6 @@ class CreateHelpfulsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('helpfuls');
+        Schema::dropIfExists('ratings');
     }
 }

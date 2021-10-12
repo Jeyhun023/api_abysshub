@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\Forum\ThreadController;
 use App\Http\Controllers\Api\Forum\AnswerController;
 //Chat
 use App\Http\Controllers\Api\Chat\ChatController;
+//Store
+use App\Http\Controllers\Api\Store\ProductController;
 
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +37,6 @@ Route::group(['prefix' => 'password'], function () {
 });
 
 Route::group(['middleware' => 'auth:api'], function ($router) {
-
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::get('/logout', [AuthController::class, 'logout']);
 
@@ -62,6 +63,7 @@ Route::group(['prefix' => 'forum'], function () {
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
         //Thread
         Route::post('/create', [ThreadController::class, 'store']); 
+        Route::post('/{product}/product/discuss', [ThreadController::class, 'productDiscuss']);
         Route::put('/{thread}/thread/edit', [ThreadController::class, 'update']); 
         Route::delete('/{thread}/thread/delete', [ThreadController::class, 'delete']); 
         Route::post('/{thread}/thread/vote', [ThreadController::class, 'vote']); 
@@ -89,4 +91,18 @@ Route::group(['prefix' => 'chat', 'middleware' => ['auth:api','verified']], func
     Route::get('/{chat}/{limit}/load', [ChatController::class, 'loadMessage']); 
 });
 
+//Product
+Route::group(['prefix' => 'store'], function () {
+    Route::get('/{product}/{slug}', [ProductController::class, 'show']); 
+
+    Route::group(['middleware' => ['auth:api','verified']], function ($router) {
+        Route::post('/{product}/product/review', [ProductController::class, 'review']); 
+        Route::post('/{product}/product/fullreview', [ProductController::class, 'fullReview']); 
+        
+        Route::post('/create', [ProductController::class, 'store']);
+        Route::post('/{product}/iterate', [ProductController::class, 'iterate']);
+        Route::put('/{product}/product/edit', [ProductController::class, 'update']); 
+        Route::delete('/{product}/product/delete', [ProductController::class, 'delete']); 
+    });
+});
 

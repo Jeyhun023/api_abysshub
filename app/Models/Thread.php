@@ -11,7 +11,7 @@ class Thread extends Model
 
     public $table = "threads";
 
-    protected $fillable = ['user_id', 'category_id','title','slug','content','tags','last_active_at'];
+    protected $fillable = ['user_id', 'product_id', 'category_id','title','slug','content','tags','last_active_at'];
     protected $guarded = ['accepted_answer_id', 'closed_at', 'answer_count', 'comment_count', 'view_count', 'upvote']; 
 
     protected $dates = ['last_active_at','closed_at'];
@@ -19,6 +19,11 @@ class Thread extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 
     public function category()

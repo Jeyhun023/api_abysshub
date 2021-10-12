@@ -39,4 +39,11 @@ return [
     'answer_error' => 'You do not have answer like this',
     'answer_update_success' => 'Successfully updated answer',
     'answer_delete_success' => 'Successfully deleted answer',
+    'product_store_success' => 'Successfully created product',
+    'product_update_success' => 'Successfully updated product',
+    'product_error' => 'You do not have product like this',
+    'rating_store_success' => 'Successfully created rating',
+    'iteration_store_success' => 'Iteration created successfully',
+    'product_delete_success' => 'Product successfully deleted',
+    'product_error' => 'You do not have product like this',
 ];
