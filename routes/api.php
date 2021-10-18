@@ -105,4 +105,3 @@ Route::group(['prefix' => 'store'], function () {
         Route::delete('/{product}/product/delete', [ProductController::class, 'delete']); 
     });
 });
-
