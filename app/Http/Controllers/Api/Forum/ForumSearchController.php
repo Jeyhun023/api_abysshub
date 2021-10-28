@@ -30,7 +30,7 @@ class ForumSearchController extends Controller
     public function index($query)
     {
         try {
-            $from = (request()->input('from') !=null ) ? request()->input('from') : 1;
+            $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
 
             $params = [
@@ -59,7 +59,7 @@ class ForumSearchController extends Controller
                 'max_score' => $response['hits']['max_score'], 
                 'results' => new ForumSearchCollection($response['hits']['hits'])
             ], null);
-            
+
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
