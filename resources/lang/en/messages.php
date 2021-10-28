@@ -46,4 +46,5 @@ return [
     'iteration_store_success' => 'Iteration created successfully',
     'product_delete_success' => 'Product successfully deleted',
     'product_error' => 'You do not have product like this',
+    'plagiat' => 'Plagiarism detected',
 ];

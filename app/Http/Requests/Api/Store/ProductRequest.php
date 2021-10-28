@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Store;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
+use App\Rules\PlagiarismCheck;
 
 class ProductRequest extends FormRequest
 {
@@ -27,7 +28,7 @@ class ProductRequest extends FormRequest
         return [
             'category_id' => 'required|exists:categories,id',
             'name' => ['required', 'string', 'max:255', new ProfanityCheck()],
-            'source_code' => 'required',
+            'source_code' => ['required', new PlagiarismCheck()],
             'description' => 'required',
             'price' => 'required|integer'
         ];

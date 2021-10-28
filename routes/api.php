@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\VerificationController;
 //Forum
 use App\Http\Controllers\Api\Forum\ThreadController;
 use App\Http\Controllers\Api\Forum\AnswerController;
+use App\Http\Controllers\Api\Forum\ForumSearchController;
 //Chat
 use App\Http\Controllers\Api\Chat\ChatController;
 //Store
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('/content-check', [CheckController::class, 'contentCheck']); 
 
 //Auth
 
@@ -44,15 +47,12 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
         Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
         Route::post('/resend', [VerificationController::class, 'resend'])->middleware('throttle:2,1');
     }); 
-
-    Route::group(['middleware' => 'verified'], function ($router) {
-        Route::get('/content-check', [CheckController::class, 'contentCheck']); 
-    });
 });
 
 //Forum
 Route::group(['prefix' => 'forum'], function () {
     //Thread
+    Route::get('/search/{query}', [ForumSearchController::class, 'index']); 
     Route::get('/', [ThreadController::class, 'index']); 
     Route::get('/{thread}/{slug}', [ThreadController::class, 'show']); 
     Route::get('/{thread}/thread/getcomment', [ThreadController::class, 'getComment']);
