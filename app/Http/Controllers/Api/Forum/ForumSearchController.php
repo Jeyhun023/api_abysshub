@@ -12,29 +12,40 @@ use App\Http\Resources\Forum\ForumSearchCollection;
 class ForumSearchController extends Controller
 {
     use ApiResponser;
+    public $hosts;
+    
+    public function __construct()
+    {
+        $this->hosts = [
+            [
+                'host' => env("ELASTICSEARCH_HOST"),
+                'port' => env("ELASTICSEARCH_PORT"),
+                'scheme' => env("ELASTICSEARCH_SCHEME"),
+                'user' => env("ELASTICSEARCH_USER"),
+                'pass' => env("ELASTICSEARCH_PASS")
+            ]
+        ];
+    }
 
     public function index($query)
     {
         try {
-            $hosts = [
-                [
-                    'host' => '13d6a30482e344d9b88a034ea728adc2.us-central1.gcp.cloud.es.io',
-                    'port' => '9243',
-                    'scheme' => 'https',
-                    // 'path' => '/threads',
-                    'user' => 'elastic',
-                    'pass' => 'Q2Wt03kuyuNxgqqeJcSzAeAj'
-                ]
-            ];
-    
-            $client = ClientBuilder::create()->setRetries(2)->setHosts($hosts)->build(); 
+            $from = (request()->input('from') !=null ) ? request()->input('from') : 1;
+            $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
 
             $params = [
                 'index' => 'threads',
-                'body'  => [
+                'size'  => 10,
+                'from'  => $from,
+                'body' => [
                     'query' => [
-                        'match' => [
-                            'title' => $query
+                        'bool' => [
+                            'should' => [
+                                [ 'multi_match' => [ 'query' => $query,
+                                        'fields' => ['title^3', 'tags','content']
+                                    ] 
+                                ],
+                            ]
                         ]
                     ]
                 ]
