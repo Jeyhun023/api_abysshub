@@ -52,8 +52,14 @@ class ForumSearchController extends Controller
             ];
             
             $response = $client->search($params);
-        
-            return $this->successResponse(new ForumSearchCollection($response['hits']['hits']), null);
+       
+            return $this->successResponse([
+                'total' => $response['hits']['total']['value'], 
+                'from'  => $from,
+                'max_score' => $response['hits']['max_score'], 
+                'results' => new ForumSearchCollection($response['hits']['hits'])
+            ], null);
+            
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
