@@ -61,8 +61,8 @@ class ProductController extends Controller
 
     public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
     {
-        $file = md5(time()).'txt';
-        Storage::disk('products')->put( 'temporary/'.$file .'.txt', $request->source_code);
+        $file = md5(time()).'.txt';
+        Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
 
         // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
         // $result = shell_exec( $url );
