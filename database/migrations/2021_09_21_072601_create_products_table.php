@@ -27,8 +27,7 @@ class CreateProductsTable extends Migration
             $table->integer('rate')->default(0)->nullable();
             $table->bigInteger('download_count')->default(0)->nullable();
             $table->bigInteger('view_count')->default(0)->nullable();
-            $table->integer('status')->default(0)->nullable();
-            $table->enum('status', [0, 1]);
+            $table->enum('status', [0, 1])->default(0);
             $table->timestamps();
             $table->softDeletes();
             
