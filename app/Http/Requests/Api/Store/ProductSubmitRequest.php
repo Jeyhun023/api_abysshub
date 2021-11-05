@@ -3,10 +3,9 @@
 namespace App\Http\Requests\Api\Store;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
 
-class ProductUpdateRequest extends FormRequest
+class ProductSubmitRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,7 +18,7 @@ class ProductUpdateRequest extends FormRequest
             'id' => $this->route('product')->id,
             'user_id' => auth()->user()->id
         ]);
-        return true;
+        return false;
     }
 
     /**
@@ -30,14 +29,10 @@ class ProductUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)],
-            'category_id' => [Rule::requiredIf($this->route('product')->status == 1), 'exists:categories,id'],
-            'name' => [Rule::requiredIf($this->route('product')->status == 1) , 'max:255', new ProfanityCheck()],
-            'description' => Rule::requiredIf($this->route('product')->status == 1),
-            'price' => [Rule::requiredIf($this->route('product')->status == 1), 'max:1000']
+            'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)]
         ];
     }
-
+    
     public function messages()
     {
         return [

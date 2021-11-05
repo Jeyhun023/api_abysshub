@@ -8,6 +8,10 @@ use App\Events\NewUserRegisteredEvent;
 use App\Listeners\SendVerificationMailListener;
 use App\Events\NewChatMessageEvent;
 use App\Listeners\SendMessageNotificationListener;
+use App\Events\NewSearchEvent;
+use App\Listeners\NewSearchListener;
+use App\Events\ThreadElasticEvent;
+use App\Listeners\ThreadElasticListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,6 +26,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewChatMessageEvent::class => [
             SendMessageNotificationListener::class
+        ],
+        NewSearchEvent::class => [
+            NewSearchListener::class
+        ],
+        ThreadElasticEvent::class => [
+            ThreadElasticListener::class
         ]
     ];
 

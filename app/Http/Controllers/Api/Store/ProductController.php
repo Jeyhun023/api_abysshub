@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Api\Store;
 
 use App\Models\Product;
 use App\Models\Rating;
-use App\Http\Requests\Api\Store\ProductRequest;
+use App\Http\Requests\Api\Store\ProductPlagiarismRequest;
+use App\Http\Requests\Api\Store\ProductSubmitRequest;
 use App\Http\Requests\Api\Store\RatingRequest;
 use App\Http\Requests\Api\Store\FullRatingRequest;
 use App\Http\Requests\Api\Store\ProductIterateRequest;
@@ -17,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -28,10 +30,89 @@ class ProductController extends Controller
         $this->user = auth('api')->user();
     }
 
-    public function store(ProductRequest $request)
+    public function store(Request $request)
+    {
+        try {
+
+
+            $product = Product::query()->create([
+                'user_id' => $this->user->id,
+                'shop_id' => $this->user->shop->id
+            ]);
+
+            // 'file' => $file,
+            // $product = Product::query()->create([
+            //     'user_id' => $this->user->id,
+            //     'category_id' => $request->category_id,  
+            //     'shop_id' => $this->user->shop->id,
+            //     'name' => $request->name, 
+            //     'slug' => Str::slug($request->name),
+            //     'source_code' => $request->source_code, 
+            //     'description' => $request->description, 
+            //     'price' => $request->price
+            // ]);
+            // new ProductResource($product)
+            
+            return $this->successResponse(new ProductResource($product), trans('messages.product_store_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
+    {
+        $file = md5(time()).'txt';
+        Storage::disk('products')->put( 'temporary/'.$file .'.txt', $request->source_code);
+
+        // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
+        // $result = shell_exec( $url );
+        $result = true;
+
+        if($result){
+            Storage::disk('products')->move('temporary/'.$file, 'live/'.$file);
+            Storage::disk('products')->delete('live/'.$product->file);
+            $product->file = $file;
+            $product->save();
+            return $this->successResponse(null, trans('messages.plagiat_success'));
+        }
+
+        Storage::disk('products')->delete('temporary/'.$file);
+        return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
+    }
+
+    public function update(Product $product, ProductUpdateRequest $request)
+    {
+        try {
+            $product->category_id = $request->category_id;
+            $product->name = $request->name;
+            $product->slug = Str::slug($request->name);
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->save();
+
+            return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function submit(Product $product, ProductSubmitRequest $request)
+    {
+        try {
+            $product->status = 1;
+            $product->save();
+
+            return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function iterate(Product $product, ProductIterateRequest $request)
     {
         try {
             $product = Product::query()->create([
+                'parent_id' => $product->id,
                 'user_id' => $this->user->id,
                 'category_id' => $request->category_id,  
                 'name' => $request->name, 
@@ -41,24 +122,19 @@ class ProductController extends Controller
                 'price' => $request->price
             ]);
 
-            return $this->successResponse(new ProductResource($product), trans('messages.product_store_success'));
+            return $this->successResponse(new ProductResource($product), trans('messages.iteration_store_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
-
-    public function update(Product $product, ProductUpdateRequest $request)
+    
+    
+    public function delete(Product $product, ProductDeleteRequest $request)
     {
         try {
-            $product->category_id = $request->category_id;
-            $product->name = $request->name;
-            $product->slug = Str::slug($request->name);
-            $product->source_code = $request->source_code;
-            $product->description = $request->description;
-            $product->price = $request->price;
-            $product->save();
+            $product->delete();
 
-            return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
+            return $this->successResponse(null, trans('messages.product_delete_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -102,37 +178,6 @@ class ProductController extends Controller
             );
 
             return $this->successResponse(new RatingResource($rating), trans('messages.rating_store_success'));
-        } catch (Exception $e) {
-            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-        }
-    }
-    
-    public function iterate(Product $product, ProductIterateRequest $request)
-    {
-        try {
-            $product = Product::query()->create([
-                'parent_id' => $product->id,
-                'user_id' => $this->user->id,
-                'category_id' => $request->category_id,  
-                'name' => $request->name, 
-                'slug' => Str::slug($request->name),
-                'source_code' => $request->source_code, 
-                'description' => $request->description, 
-                'price' => $request->price
-            ]);
-
-            return $this->successResponse(new ProductResource($product), trans('messages.iteration_store_success'));
-        } catch (Exception $e) {
-            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-        }
-    }
-
-    public function delete(Product $product, ProductDeleteRequest $request)
-    {
-        try {
-            $product->delete();
-
-            return $this->successResponse(null, trans('messages.product_delete_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

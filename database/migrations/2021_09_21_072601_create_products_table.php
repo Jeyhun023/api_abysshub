@@ -17,21 +17,25 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->bigInteger('parent_id')->nullable()->unsigned();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('category_id');
-            $table->string('name')->index();
-            $table->string('slug');
-            $table->longText('source_code');
-            $table->longText('description');
-            $table->decimal('price', 6, 2);
-            $table->integer('rate')->default(0);
-            $table->bigInteger('download_count')->default(0);
-            $table->bigInteger('view_count')->default(0);
+            $table->unsignedBigInteger('category_id')->nullable()->unsigned();
+            $table->unsignedBigInteger('shop_id')->nullable()->unsigned();
+            $table->string('name')->nullable();
+            $table->string('slug')->nullable();
+            $table->string('file')->nullable();
+            $table->longText('description')->nullable();
+            $table->decimal('price', 6, 2)->nullable();
+            $table->integer('rate')->default(0)->nullable();
+            $table->bigInteger('download_count')->default(0)->nullable();
+            $table->bigInteger('view_count')->default(0)->nullable();
+            $table->integer('status')->default(0)->nullable();
+            $table->enum('status', [0, 1]);
             $table->timestamps();
             $table->softDeletes();
             
             $table->foreign('parent_id')->nullable()->references('id')->on('products');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('category_id')->nullable()->references('id')->on('categories');
+            $table->foreign('shop_id')->nullable()->references('id')->on('shops');
             
         });
     }

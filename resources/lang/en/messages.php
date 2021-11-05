@@ -45,6 +45,8 @@ return [
     'rating_store_success' => 'Successfully created rating',
     'iteration_store_success' => 'Iteration created successfully',
     'product_delete_success' => 'Product successfully deleted',
+    'product_submitted_success' => 'Product successfully submitted',
     'product_error' => 'You do not have product like this',
-    'plagiat' => 'Plagiarism detected',
+    'plagiat_success' => 'Plagiarism not detected',
+    'plagiat_error' => 'Plagiarism detected',
 ];

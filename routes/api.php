@@ -100,8 +100,11 @@ Route::group(['prefix' => 'store'], function () {
         Route::post('/{product}/product/fullreview', [ProductController::class, 'fullReview']); 
         
         Route::post('/create', [ProductController::class, 'store']);
-        Route::post('/{product}/iterate', [ProductController::class, 'iterate']);
         Route::put('/{product}/product/edit', [ProductController::class, 'update']); 
+        Route::post('/{product}/product/plagiarism', [ProductController::class, 'plagiarismCheck']); 
+        Route::post('/{product}/product/submit', [ProductController::class, 'submit']); 
+
+        Route::post('/{product}/iterate', [ProductController::class, 'iterate']);
         Route::delete('/{product}/product/delete', [ProductController::class, 'delete']); 
     });
 });

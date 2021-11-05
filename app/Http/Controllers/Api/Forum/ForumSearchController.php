@@ -8,6 +8,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use Elasticsearch\ClientBuilder;
 use App\Http\Resources\Forum\ForumSearchCollection;
+use App\Events\NewSearchEvent;
 
 class ForumSearchController extends Controller
 {
@@ -52,7 +53,9 @@ class ForumSearchController extends Controller
             ];
             
             $response = $client->search($params);
-       
+
+            event(new NewSearchEvent($query));
+
             return $this->successResponse([
                 'total' => $response['hits']['total']['value'], 
                 'from'  => $from,

@@ -11,7 +11,7 @@ class Product extends Model
 
     public $table = "products";
 
-    protected $fillable = ['parent_id', 'user_id', 'category_id', 'name','slug','source_code','description','price'];
+    protected $fillable = ['parent_id', 'user_id', 'category_id', 'shop_id', 'file', 'name','slug','source_code','description','price'];
     protected $guarded = ['rate', 'view_count', 'download_count']; 
 
     public function user()
@@ -32,5 +32,10 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
     }
 }

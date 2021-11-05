@@ -7,11 +7,13 @@ use App\Http\Requests\Api\Auth\RegisterRequest;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Resources\Auth\UserResource;
 use App\Models\User;
+use App\Models\Shop;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -34,8 +36,15 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'password' => bcrypt($request->password),
             ]);
-
             $user->save();
+
+            $shop = new Shop([
+                'user_id' => $user->id,
+                'name' => $user->name."'s shop",
+                'slug' => Str::slug($user->name."'s shop")
+            ]);
+            $shop->save();
+
             $tokenResult = $user->createToken($this->pac);
 
             $success['user'] = new UserResource($user);

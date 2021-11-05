@@ -24,6 +24,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Events\ThreadElasticEvent;
 
 class ThreadController extends Controller
 {
@@ -60,8 +61,11 @@ class ThreadController extends Controller
                 'tags' => $request->tags,
                 'last_active_at' => now(),
             ]);
-
-            return $this->successResponse(new ThreadResource($thread), trans('messages.thread_store_success'));
+            $thread = new ThreadResource($thread);
+            
+            event(new ThreadElasticEvent($thread));
+            
+            return $this->successResponse($thread, trans('messages.thread_store_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -80,8 +84,11 @@ class ThreadController extends Controller
                 'tags' => $request->tags,
                 'last_active_at' => now(),
             ]);
+            $thread = new ThreadResource($thread);
 
-            return $this->successResponse(new ThreadResource($thread), trans('messages.thread_store_success'));
+            event(new ThreadElasticEvent($thread));
+
+            return $this->successResponse($thread, trans('messages.thread_store_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -96,8 +103,11 @@ class ThreadController extends Controller
             $thread->content = $request->content;
             $thread->tags = $request->tags;
             $thread->save();
+            $thread = new ThreadResource($thread);
 
-            return $this->successResponse(new ThreadResource($thread), trans('messages.thread_update_success'));
+            event(new ThreadElasticEvent($thread));
+
+            return $this->successResponse($thread, trans('messages.thread_update_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
