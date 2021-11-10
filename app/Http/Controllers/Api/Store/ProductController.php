@@ -33,26 +33,10 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
-
-
             $product = Product::query()->create([
                 'user_id' => $this->user->id,
                 'shop_id' => $this->user->shop->id
             ]);
-
-            // 'file' => $file,
-            // $product = Product::query()->create([
-            //     'user_id' => $this->user->id,
-            //     'category_id' => $request->category_id,  
-            //     'shop_id' => $this->user->shop->id,
-            //     'name' => $request->name, 
-            //     'slug' => Str::slug($request->name),
-            //     'source_code' => $request->source_code, 
-            //     'description' => $request->description, 
-            //     'price' => $request->price
-            // ]);
-            // new ProductResource($product)
-            
             return $this->successResponse(new ProductResource($product), trans('messages.product_store_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);

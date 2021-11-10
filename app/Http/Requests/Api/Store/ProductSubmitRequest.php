@@ -18,7 +18,7 @@ class ProductSubmitRequest extends FormRequest
             'id' => $this->route('product')->id,
             'user_id' => auth()->user()->id
         ]);
-        return false;
+        return true;
     }
 
     /**

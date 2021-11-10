@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
 Route::group(['prefix' => 'forum'], function () {
     //Thread
     Route::get('/search/{query}', [ForumSearchController::class, 'index']); 
+    Route::get('/user/{query}', [ForumSearchController::class, 'user']);
     Route::get('/', [ThreadController::class, 'index']); 
     Route::get('/{thread}/{slug}', [ThreadController::class, 'show']); 
     Route::get('/{thread}/thread/getcomment', [ThreadController::class, 'getComment']);

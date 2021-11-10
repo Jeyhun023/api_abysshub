@@ -10,6 +10,8 @@ use Elasticsearch\ClientBuilder;
 use App\Http\Resources\Forum\ForumSearchCollection;
 use App\Events\NewSearchEvent;
 
+use App\Models\User;
+
 class ForumSearchController extends Controller
 {
     use ApiResponser;
@@ -63,6 +65,18 @@ class ForumSearchController extends Controller
                 'results' => new ForumSearchCollection($response['hits']['hits'])
             ], null);
 
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    
+    public function user($query)
+    {
+        try {
+            $users = User::where('name', 'LIKE', '%' . $query . '%')->get();
+            
+            return $this->successResponse($users, null);
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
