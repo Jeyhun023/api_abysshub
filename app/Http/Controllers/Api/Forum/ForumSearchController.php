@@ -11,6 +11,7 @@ use App\Http\Resources\Forum\ForumSearchCollection;
 use App\Events\NewSearchEvent;
 
 use App\Models\User;
+use App\Models\Product;
 
 class ForumSearchController extends Controller
 {
@@ -77,6 +78,17 @@ class ForumSearchController extends Controller
             $users = User::where('name', 'LIKE', '%' . $query . '%')->get();
             
             return $this->successResponse($users, null);
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+      
+    public function product($query)
+    {
+        try {
+            $products = Product::where('name', 'LIKE', '%' . $query . '%')->get();
+            
+            return $this->successResponse($products, null);
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
