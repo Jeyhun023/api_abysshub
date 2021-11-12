@@ -17,6 +17,7 @@ class ForumSearchController extends Controller
 {
     use ApiResponser;
     public $hosts;
+    public $user;
     
     public function __construct()
     {
@@ -29,6 +30,7 @@ class ForumSearchController extends Controller
                 'pass' => env("ELASTICSEARCH_PASS")
             ]
         ];
+        $this->user = auth('api')->user();
     }
 
     public function index($query)
@@ -58,6 +60,12 @@ class ForumSearchController extends Controller
             $response = $client->search($params);
 
             event(new NewSearchEvent($query));
+
+            activity('thread')
+                ->event('search')
+                ->causedBy($this->user)
+                ->withProperties(['query' => $query ])
+                ->log( request()->ip() );
 
             return $this->successResponse([
                 'total' => $response['hits']['total']['value'], 
