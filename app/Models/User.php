@@ -54,12 +54,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return LogOptions::defaults()
         ->logOnly(['name', 'email'])
-        ->useLogName('user');
-    }
-
-    public function tapActivity($activity, string $eventName)
-    {
-        $activity->description = request()->ip();
+        ->useLogName('user')
+        ->setDescriptionForEvent(fn(string $eventName) => request()->ip() );
     }
 
     public function getInAdminroles()

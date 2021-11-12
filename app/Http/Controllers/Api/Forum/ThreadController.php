@@ -57,7 +57,7 @@ class ThreadController extends Controller
             ->causedBy($this->user)
             ->performedOn($thread)
             ->withProperties(['query' => request()->query('query') ])
-            ->log(request()->ip());
+            ->log( request()->ip() );
 
         return $this->successResponse(new ThreadResource($thread));
     }

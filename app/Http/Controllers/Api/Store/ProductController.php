@@ -141,7 +141,7 @@ class ProductController extends Controller
             ->causedBy($this->user)
             ->performedOn($product)
             ->withProperties(['query' => request()->query('query'), 'ref' => request()->query('ref')])
-            ->log(request()->ip());
+            ->log( request()->ip() );
 
         return $this->successResponse(new ProductResource($product));
     }
