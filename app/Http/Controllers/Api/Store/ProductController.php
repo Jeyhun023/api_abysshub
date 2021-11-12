@@ -136,6 +136,13 @@ class ProductController extends Controller
             ->firstOrFail();
         $product->increment('view_count');
 
+        activity('product')
+            ->event('show')
+            ->causedBy($this->user)
+            ->performedOn($product)
+            ->withProperties(['query' => request()->query('query'), 'ref' => request()->query('ref')])
+            ->log(request()->ip());
+
         return $this->successResponse(new ProductResource($product));
     }
     

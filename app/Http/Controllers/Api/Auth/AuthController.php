@@ -37,7 +37,7 @@ class AuthController extends Controller
                 'password' => bcrypt($request->password),
             ]);
             $user->save();
-
+            
             $shop = new Shop([
                 'user_id' => $user->id,
                 'name' => $user->name."'s shop",

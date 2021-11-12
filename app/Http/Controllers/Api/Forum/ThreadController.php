@@ -29,6 +29,12 @@ use App\Events\ThreadElasticEvent;
 class ThreadController extends Controller
 {
     use ApiResponser;
+    public $user;
+    
+    public function __construct()
+    {
+        $this->user = auth('api')->user();
+    }
 
     public function index()
     {
@@ -45,6 +51,13 @@ class ThreadController extends Controller
             ])
             ->firstOrFail();
         $thread->increment('view_count');
+        
+        activity('thread')
+            ->event('show')
+            ->causedBy($this->user)
+            ->performedOn($thread)
+            ->withProperties(['query' => request()->query('query') ])
+            ->log(request()->ip());
 
         return $this->successResponse(new ThreadResource($thread));
     }

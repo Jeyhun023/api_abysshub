@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -39,12 +41,26 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'email_verified_at' => 'datetime'
     ];
 
     protected $dispatchesEvents = [
         'created' => \App\Events\NewUserRegisteredEvent::class
     ];
+
+    protected static $recordEvents = ['created', 'updated'];
+    
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['name', 'email'])
+        ->useLogName('user');
+    }
+
+    public function tapActivity($activity, string $eventName)
+    {
+        $activity->description = request()->ip();
+    }
 
     public function getInAdminroles()
     {
