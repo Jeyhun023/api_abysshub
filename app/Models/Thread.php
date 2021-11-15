@@ -26,6 +26,11 @@ class Thread extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function linked()
+    {
+        return $this->hasMany(ThreadLinkedProduct::class);
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);

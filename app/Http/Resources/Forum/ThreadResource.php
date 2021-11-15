@@ -20,6 +20,7 @@ class ThreadResource extends JsonResource
             'id' => $this->id,
             'user' => new UserResource($this->user),
             'category' => new CategoryResource($this->category),
+            'linked_products' => $this->linked,
             'title' => $this->title,
             'slug' => $this->slug,
             'content' => $this->content,

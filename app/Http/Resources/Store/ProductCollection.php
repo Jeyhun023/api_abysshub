@@ -24,7 +24,6 @@ class ProductCollection extends ResourceCollection
                 'iterations' => $product->whenLoaded('iterations', new ProductCollection($product->iterations), null),
                 'name' => $product->name,
                 'slug' => $product->slug,
-                'source_code' => $product->source_code,
                 'description' => $product->description,
                 'price' => $product->price,
                 'rate' => $product->rate,

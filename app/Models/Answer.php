@@ -33,4 +33,9 @@ class Answer extends Model
     {
         return $this->hasMany(AnswersComment::class);
     }
+
+    public function linked()
+    {
+        return $this->hasMany(AnswerLinkedProduct::class);
+    }
 }

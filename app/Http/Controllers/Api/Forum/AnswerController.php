@@ -8,8 +8,10 @@ use App\Models\Answer;
 use App\Models\Thread;
 use App\Models\AnswersVote;
 use App\Models\AnswersComment;
+use App\Models\AnswerLinkedProduct;
 use App\Http\Resources\Forum\AnswerResource;
 use App\Http\Resources\Forum\AnswerCollection;
+use App\Http\Resources\Forum\LinkedProductCollection;
 use App\Http\Resources\Forum\AnswerCommentCollection;
 use App\Http\Resources\Forum\AnswerCommentResource;
 use App\Http\Requests\Api\Forum\AnswerRequest;
@@ -22,6 +24,7 @@ use App\Http\Requests\Api\Forum\AnswerCommentUpdateRequest;
 use App\Http\Requests\Api\Forum\AnswerCommentDeleteRequest;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
+use DB;
 
 class AnswerController extends Controller
 {
@@ -37,6 +40,13 @@ class AnswerController extends Controller
             ]);
             $thread->increment('answer_count');
 
+            foreach($request->linked_products as $product){
+                AnswerLinkedProduct::create([
+                    'answer_id' => $answer->id,
+                    'product_id' => $product
+                ]);
+            }
+            
             return $this->successResponse(new AnswerResource($answer), trans('messages.answer_store_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
@@ -147,8 +157,34 @@ class AnswerController extends Controller
     
     public function loadAnswers($thread)
     {
-        $loadAnswers = Answer::where('thread_id', $thread)->paginate(5);
-        
+        $loadAnswers = Answer::with('linked.product')->where('thread_id', $thread)->paginate(5);
+
         return new AnswerCollection($loadAnswers);
     }
+
+    public function loadProducts($thread)
+    {
+        $loadProducts = AnswerLinkedProduct::with('product')->whereHas('answer.thread', function ($q) use ($thread){
+                $q->where('id', $thread);   
+            })
+            ->select('product_id', DB::raw('count(*) as total'))
+            ->groupBy('product_id')
+            ->paginate(5);
+        
+        return new LinkedProductCollection($loadProducts);
+    }
+    
+    public function getAnswers($thread, $product)
+    {
+        $getAnswers = Answer::with('linked.product')
+            ->whereHas('thread', function ($q) use ($thread){
+                $q->where('id', $thread);   
+            },'linked', function ($q) use ($product){
+                $q->where('product_id', $product);   
+            }
+        )->get();
+        
+        return new AnswerCollection($getAnswers);
+    }
+
 }

@@ -19,6 +19,7 @@ class AnswerCollection extends ResourceCollection
             return [
                 'id' => $answer->id,
                 'user' => new UserResource($answer->user),
+                'linked_products' => $answer->linked,
                 'content' => $answer->content,
                 'upvote' => $answer->upvote,
                 'comment_count' => $answer->comment_count,

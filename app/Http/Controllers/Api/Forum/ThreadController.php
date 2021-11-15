@@ -6,6 +6,7 @@ use App\Models\Thread;
 use App\Models\Product;
 use App\Models\ThreadsVote;
 use App\Models\ThreadsComment;
+use App\Models\ThreadLinkedProduct;
 use App\Http\Requests\Api\Forum\ThreadVoteRequest;
 use App\Http\Requests\Api\Forum\ThreadUnvoteRequest;
 use App\Http\Requests\Api\Forum\ThreadCommentRequest;
@@ -44,14 +45,14 @@ class ThreadController extends Controller
     
     public function show($id, $slug)
     {
-        $thread = Thread::with(['category', 'user', 'userVotes'])
+        $thread = Thread::with(['category', 'user', 'userVotes', 'linked.product'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
             ])
             ->firstOrFail();
         $thread->increment('view_count');
-        
+       
         activity('thread')
             ->event('show')
             ->causedBy($this->user)
@@ -76,6 +77,13 @@ class ThreadController extends Controller
             ]);
             $thread = new ThreadResource($thread);
             
+            foreach($request->linked_products as $product){
+                ThreadLinkedProduct::create([
+                    'thread_id' => $thread->id,
+                    'product_id' => $product
+                ]);
+            }
+
             event(new ThreadElasticEvent($thread));
             
             return $this->successResponse($thread, trans('messages.thread_store_success'));

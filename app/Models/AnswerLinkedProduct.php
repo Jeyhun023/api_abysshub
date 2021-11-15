@@ -22,4 +22,9 @@ class AnswerLinkedProduct extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    
+    public function thread()
+    {
+        return $this->belongsToThrough(Answer::class, Thread::class);
+    }
 }
