@@ -11,7 +11,7 @@ class ThreadLinkedProduct extends Model
     
     public $table = "thread_linked_products";
     
-    protected $fillable = ['answer_id','thread_id'];
+    protected $fillable = ['thread_id', 'product_id'];
     
     public function thread()
     {
