@@ -77,11 +77,13 @@ class ThreadController extends Controller
             ]);
             $thread = new ThreadResource($thread);
             
-            foreach(json_decode($request->linked_products) as $product){
-                ThreadLinkedProduct::create([
-                    'thread_id' => $thread->id,
-                    'product_id' => $product
-                ]);
+            if ($request->has('linked_products')) {
+                foreach(json_decode($request->linked_products) as $product){
+                    AnswerLinkedProduct::create([
+                        'answer_id' => $answer->id,
+                        'product_id' => $product
+                    ]);
+                }
             }
 
             event(new ThreadElasticEvent($thread));
