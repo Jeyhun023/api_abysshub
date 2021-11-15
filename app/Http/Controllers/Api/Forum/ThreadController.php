@@ -77,7 +77,7 @@ class ThreadController extends Controller
             ]);
             $thread = new ThreadResource($thread);
             
-            foreach($request->linked_products as $product){
+            foreach(json_decode($request->linked_products) as $product){
                 ThreadLinkedProduct::create([
                     'thread_id' => $thread->id,
                     'product_id' => $product

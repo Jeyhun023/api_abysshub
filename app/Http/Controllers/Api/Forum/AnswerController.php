@@ -40,7 +40,7 @@ class AnswerController extends Controller
             ]);
             $thread->increment('answer_count');
 
-            foreach($request->linked_products as $product){
+            foreach(json_decode($request->linked_products) as $product){
                 AnswerLinkedProduct::create([
                     'answer_id' => $answer->id,
                     'product_id' => $product
