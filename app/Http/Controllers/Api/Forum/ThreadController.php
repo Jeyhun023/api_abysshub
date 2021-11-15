@@ -79,8 +79,8 @@ class ThreadController extends Controller
             
             if ($request->has('linked_products')) {
                 foreach(json_decode($request->linked_products) as $product){
-                    AnswerLinkedProduct::create([
-                        'answer_id' => $answer->id,
+                    ThreadLinkedProduct::create([
+                        'thread_id' => $thread->id,
                         'product_id' => $product
                     ]);
                 }
