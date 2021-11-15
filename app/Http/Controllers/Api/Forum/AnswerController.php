@@ -46,7 +46,7 @@ class AnswerController extends Controller
                     'product_id' => $product
                 ]);
             }
-            
+
             return $this->successResponse(new AnswerResource($answer), trans('messages.answer_store_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
@@ -182,7 +182,7 @@ class AnswerController extends Controller
             },'linked', function ($q) use ($product){
                 $q->where('product_id', $product);   
             }
-        )->get();
+        )->paginate(5);
         
         return new AnswerCollection($getAnswers);
     }
