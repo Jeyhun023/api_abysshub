@@ -2,7 +2,7 @@ import os
 import sys
 from importlib import import_module
 
-plagiarismdetect = import_module("/home/abysshub_023/.local/lib/python3.8/site-packages/plagiarismdetect")
+plagiarismdetect = import_module("plagiarismdetect")
 
 directory = os.path.normpath(os.path.join(__file__,'../../../../'))
 # {sys.argv[1]}
