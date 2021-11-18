@@ -1,10 +1,8 @@
 import os
 import sys
 
-print(os.path.dirname(os.__file__) + '/site-packages')
 
-
-sys.path.append("/home/abysshub_023/.local/lib/python3.8/site-packages")
+sys.path.append(os.path.dirname(os.__file__) + '/site-packages')
 
 from plagiarismdetect import CopyDetector
 
