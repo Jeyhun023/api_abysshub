@@ -1,6 +1,8 @@
 import os
-# import sys
+import sys
 from plagiarismdetect import CopyDetector
+
+sys.path.append("/home/abysshub_023/.local/lib/python3.8/site-packages")
 
 directory = os.path.normpath(os.path.join(__file__,'../../../../'))
 # {sys.argv[1]}
