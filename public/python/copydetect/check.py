@@ -1,6 +1,10 @@
-from copydetect import CopyDetector
+import os
+import sys
+from plagiarismdetect import CopyDetector
 
-detector = CopyDetector(test_dirs=["C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/tests"], display_t=1)
-detector.add_file("C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/filter.py")
+directory = os.path.normpath(os.path.join(__file__,'../../../../'))
+
+detector = CopyDetector(test_dirs=[f"{directory}/storage/app/products/live"], display_t=0.1)
+detector.add_file(f"{directory}/storage/app/products/temporary/{sys.argv[1]}")
 detector.run()
 detector.generate_html_report()
