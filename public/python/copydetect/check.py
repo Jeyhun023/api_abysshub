@@ -1,6 +1,6 @@
 import os
 import sys
-from detector import CopyDetector
+from plagiarismdetect import CopyDetector
 
 directory = os.path.normpath(os.path.join(__file__,'../../../../'))
 
