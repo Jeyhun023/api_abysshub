@@ -4,7 +4,6 @@ reference files (files that might have been plagairised from).
 """
 
 from pathlib import Path
-import .numpy as np
 import logging
 from .utils import (filter_code, highlight_overlap, get_copied_slices,
                     get_document_fingerprints, find_fingerprint_overlap)
