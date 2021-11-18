@@ -1,8 +1,9 @@
 import os
 import sys
-import site; 
-print(site.getsitepackages())
-sys.path.append(site.getsitepackages()[0])
+from distutils.sysconfig import get_python_lib
+print(get_python_lib())
+
+sys.path.append("/home/abysshub_023/.local/lib/python3.8/site-packages")
 
 from plagiarismdetect import CopyDetector
 
