@@ -50,7 +50,7 @@ class ProductController extends Controller
 
         $url = "python3 /var/www/abysshub/public/python/copydetect/check.py 2>&1";
         // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
-        $result = shell_exec( $url . $file );
+        $result = shell_exec( $url );
         return $result;
 
         $result = true;
