@@ -1,7 +1,8 @@
 import os
 import sys
-import distutils.sysconfig
-print (distutils.sysconfig.get_python_lib())
+
+print(os.path.dirname(os.__file__) + '/site-packages')
+
 
 sys.path.append("/home/abysshub_023/.local/lib/python3.8/site-packages")
 
