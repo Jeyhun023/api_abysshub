@@ -2,7 +2,7 @@ import os
 import sys
 import site; 
 print(site.getsitepackages())
-sys.path.append(site.getsitepackages())
+sys.path.append(site.getsitepackages()[0])
 
 from plagiarismdetect import CopyDetector
 
