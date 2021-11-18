@@ -1,6 +1,8 @@
 import os
 import sys
-sys.path.append("/home/abysshub_023/.local/lib/python3.8/site-packages")
+import site; 
+
+sys.path.append(site.getsitepackages())
 
 from plagiarismdetect import CopyDetector
 
