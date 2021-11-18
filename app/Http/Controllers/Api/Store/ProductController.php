@@ -49,7 +49,8 @@ class ProductController extends Controller
         Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
 
         $url = "python3 /var/www/abysshub/public/python/copydetect/check.py 2>&1";
-        $result = shell_exec( $url  );
+        // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
+        $result = shell_exec( $url . $file );
         return $result;
 
         $result = true;
