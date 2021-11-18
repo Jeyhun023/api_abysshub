@@ -5,7 +5,7 @@ reference files (files that might have been plagairised from).
 
 from pathlib import Path
 import sys
-sys.path.append("/home/abysshub_023/.local/lib/python3.8/site-packages/numpy")
+sys.path.append("/home/abysshub_023/.local/lib/python3.8/site-packages")
 import numpy as np
 import logging
 from .utils import (filter_code, highlight_overlap, get_copied_slices,
