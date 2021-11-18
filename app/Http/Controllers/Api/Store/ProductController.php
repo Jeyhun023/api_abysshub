@@ -48,10 +48,8 @@ class ProductController extends Controller
         $file = md5(time()).'.py';
         Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
 
-        $url = "python /var/www/abysshub/public/python/copydetect/check.py 2>&1";
-        echo $url;
+        $url = "python3 /var/www/abysshub/public/python/copydetect/check.py 2>&1";
         $result = shell_exec( $url . $file );
-        echo $file;
         return $result;
 
         $result = true;
