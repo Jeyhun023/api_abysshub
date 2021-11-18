@@ -1,5 +1,6 @@
 import os
 import sys
+from importlib import import_module
 
 plagiarismdetect = import_module("/home/abysshub_023/.local/lib/python3.8/site-packages/plagiarismdetect")
 
