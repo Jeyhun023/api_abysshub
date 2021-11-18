@@ -2,7 +2,6 @@
 a set of test files (files to check for plagairism) and a set of
 reference files (files that might have been plagairised from).
 """
-export PYTHONPATH=$PYTHONPATH:/home/abysshub_023/.local/lib/python3.8/site-packages
 from pathlib import Path
 import numpy as np
 import logging
