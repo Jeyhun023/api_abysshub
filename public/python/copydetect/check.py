@@ -1,6 +1,5 @@
-print("Hello world")
 import os
-import sys
+# import sys
 from plagiarismdetect import CopyDetector
 
 directory = os.path.normpath(os.path.join(__file__,'../../../../'))
