@@ -179,11 +179,11 @@ class AnswerController extends Controller
     public function getAnswers($thread, $product)
     {
         $getAnswers = Answer::with('linked.product')
-            ->whereHas('thread', function ($q) use ($thread){
+            ->whereHas(['thread', function ($q) use ($thread){
                 $q->where('id', $thread);   
             },'linked', function ($q) use ($product){
                 $q->where('product_id', $product);   
-            }
+            }]
         )->paginate(5);
         
         return new AnswerCollection($getAnswers);
