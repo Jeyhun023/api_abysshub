@@ -1,9 +1,9 @@
 import sys
 import os
-# sys.path.append("/home/abysshub_023/.local/lib/python3.10/site-packages")
+sys.path.append("/home/abysshub_023/.local/lib/python3.10/site-packages")
+print(sys.path)
 from plagiarismdetect import CopyDetector
 
-print(sys.argv[1])
 directory = os.path.normpath(os.path.join(__file__,'../../../../'))
 detector = CopyDetector(test_dirs=[f"{directory}/storage/app/products/live"], display_t=0.1)
 detector.add_file(f"{directory}/storage/app/products/temporary/{sys.argv[1]}", f"{sys.argv[2]}")
