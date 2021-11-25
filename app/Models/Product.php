@@ -11,8 +11,8 @@ class Product extends Model
 
     public $table = "products";
 
-    protected $fillable = ['user_id', 'shop_id', 'file', 'name','slug','description','price'];
-    protected $guarded = ['rate', 'download_count', 'status']; 
+    protected $fillable = ['user_id', 'shop_id', 'file', 'name','slug','description','price', 'status'];
+    protected $guarded = ['rate', 'download_count']; 
 
     public function user()
     {
