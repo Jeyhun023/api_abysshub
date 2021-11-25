@@ -92,7 +92,7 @@ class ProductController extends Controller
        
             switch (true) {
                 case $result <= 90:
-                    if($product->type != 2){
+                    if($product->status != 2){
                         Storage::disk('products')->delete($product->file);
                         $product->file = 'temporary/'.$file;
                         $product->status = 1;
@@ -110,7 +110,7 @@ class ProductController extends Controller
                     }
                     break;
                 case $result <= 100:
-                    if($product->type != 2){
+                    if($product->status != 2){
                         Storage::disk('products')->delete($product->file);
                         $product->file = 'temporary/'.$file;
                         $product->save();
