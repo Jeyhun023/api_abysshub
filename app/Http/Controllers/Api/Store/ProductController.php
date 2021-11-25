@@ -63,8 +63,8 @@ class ProductController extends Controller
         try {
             switch ($product->status) {
                 case 1:
-                    Storage::disk('products')->move($product->file, 'live/'.basename($product->file).PHP_EOL);
-                    $product->update(['status' => '2', 'file' => 'live/'.basename($product->file).PHP_EOL]);
+                    Storage::disk('products')->move($product->file, 'live/'.basename($product->file));
+                    $product->update(['status' => '2', 'file' => 'live/'.basename($product->file)]);
                     return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
                   break;
                 case 0:
@@ -84,7 +84,7 @@ class ProductController extends Controller
     public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
     {
         try {
-            $file = md5(time()).'.'.$request->extension;
+            $file = trim(md5(time()).'.'.$request->extension);
             Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
             $url = "python3 /var/www/abysshub/public/python/copydetect/check.py ";
             // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
