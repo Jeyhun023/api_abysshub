@@ -94,7 +94,7 @@ class ProductController extends Controller
                 case $result <= 90:
                     if($product->status != 2){
                         Storage::disk('products')->delete($product->file);
-                        $product->update(['status' => 1, 'file' => 'temporary/'.$file]);
+                        $product->update(['status' => '1', 'file' => 'temporary/'.$file]);
                     }else{
                         Storage::disk('products')->move('temporary/'.$file, 'live/'.$file);
                         Storage::disk('products')->delete($product->file);
