@@ -63,8 +63,8 @@ class ProductController extends Controller
         try {
             switch ($product->status) {
                 case 1:
-                    $product->status = 2;
-                    $product->save();
+                    Storage::disk('products')->move($product->file, 'live/'.basename($product->file).PHP_EOL);
+                    $product->update(['status' => '2', 'file' => 'live/'.basename($product->file).PHP_EOL]);
                     return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
                   break;
                 case 0:
@@ -110,8 +110,7 @@ class ProductController extends Controller
                 case $result <= 100:
                     if($product->status != 2){
                         Storage::disk('products')->delete($product->file);
-                        $product->file = 'temporary/'.$file;
-                        $product->save();
+                        $product->update(['file' => 'temporary/'.$file]);
                     }else{
                         Storage::disk('products')->delete('temporary/'.$file);
                     }
