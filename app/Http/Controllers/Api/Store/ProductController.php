@@ -100,7 +100,7 @@ class ProductController extends Controller
                         Storage::disk('products')->delete($product->file);
                         $product->update(['file' => 'live/'.$file]);
                     }
-                    return $product;
+                    return Product::find($product->id);
                     if($result <= 40){
                         return $this->successResponse($result, trans('messages.plagiat_success'));
                     }else{
