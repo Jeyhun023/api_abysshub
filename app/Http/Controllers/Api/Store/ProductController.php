@@ -84,9 +84,6 @@ class ProductController extends Controller
     public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
     {
         try {
-            $product->status = 1;
-            $product->save();
-            return $product;
             $file = md5(time()).'.'.$request->extension;
             Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
             $url = "python3 /var/www/abysshub/public/python/copydetect/check.py ";
@@ -97,14 +94,12 @@ class ProductController extends Controller
                 case $result <= 90:
                     if($product->status != 2){
                         Storage::disk('products')->delete($product->file);
-                        $product->file = 'temporary/'.$file;
-                        $product->status = 1;
+                        $product->update(['status' => 1, 'file' => 'temporary/'.$file]);
                     }else{
                         Storage::disk('products')->move('temporary/'.$file, 'live/'.$file);
                         Storage::disk('products')->delete($product->file);
-                        $product->file = 'live/'.$file;
+                        $product->update(['file' => 'live/'.$file]);
                     }
-                    $product->save();
 
                     if($result <= 40){
                         return $this->successResponse($result, trans('messages.plagiat_success'));
