@@ -86,7 +86,7 @@ class ProductController extends Controller
         try {
             $product->status = 1;
             $product->save();
-
+            return $product->status;
             $file = md5(time()).'.'.$request->extension;
             Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
             $url = "python3 /var/www/abysshub/public/python/copydetect/check.py ";
