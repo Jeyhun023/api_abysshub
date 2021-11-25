@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Forum\ForumSearchController;
 use App\Http\Controllers\Api\Chat\ChatController;
 //Store
 use App\Http\Controllers\Api\Store\ProductController;
+use App\Http\Controllers\Api\Store\IterationController;
 
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
@@ -108,7 +109,7 @@ Route::group(['prefix' => 'store'], function () {
         Route::post('/{product}/product/plagiarism', [ProductController::class, 'plagiarismCheck']); 
         Route::post('/{product}/product/submit', [ProductController::class, 'submit']); 
 
-        Route::post('/{product}/iterate', [ProductController::class, 'iterate']);
+        Route::post('/{product}/iterate', [IterationController::class, 'store']);
         Route::delete('/{product}/product/delete', [ProductController::class, 'delete']); 
     });
 });

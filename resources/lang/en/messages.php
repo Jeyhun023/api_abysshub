@@ -49,4 +49,6 @@ return [
     'product_error' => 'You do not have product like this',
     'plagiat_success' => 'Plagiarism not detected',
     'plagiat_error' => 'Plagiarism detected',
+    'product_already_submitted' => 'Your product have already submitted',
+    'can_be_iteration' => 'Your product can be iteration',
 ];

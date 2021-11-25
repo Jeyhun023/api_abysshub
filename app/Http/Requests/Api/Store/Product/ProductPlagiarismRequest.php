@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Store;
+namespace App\Http\Requests\Api\Store\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
 
-class ProductUpdateRequest extends FormRequest
+class ProductPlagiarismRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,10 +31,8 @@ class ProductUpdateRequest extends FormRequest
     {
         return [
             'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)],
-            'category_id' => [Rule::requiredIf($this->route('product')->status == 1), 'exists:categories,id'],
-            'name' => [Rule::requiredIf($this->route('product')->status == 1) , 'max:255', new ProfanityCheck()],
-            'description' => Rule::requiredIf($this->route('product')->status == 1),
-            'price' => [Rule::requiredIf($this->route('product')->status == 1), 'max:1000']
+            'source_code' => 'required',
+            'extension' => ['required',  Rule::in(['php', 'js', 'py'])] 
         ];
     }
 

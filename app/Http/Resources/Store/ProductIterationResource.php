@@ -4,9 +4,8 @@ namespace App\Http\Resources\Store;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Auth\UserResource;
-use App\Http\Resources\Forum\ThreadCollection;
 
-class ProductResource extends JsonResource
+class ProductIterationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,12 +18,9 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => new UserResource($this->user),
-            // 'iterations' => $this->whenLoaded('iterations', new ProductCollection($this->iterations), null),
-            'threads' => $this->whenLoaded('threads', new ThreadCollection($this->threads), null),
             'name' => $this->name,
             'slug' => $this->slug,
-            'description' => $this->description,
-            'price' => $this->price,
+            'note' => $this->note,
             'rate' => $this->rate,
             'download_count' => $this->download_count,
             'created_at' => $this->created_at->format('d/m/Y'),

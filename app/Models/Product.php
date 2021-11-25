@@ -11,8 +11,8 @@ class Product extends Model
 
     public $table = "products";
 
-    protected $fillable = ['parent_id', 'user_id', 'category_id', 'shop_id', 'file', 'name','slug','description','price'];
-    protected $guarded = ['rate', 'view_count', 'download_count']; 
+    protected $fillable = ['user_id', 'shop_id', 'file', 'name','slug','description','price'];
+    protected $guarded = ['rate', 'download_count', 'status']; 
 
     public function user()
     {
@@ -21,17 +21,12 @@ class Product extends Model
 
     public function iterations()
     {
-        return $this->hasMany(Product::class, 'parent_id', 'id');
+        return $this->hasMany(ProductIteration::class);
     }
 
     public function threads()
     {
         return $this->hasMany(Thread::class);
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
     }
 
     public function shop()

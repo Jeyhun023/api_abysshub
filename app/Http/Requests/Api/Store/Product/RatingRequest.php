@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Store;
+namespace App\Http\Requests\Api\Store\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProductDeleteRequest extends FormRequest
+class RatingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,8 +15,7 @@ class ProductDeleteRequest extends FormRequest
     public function authorize()
     {
         $this->merge([
-            'id' => $this->route('product')->id,
-            'user_id' => auth()->user()->id
+            'id' => $this->route('product')->id
         ]);
         return true;
     }
@@ -29,14 +28,8 @@ class ProductDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)]
-        ];
-    }
-    
-    public function messages()
-    {
-        return [
-            'id.exists' => trans('messages.product_error'),
+            'id' => ['required', Rule::exists('products')],
+            'value' => ['required',  Rule::in([1, 2, 3, 4, 5])] 
         ];
     }
 }

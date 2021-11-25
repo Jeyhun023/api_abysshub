@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api\Store;
 
 use App\Models\Product;
+use App\Models\ProductIteration;
 use App\Models\Rating;
-use App\Http\Requests\Api\Store\ProductPlagiarismRequest;
-use App\Http\Requests\Api\Store\ProductSubmitRequest;
-use App\Http\Requests\Api\Store\RatingRequest;
-use App\Http\Requests\Api\Store\FullRatingRequest;
-use App\Http\Requests\Api\Store\ProductIterateRequest;
-use App\Http\Requests\Api\Store\ProductUpdateRequest;
-use App\Http\Requests\Api\Store\ProductDeleteRequest;
+use App\Http\Requests\Api\Store\Product\ProductPlagiarismRequest;
+use App\Http\Requests\Api\Store\Product\ProductSubmitRequest;
+use App\Http\Requests\Api\Store\Product\RatingRequest;
+use App\Http\Requests\Api\Store\Product\FullRatingRequest;
+use App\Http\Requests\Api\Store\Product\ProductUpdateRequest;
+use App\Http\Requests\Api\Store\Product\ProductDeleteRequest;
 use App\Http\Resources\Store\ProductResource;
 use App\Http\Resources\Store\RatingResource;
 use Illuminate\Support\Str;
@@ -43,34 +43,9 @@ class ProductController extends Controller
         }
     }
 
-    public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
-    {
-        $file = md5(time()).'.py';
-        Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
-
-        $url = "python3 /var/www/abysshub/public/python/copydetect/check.py ";
-        // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
-        $result = shell_exec( $url . $file);
-        // return $result;
-
-        $result = true;
-
-        if($result){
-            Storage::disk('products')->move('temporary/'.$file, 'live/'.$file);
-            Storage::disk('products')->delete('live/'.$product->file);
-            $product->file = $file;
-            $product->save();
-            return $this->successResponse(null, trans('messages.plagiat_success'));
-        }
-
-        Storage::disk('products')->delete('temporary/'.$file);
-        return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
-    }
-
     public function update(Product $product, ProductUpdateRequest $request)
     {
         try {
-            $product->category_id = $request->category_id;
             $product->name = $request->name;
             $product->slug = Str::slug($request->name);
             $product->description = $request->description;
@@ -86,36 +61,73 @@ class ProductController extends Controller
     public function submit(Product $product, ProductSubmitRequest $request)
     {
         try {
-            $product->status = 1;
-            $product->save();
-
-            return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
+            switch ($product->status) {
+                case 1:
+                    $product->status = 2;
+                    $product->save();
+                    return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
+                  break;
+                case 0:
+                    return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
+                  break;
+                case 2:
+                    return $this->errorResponse(["failed" => [trans('messages.product_already_submitted')] ]);
+                  break;
+                default:
+                    return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+            }
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
 
-    public function iterate(Product $product, ProductIterateRequest $request)
+    public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
     {
         try {
-            $product = Product::query()->create([
-                'parent_id' => $product->id,
-                'user_id' => $this->user->id,
-                'category_id' => $request->category_id,  
-                'name' => $request->name, 
-                'slug' => Str::slug($request->name),
-                'source_code' => $request->source_code, 
-                'description' => $request->description, 
-                'price' => $request->price
-            ]);
+            $file = md5(time()).'.'.$request->extension;
+            Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
+            // $url = "python3 /var/www/abysshub/public/python/copydetect/check.py ";
+            $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
+            $result = shell_exec( $url . $file .' '. basename($product->file).PHP_EOL );        
+       
+            switch (true) {
+                case $result <= 90:
+                    if($product->type != 2){
+                        Storage::disk('products')->delete($product->file);
+                        $product->file = 'temporary/'.$file;
+                        $product->status = 1;
+                    }else{
+                        Storage::disk('products')->move('temporary/'.$file, 'live/'.$file);
+                        Storage::disk('products')->delete($product->file);
+                        $product->file = 'live/'.$file;
+                    }
+                    $product->save();
 
-            return $this->successResponse(new ProductResource($product), trans('messages.iteration_store_success'));
+                    if($result <= 40){
+                        return $this->successResponse($result, trans('messages.plagiat_success'));
+                    }else{
+                        return $this->successResponse($result, trans('messages.can_be_iteration'));
+                    }
+                    break;
+                case $result <= 100:
+                    if($product->type != 2){
+                        Storage::disk('products')->delete($product->file);
+                        $product->file = 'temporary/'.$file;
+                        $product->save();
+                    }else{
+                        Storage::disk('products')->delete('temporary/'.$file);
+                    }
+                    return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
+                    break;
+                default:
+                    return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+                    break;
+            }
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
-    
-    
+
     public function delete(Product $product, ProductDeleteRequest $request)
     {
         try {
@@ -137,7 +149,6 @@ class ProductController extends Controller
                 'slug' => $slug
             ])
             ->firstOrFail();
-        $product->increment('view_count');
 
         activity('product')
             ->event('show')

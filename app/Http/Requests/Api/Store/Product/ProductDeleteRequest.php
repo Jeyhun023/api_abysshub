@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Store;
+namespace App\Http\Requests\Api\Store\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
 
-class ProductPlagiarismRequest extends FormRequest
+class ProductDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,11 +29,10 @@ class ProductPlagiarismRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)],
-            'source_code' => 'required',
+            'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)]
         ];
     }
-
+    
     public function messages()
     {
         return [

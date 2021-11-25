@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Store;
+namespace App\Http\Requests\Api\Store\Iteration;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Rules\ProfanityCheck;
 
-class RatingRequest extends FormRequest
+class ProductIterateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +30,9 @@ class RatingRequest extends FormRequest
     {
         return [
             'id' => ['required', Rule::exists('products')],
-            'value' => ['required',  Rule::in([1, 2, 3, 4, 5])] 
+            'name' => ['required', 'string', 'max:255', new ProfanityCheck()],
+            'note' => ['required', 'string', new ProfanityCheck()],
+            'source_code' => 'required'
         ];
     }
 }
