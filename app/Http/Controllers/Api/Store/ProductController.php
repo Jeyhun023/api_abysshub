@@ -88,8 +88,8 @@ class ProductController extends Controller
             Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
             $url = "python3 /var/www/abysshub/public/python/copydetect/check.py ";
             // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
-            $result = shell_exec( $url . $file .' '. basename($product->file).PHP_EOL );        
-       
+            $result = shell_exec( $url . $file .' '. basename($product->file) );        
+            return $result;
             switch (true) {
                 case $result <= 90:
                     if($product->status != 2){
