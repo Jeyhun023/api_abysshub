@@ -18,7 +18,7 @@ class StoreSearchCollection extends ResourceCollection
             return [
                 'id' => $result['_id'],
                 'score' => $result['_score'],
-                'title' => $result['_source']['title'],
+                'name' => $result['_source']['name'],
                 'slug' => $result['_source']['slug'],
                 'description' => $result['_source']['description'],
                 'download_count' => $result['_source']['download_count'],

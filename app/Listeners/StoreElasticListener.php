@@ -42,7 +42,7 @@ class StoreElasticListener implements ShouldQueue
         $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
         $params['index'] = 'products';
         $params['id'] = $event->data->id;
-        $params['body']['title'] = $event->data->title;
+        $params['body']['name'] = $event->data->name;
         $params['body']['slug'] = $event->data->slug;
         $params['body']['description'] = $event->data->description;
         $params['body']['tags'] = $event->data->tags;

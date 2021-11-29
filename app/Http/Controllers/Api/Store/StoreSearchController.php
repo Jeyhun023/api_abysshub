@@ -47,7 +47,7 @@ class StoreSearchController extends Controller
                         'bool' => [
                             'should' => [
                                 [ 'multi_match' => [ 'query' => $query,
-                                        'fields' => ['title^3', 'tags','description']
+                                        'fields' => ['name^3', 'tags','description']
                                     ] 
                                 ],
                             ]
