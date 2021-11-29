@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Chat\ChatController;
 //Store
 use App\Http\Controllers\Api\Store\ProductController;
 use App\Http\Controllers\Api\Store\IterationController;
+use App\Http\Controllers\Api\Store\StoreSearchController;
 
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
@@ -98,6 +99,7 @@ Route::group(['prefix' => 'chat', 'middleware' => ['auth:api','verified']], func
 
 //Product
 Route::group(['prefix' => 'store'], function () {
+    Route::get('/search/{query}', [StoreSearchController::class, 'index']); 
     Route::get('/{product}/{slug}', [ProductController::class, 'show']); 
 
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
