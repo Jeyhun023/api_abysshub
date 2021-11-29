@@ -89,8 +89,8 @@ class ProductController extends Controller
             $url = "python3 /var/www/abysshub/public/python/copydetect/check.py ";
             // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
             $result = shell_exec( $url . $file .' '. basename($product->file) );        
-            $result = 95;
-            
+            $result = 35;
+
             switch (true) {
                 case $result <= 90:
                     if($product->status != 2){
