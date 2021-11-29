@@ -12,6 +12,8 @@ use App\Events\NewSearchEvent;
 use App\Listeners\NewSearchListener;
 use App\Events\ThreadElasticEvent;
 use App\Listeners\ThreadElasticListener;
+use App\Events\StoreElasticEvent;
+use App\Listeners\StoreElasticListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ThreadElasticEvent::class => [
             ThreadElasticListener::class
+        ],
+        StoreElasticEvent::class => [
+            StoreElasticListener::class
         ]
     ];
 
