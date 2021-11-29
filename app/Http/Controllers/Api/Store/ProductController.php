@@ -19,6 +19,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Events\StoreElasticEvent;
 
 class ProductController extends Controller
 {
@@ -65,6 +66,7 @@ class ProductController extends Controller
                 case 1:
                     Storage::disk('products')->move($product->file, 'live/'.basename($product->file));
                     $product->update(['status' => '2', 'file' => 'live/'.basename($product->file)]);
+                    event(new StoreElasticEvent($product));
                     return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
                   break;
                 case 0:
