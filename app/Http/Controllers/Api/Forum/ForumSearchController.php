@@ -65,7 +65,7 @@ class ForumSearchController extends Controller
             ];
             
             $response = $client->search($params);
-            return $response;
+         
             event(new NewSearchEvent($query));
 
             activity('thread')
