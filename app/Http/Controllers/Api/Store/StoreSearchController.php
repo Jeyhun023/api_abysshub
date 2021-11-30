@@ -32,9 +32,10 @@ class StoreSearchController extends Controller
         $this->user = auth('api')->user();
     }
 
-    public function index($query)
+    public function index()
     {
         try {
+            $query = (request()->input('query') !=null ) ? request()->input('query') : 0;
             $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
 
@@ -57,7 +58,7 @@ class StoreSearchController extends Controller
             ];
             
             $response = $client->search($params);
-            // event(new NewSearchEvent($query));
+            event(new NewSearchEvent($query));
 
             activity('store')
                 ->event('search')

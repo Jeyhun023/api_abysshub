@@ -54,7 +54,7 @@ Route::group(['middleware' => 'auth:api'], function ($router) {
 //Forum
 Route::group(['prefix' => 'forum'], function () {
     //Thread
-    Route::get('/search/{query}', [ForumSearchController::class, 'index']); 
+    Route::get('/search', [ForumSearchController::class, 'index']); 
     Route::get('/user/{query}', [ForumSearchController::class, 'user']);
     Route::get('/product/{query}', [ForumSearchController::class, 'product']);
     Route::get('/', [ThreadController::class, 'index']); 
@@ -99,7 +99,7 @@ Route::group(['prefix' => 'chat', 'middleware' => ['auth:api','verified']], func
 
 //Product
 Route::group(['prefix' => 'store'], function () {
-    Route::get('/search/{query}', [StoreSearchController::class, 'index']); 
+    Route::get('/search', [StoreSearchController::class, 'index']); 
     Route::get('/{product}/{slug}', [ProductController::class, 'show']); 
 
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {

@@ -25,7 +25,7 @@ class CreateProductsTable extends Migration
             $table->integer('rate')->default(0)->nullable();
             $table->bigInteger('download_count')->default(0)->nullable();
             $table->enum('status', [0, 1, 2])->default(0);
-            $table->string('tags', 75);
+            $table->json('tags');
             $table->timestamps();
             $table->softDeletes();
             

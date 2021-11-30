@@ -33,9 +33,10 @@ class ForumSearchController extends Controller
         $this->user = auth('api')->user();
     }
 
-    public function index($query)
+    public function index()
     {
         try {
+            $query = (request()->input('query') !=null ) ? request()->input('query') : 0;
             $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
 
@@ -46,6 +47,12 @@ class ForumSearchController extends Controller
                 'body' => [
                     'query' => [
                         'bool' => [
+                            // "should" => [
+                            //     [ "term" => [ "tags" => "important" ] ],
+                            //     [ "term" => [ "tags" => "revisit" ] ]
+                            // ],
+                            // "minimum_should_match" => 1,
+                            // "boost" => 1.0
                             'should' => [
                                 [ 'multi_match' => [ 'query' => $query,
                                         'fields' => ['title^3', 'tags','content']
@@ -58,7 +65,7 @@ class ForumSearchController extends Controller
             ];
             
             $response = $client->search($params);
-
+            return $response;
             event(new NewSearchEvent($query));
 
             activity('thread')

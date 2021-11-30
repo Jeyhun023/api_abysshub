@@ -19,7 +19,7 @@ class CreateThreadsTable extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('title', 255);
             $table->text('content');
-            $table->string('tags', 75);
+            $table->json('tags');
             $table->string('slug', 300);
             
             $table->integer('answer_count')->default(0);

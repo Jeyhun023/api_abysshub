@@ -48,6 +48,7 @@ class ProductController extends Controller
     {
         try {
             $product->name = $request->name;
+            $product->tags = $request->tags;
             $product->slug = Str::slug($request->name);
             $product->description = $request->description;
             $product->price = $request->price;
@@ -187,4 +188,3 @@ class ProductController extends Controller
         }
     }
 }
-
