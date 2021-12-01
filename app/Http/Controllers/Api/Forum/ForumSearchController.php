@@ -63,19 +63,24 @@ class ForumSearchController extends Controller
             $thread->tags = $tags;
             $thread->save();
 
-            $params['index'] = 'products';
+            $params['index'] = 'threads';
             $params['id'] = $thread->id;
-            $params['body']['name'] = $thread->name;
+            $params['body']['title'] = $thread->title;
             $params['body']['slug'] = $thread->slug;
-            $params['body']['description'] = $thread->description;
-            $params['body']['tags'] = $tags;
+            $params['body']['content'] = $thread->content;
+            $params['body']['tags'] = $thread->tags;
             $params['body']['user'] = $thread->user;
-            $params['body']['shop'] = $thread->shop;
-            $params['body']['price'] = $thread->price;
-            $params['body']['rate'] = $thread->rate;
-            $params['body']['download_count'] = $thread->download_count;
+            $params['body']['category'] = $thread->category;
+            $params['body']['product'] = $thread->product;
+            $params['body']['accepted_answer_id'] = $thread->accepted_answer_id;
+            $params['body']['upvote'] = $thread->upvote;
+            $params['body']['comment_count'] = $thread->comment_count;
+            $params['body']['view_count'] = $thread->view_count;
+            $params['body']['answer_count'] = $thread->answer_count;
+            $params['body']['last_active_at'] = $thread->last_active_at;
             $params['body']['created_at'] = $thread->created_at;
             $params['body']['updated_at'] = $thread->updated_at;
+            $params['body']['closed_at'] = $thread->closed_at;
             $params['body']['deleted_at'] = $thread->deleted_at;
     
             $client->index($params);
