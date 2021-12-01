@@ -40,25 +40,49 @@ class ForumSearchController extends Controller
         $threads = Thread::with(['answers' => function($query) {
             $query->with('linked');
             $query->with('comments');
-        }])->get();
+        },'user', 'shop'])->get();
+        $i = 1;
+        $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
         foreach($threads as $thread) {
-            // if($thread->answers->isNotEmpty()){
-            //     if($thread->answers->first()->linked->isNotEmpty()){
-            //         foreach($thread->answers->first()->linked as $linked){
-            //             $linked->delete();
-            //         }
-            //     }
-            //     if($thread->answers->first()->comments->isNotEmpty()){
-            //         foreach($thread->answers->first()->comments as $comment){
-            //             $comment->delete();
-            //         }
-            //     }
-            //     $thread->answers->first()->delete();   
-            //     $thread->decrement('answer_count');
-            // }
-            $tags = $thread->tags;
-            return $tags;
+            if($thread->answers->isNotEmpty()){
+                if($thread->answers->first()->linked->isNotEmpty()){
+                    foreach($thread->answers->first()->linked as $linked){
+                        $linked->delete();
+                    }
+                }
+                if($thread->answers->first()->comments->isNotEmpty()){
+                    foreach($thread->answers->first()->comments as $comment){
+                        $comment->delete();
+                    }
+                }
+                $thread->answers->first()->delete();   
+                $thread->decrement('answer_count');
+            }
 
+            $tags = collect(json_decode($thread->getRawOriginal('tags')));
+            $thread->tags = $tags;
+            $thread->save();
+
+            $params['index'] = 'products';
+            $params['id'] = $thread->id;
+            $params['body']['name'] = $thread->name;
+            $params['body']['slug'] = $thread->slug;
+            $params['body']['description'] = $thread->description;
+            $params['body']['tags'] = $tags;
+            $params['body']['user'] = $thread->user;
+            $params['body']['shop'] = $thread->shop;
+            $params['body']['price'] = $thread->price;
+            $params['body']['rate'] = $thread->rate;
+            $params['body']['download_count'] = $thread->download_count;
+            $params['body']['created_at'] = $thread->created_at;
+            $params['body']['updated_at'] = $thread->updated_at;
+            $params['body']['deleted_at'] = $thread->deleted_at;
+    
+            $client->index($params);
+
+            echo $tags;
+            echo $i;
+            $i++;
         }
 
         return "yes";
@@ -75,16 +99,16 @@ class ForumSearchController extends Controller
                     'query' => [
                         'bool' => [
                             "should" => [
-                                [ "term" => [ "tags" => "java" ] ],
-                                [ "term" => [ "tags" => "php" ] ],
+                                // [ "term" => [ "tags" => "java" ] ],
+                                // [ "term" => [ "tags" => "php" ] ],
                                 [ "multi_match" => [
                                         "query" => $query, 
                                         "fields" => ['title^3', 'tags','content']
                                     ]
                                 ],
                             ],
-                            "minimum_should_match" => 2,
-                            "boost" => 1.0
+                            // "minimum_should_match" => 2,
+                            // "boost" => 1.0
                         ],
                     
                     ]
