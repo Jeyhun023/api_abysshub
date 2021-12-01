@@ -13,6 +13,8 @@ use App\Events\NewSearchEvent;
 use App\Models\User;
 use App\Models\Product;
 
+use App\Models\Thread;
+
 class ForumSearchController extends Controller
 {
     use ApiResponser;
@@ -33,10 +35,35 @@ class ForumSearchController extends Controller
         $this->user = auth('api')->user();
     }
 
-    public function index()
+    public function change()
     {
+        $threads = Thread::with(['answers' => function($query) {
+            $query->with('linked');
+            $query->with('comments');
+        }])->get();
+        foreach($threads as $thread) {
+            // if($thread->answers->isNotEmpty()){
+            //     if($thread->answers->first()->linked->isNotEmpty()){
+            //         foreach($thread->answers->first()->linked as $linked){
+            //             $linked->delete();
+            //         }
+            //     }
+            //     if($thread->answers->first()->comments->isNotEmpty()){
+            //         foreach($thread->answers->first()->comments as $comment){
+            //             $comment->delete();
+            //         }
+            //     }
+            //     $thread->answers->first()->delete();   
+            //     $thread->decrement('answer_count');
+            // }
+            $tags = $thread->tags;
+            return $tags;
+
+        }
+
+        return "yes";
         try {
-            $query = (request()->input('query') !=null ) ? request()->input('query') : 0;
+            $query = request()->input('query');
             $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
 
@@ -47,25 +74,90 @@ class ForumSearchController extends Controller
                 'body' => [
                     'query' => [
                         'bool' => [
-                            // "should" => [
-                            //     [ "term" => [ "tags" => "important" ] ],
-                            //     [ "term" => [ "tags" => "revisit" ] ]
-                            // ],
-                            // "minimum_should_match" => 1,
-                            // "boost" => 1.0
-                            'should' => [
-                                [ 'multi_match' => [ 'query' => $query,
-                                        'fields' => ['title^3', 'tags','content']
-                                    ] 
+                            "should" => [
+                                [ "term" => [ "tags" => "java" ] ],
+                                [ "term" => [ "tags" => "php" ] ],
+                                [ "multi_match" => [
+                                        "query" => $query, 
+                                        "fields" => ['title^3', 'tags','content']
+                                    ]
                                 ],
-                            ]
-                        ]
+                            ],
+                            "minimum_should_match" => 2,
+                            "boost" => 1.0
+                        ],
+                    
                     ]
                 ]
             ];
             
             $response = $client->search($params);
-         
+            return $response;
+            event(new NewSearchEvent($query));
+
+            activity('thread')
+                ->event('search')
+                ->causedBy($this->user)
+                ->withProperties(['query' => $query ])
+                ->log( request()->ip() );
+
+            return $this->successResponse([
+                'total' => $response['hits']['total']['value'], 
+                'from'  => $from,
+                'max_score' => $response['hits']['max_score'], 
+                'results' => new ForumSearchCollection($response['hits']['hits'])
+            ], null);
+
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function index()
+    {
+        try {
+            $query = request()->input('query');
+            $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
+            $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
+
+            // 'bool' => [
+            //     "should" => [
+            //         [ 'query' => $query,
+            //           'multi_match' => [ 'fields' => ['title^3', 'tags','content']] 
+            //         ],
+            //         [ "term" => [ "tags" => "important" ] ],
+            //         [ "term" => [ "tags" => "revisit" ] ] 
+            //     ],
+            //     "minimum_should_match" => 1,
+            //     "boost" => 1.0,
+            // ]
+
+            $params = [
+                'index' => 'threads',
+                'size'  => 10,
+                'from'  => $from,
+                'body' => [
+                    'query' => [
+                        'bool' => [
+                            "should" => [
+                                [ "term" => [ "tags" => "java" ] ],
+                                [ "term" => [ "tags" => "php" ] ],
+                                [ "multi_match" => [
+                                        "query" => $query, 
+                                        "fields" => ['title^3', 'tags','content']
+                                    ]
+                                ],
+                            ],
+                            "minimum_should_match" => 2,
+                            "boost" => 1.0
+                        ],
+                    
+                    ]
+                ]
+            ];
+            
+            $response = $client->search($params);
+            return $response;
             event(new NewSearchEvent($query));
 
             activity('thread')

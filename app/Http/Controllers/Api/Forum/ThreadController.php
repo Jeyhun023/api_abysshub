@@ -72,7 +72,7 @@ class ThreadController extends Controller
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
                 'content' => $request->content,
-                'tags' => $request->tags,
+                'tags' => collect( explode(',' , $request->tags) ),
                 'last_active_at' => now(),
             ]);
             $thread = new ThreadResource($thread);
