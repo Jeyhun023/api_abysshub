@@ -40,7 +40,7 @@ class ForumSearchController extends Controller
         $threads = Thread::with(['answers' => function($query) {
             $query->with('linked');
             $query->with('comments');
-        },'user', 'shop'])->where('id', '<=', 100)->get();
+        },'user', 'category', 'product'])->where('id', '<=', 100)->get();
         $i = 1;
         $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
         foreach($threads as $thread) {
