@@ -40,7 +40,7 @@ class ForumSearchController extends Controller
         $threads = Thread::with(['answers' => function($query) {
             $query->with('linked');
             $query->with('comments');
-        },'user', 'category', 'product'])->where('id', '<=', 100)->get();
+        },'user', 'category', 'product'])->where('id', '<=', 5)->get();
         $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
         foreach($threads as $thread) {
             if($thread->answers->isNotEmpty()){
@@ -89,55 +89,7 @@ class ForumSearchController extends Controller
         }
 
         return "yes";
-        try {
-            $query = request()->input('query');
-            $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
-            $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
-
-            $params = [
-                'index' => 'threads',
-                'size'  => 10,
-                'from'  => $from,
-                'body' => [
-                    'query' => [
-                        'bool' => [
-                            "should" => [
-                                // [ "term" => [ "tags" => "java" ] ],
-                                // [ "term" => [ "tags" => "php" ] ],
-                                [ "multi_match" => [
-                                        "query" => $query, 
-                                        "fields" => ['title^3', 'tags','content']
-                                    ]
-                                ],
-                            ],
-                            // "minimum_should_match" => 2,
-                            // "boost" => 1.0
-                        ],
-                    
-                    ]
-                ]
-            ];
-            
-            $response = $client->search($params);
-            return $response;
-            event(new NewSearchEvent($query));
-
-            activity('thread')
-                ->event('search')
-                ->causedBy($this->user)
-                ->withProperties(['query' => $query ])
-                ->log( request()->ip() );
-
-            return $this->successResponse([
-                'total' => $response['hits']['total']['value'], 
-                'from'  => $from,
-                'max_score' => $response['hits']['max_score'], 
-                'results' => new ForumSearchCollection($response['hits']['hits'])
-            ], null);
-
-        } catch (Exception $e) {
-            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-        }
+       
     }
 
     public function index()
@@ -169,13 +121,16 @@ class ForumSearchController extends Controller
                             "should" => [
                                 [ "term" => [ "tags" => "java" ] ],
                                 [ "term" => [ "tags" => "php" ] ],
-                                [ "multi_match" => [
-                                        "query" => $query, 
-                                        "fields" => ['title^3', 'tags','content']
-                                    ]
-                                ],
+                                [ "term" => [ "tags" => "timezone" ] ],
+                                [ "term" => [ "tags" => "c++" ] ],
+
+                                // [ "multi_match" => [
+                                //         "query" => $query, 
+                                //         "fields" => ['title^3', 'tags','content']
+                                //     ]
+                                // ],
                             ],
-                            "minimum_should_match" => 2,
+                            "minimum_should_match" => 1,
                             "boost" => 1.0
                         ],
                     
