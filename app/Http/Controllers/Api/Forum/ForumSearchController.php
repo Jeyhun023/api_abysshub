@@ -41,7 +41,6 @@ class ForumSearchController extends Controller
             $query->with('linked');
             $query->with('comments');
         },'user', 'category', 'product'])->where('id', '<=', 100)->get();
-        $i = 1;
         $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
         foreach($threads as $thread) {
             if($thread->answers->isNotEmpty()){
@@ -86,8 +85,7 @@ class ForumSearchController extends Controller
             $client->index($params);
 
             echo $tags;
-            echo $i;
-            $i++;
+            echo $thread->id;
         }
 
         return "yes";
