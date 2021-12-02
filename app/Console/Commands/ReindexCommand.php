@@ -98,7 +98,7 @@ class ReindexCommand extends Command
     
             $client->index($params);
 
-            echo $thread->id;
+            echo $thread->id.'\r\n';
         }
 
     }
