@@ -35,7 +35,7 @@ class ReindexCommand extends Command
 
         $this->hosts = [
             [
-                'host' => env("ELASTICSEARCH_HOST"),
+                'host' => "asd",
                 'port' => env("ELASTICSEARCH_PORT"),
                 'scheme' => env("ELASTICSEARCH_SCHEME"),
                 'user' => env("ELASTICSEARCH_USER"),
