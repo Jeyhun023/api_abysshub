@@ -139,7 +139,7 @@ class ForumSearchController extends Controller
             ];
             
             $response = $client->search($params);
-            return $response;
+            // return $response;
             event(new NewSearchEvent($query));
 
             activity('thread')
