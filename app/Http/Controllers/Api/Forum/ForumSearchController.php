@@ -95,7 +95,7 @@ class ForumSearchController extends Controller
     public function index()
     {
         try {
-            $query = (request()->input('query') !=null ) ? request()->input('query') : null;
+            $query = (request()->input('query') !=null ) ? request()->input('query') : 0;
             $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
 
