@@ -119,16 +119,16 @@ class ForumSearchController extends Controller
                     'query' => [
                         'bool' => [
                             "should" => [
-                                [ "term" => [ "tags" => "java" ] ],
-                                [ "term" => [ "tags" => "php" ] ],
-                                [ "term" => [ "tags" => "timezone" ] ],
-                                [ "term" => [ "tags" => "c++" ] ],
+                                // [ "term" => [ "tags" => "java" ] ],
+                                // [ "term" => [ "tags" => "php" ] ],
+                                // [ "term" => [ "tags" => "timezone" ] ],
+                                // [ "term" => [ "tags" => "c++" ] ],
 
-                                // [ "multi_match" => [
-                                //         "query" => $query, 
-                                //         "fields" => ['title^3', 'tags','content']
-                                //     ]
-                                // ],
+                                [ "multi_match" => [
+                                        "query" => $query, 
+                                        "fields" => ['title^3', 'tags','content']
+                                    ]
+                                ],
                             ],
                             "minimum_should_match" => 1,
                             "boost" => 1.0
