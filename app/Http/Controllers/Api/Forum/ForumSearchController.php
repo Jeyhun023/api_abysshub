@@ -38,49 +38,24 @@ class ForumSearchController extends Controller
         try {
             $query = (request()->input('query') !=null ) ? request()->input('query') : 0;
             $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
+            $tags = (request()->input('tags') !=null ) ? explode(',',request()->input('tags')) : null;
+
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
-
-            // 'bool' => [
-            //     "should" => [
-            //         [ 'query' => $query,
-            //           'multi_match' => [ 'fields' => ['title^3', 'tags','content']] 
-            //         ],
-            //         [ "term" => [ "tags" => "important" ] ],
-            //         [ "term" => [ "tags" => "revisit" ] ] 
-            //     ],
-            //     "minimum_should_match" => 1,
-            //     "boost" => 1.0,
-            // ]
-
-            $params = [
-                'index' => 'threads',
-                'size'  => 10,
-                'from'  => $from,
-                'body' => [
-                    'query' => [
-                        'bool' => [
-                            "should" => [
-                                // [ "term" => [ "tags" => "java" ] ],
-                                // [ "term" => [ "tags" => "php" ] ],
-                                // [ "term" => [ "tags" => "timezone" ] ],
-                                // [ "term" => [ "tags" => "c++" ] ],
-
-                                [ "multi_match" => [
-                                        "query" => $query, 
-                                        "fields" => ['title^3', 'tags','content']
-                                    ]
-                                ],
-                            ],
-                            "minimum_should_match" => 1,
-                            "boost" => 1.0
-                        ],
-                    
-                    ]
-                ]
-            ];
+            
+            $params['index'] = 'threads';
+            $params['size'] = 10;
+            $params['from'] = $from;
+            $params['body']['query']['bool']['should'][] = [ "multi_match" => ["query" => $query, "fields" => ['title^3', 'tags','content']]];
+            
+            if($tags != null){
+                foreach($tags as $tag){
+                    $params['body']['query']['bool']['should'][] = [ "term" => ["tags" => $tag] ] ;
+                }
+                $params['body']['query']['bool']['minimum_should_match'] = 2;
+                $params['body']['query']['bool']['boost'] = 1.0;
+            }
             
             $response = $client->search($params);
-            // return $response;
             event(new NewSearchEvent($query));
 
             activity('thread')
@@ -124,3 +99,30 @@ class ForumSearchController extends Controller
         }
     }
 }
+
+// $params = [
+//     'index' => 'threads',
+//     'size'  => 10,
+//     'from'  => $from,
+//     'body' => [
+//         'query' => [
+//             'bool' => [
+//                 "should" => [
+//                     // [ "term" => [ "tags" => "java" ] ],
+//                     // [ "term" => [ "tags" => "php" ] ],
+//                     // [ "term" => [ "tags" => "timezone" ] ],
+//                     // [ "term" => [ "tags" => "c++" ] ],
+
+//                     [ "multi_match" => [
+//                             "query" => $query, 
+//                             "fields" => ['title^3', 'tags','content']
+//                         ]
+//                     ],
+//                 ],
+//                 "minimum_should_match" => 2,
+//                 "boost" => 1.0
+//             ],
+        
+//         ]
+//     ]
+// ];
