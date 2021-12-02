@@ -51,7 +51,7 @@ class ReindexCommand extends Command
      */
     public function handle()
     {
-        for($x = 3000; $x <= 35000; $x += 1000){
+        for($x = 31033; $x <= 35000; $x += 1000){
             $threads = Thread::with(['answers' => function($query) {
                 $query->with('linked');
                 $query->with('comments');
