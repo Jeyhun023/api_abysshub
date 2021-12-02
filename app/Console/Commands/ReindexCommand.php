@@ -35,7 +35,7 @@ class ReindexCommand extends Command
 
         $this->hosts = [
             [
-                'host' => "asd",
+                'host' => env("ELASTICSEARCH_HOST"),
                 'port' => env("ELASTICSEARCH_PORT"),
                 'scheme' => env("ELASTICSEARCH_SCHEME"),
                 'user' => env("ELASTICSEARCH_USER"),
@@ -98,7 +98,7 @@ class ReindexCommand extends Command
     
             $client->index($params);
 
-            echo $thread->id.'\r\n';
+            echo $thread->id. PHP_EOL;
         }
 
     }
