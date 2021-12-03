@@ -1,5 +1,6 @@
 @php 
 $displayableActionUrl = str_replace("https://api.abysshub.com/api/","https://demo-abyss.vercel.app/", $displayableActionUrl);
+$actionUrl = str_replace("https://api.abysshub.com/api/","https://demo-abyss.vercel.app/", $actionUrl);
 @endphp
 
 @component('mail::message')
