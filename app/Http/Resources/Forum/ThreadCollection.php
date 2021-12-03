@@ -4,7 +4,6 @@ namespace App\Http\Resources\Forum;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\Auth\UserResource;
-use App\Http\Resources\Other\CategoryResource;
 
 class ThreadCollection extends ResourceCollection
 {
@@ -20,7 +19,6 @@ class ThreadCollection extends ResourceCollection
             return [
                 'id' => $thread->id,
                 'user' => new UserResource($thread->user),
-                'category' => new CategoryResource($thread->category),
                 'title' => $thread->title,
                 'slug' => $thread->slug,
                 'content' => $thread->content,

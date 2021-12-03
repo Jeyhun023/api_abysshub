@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateThreadsTable extends Migration
+class CreateCavesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,25 +13,14 @@ class CreateThreadsTable extends Migration
      */
     public function up()
     {
-        Schema::create('threads', function (Blueprint $table) {
+        Schema::create('caves', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
-            $table->string('title', 255);
-            $table->text('content');
-            $table->json('tags');
-            $table->string('slug', 300);
-            
-            $table->integer('answer_count')->default(0);
-            $table->integer('comment_count')->default(0);
-            $table->integer('view_count')->default(0);
-            $table->integer('upvote')->default(0);
-
-            $table->datetime('last_active_at');
-            $table->datetime('closed_at')->nullable();
+            $table->enum('type', [1, 2, 3]);
             $table->timestamps();
-            $table->softDeletes();
 
+            $table->unique('user_id', 'product_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
@@ -44,6 +33,6 @@ class CreateThreadsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('threads');
+        Schema::dropIfExists('caves');
     }
 }

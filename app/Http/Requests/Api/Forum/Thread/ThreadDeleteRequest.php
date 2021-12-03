@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum;
+namespace App\Http\Requests\Api\Forum\Thread;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
 
-class AnswerUpdateRequest extends FormRequest
+class ThreadDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +15,7 @@ class AnswerUpdateRequest extends FormRequest
     public function authorize()
     {
         $this->merge([
-            'id' => $this->route('answer')->id,
+            'id' => $this->route('thread')->id,
             'user_id' => auth()->user()->id
         ]);
         return true;
@@ -30,15 +29,14 @@ class AnswerUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('answers')->where('user_id', $this->user_id)],
-            'content' => ['required', new ProfanityCheck()]
+            'id' => ['required', Rule::exists('threads')->where('user_id', $this->user_id)]
         ];
     }
 
     public function messages()
     {
         return [
-            'id.exists' => trans('messages.answer_error'),
+            'id.exists' => trans('messages.question_error'),
         ];
     }
 }

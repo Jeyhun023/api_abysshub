@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum;
+namespace App\Http\Requests\Api\Forum\Answer;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ThreadCommentDeleteRequest extends FormRequest
+class AnswerCommentDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,10 +29,10 @@ class ThreadCommentDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('threads_comments')->where('user_id', $this->user_id)]
+            'id' => ['required', Rule::exists('answers_comments')->where('user_id', $this->user_id)]
         ];
     }
-
+    
     public function messages()
     {
         return [

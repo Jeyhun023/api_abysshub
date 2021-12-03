@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum;
+namespace App\Http\Requests\Api\Forum\Thread;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;

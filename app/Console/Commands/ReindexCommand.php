@@ -51,56 +51,56 @@ class ReindexCommand extends Command
      */
     public function handle()
     {
-        for($x = 31033; $x <= 35000; $x += 1000){
-            $threads = Thread::with(['answers' => function($query) {
-                $query->with('linked');
-                $query->with('comments');
-            },'user', 'category', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
-            $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
-            foreach($threads as $thread) {
-                if($thread->answers->isNotEmpty()){
-                    if($thread->answers->first()->linked->isNotEmpty()){
-                        foreach($thread->answers->first()->linked as $linked){
-                            $linked->delete();
-                        }
-                    }
-                    if($thread->answers->first()->comments->isNotEmpty()){
-                        foreach($thread->answers->first()->comments as $comment){
-                            $comment->delete();
-                        }
-                    }
-                    $thread->answers->first()->delete();   
-                    $thread->decrement('answer_count');
-                }
+        // for($x = 31033; $x <= 35000; $x += 1000){
+        //     $threads = Thread::with(['answers' => function($query) {
+        //         $query->with('linked');
+        //         $query->with('comments');
+        //     },'user', 'category', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
+        //     $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
+        //     foreach($threads as $thread) {
+        //         if($thread->answers->isNotEmpty()){
+        //             if($thread->answers->first()->linked->isNotEmpty()){
+        //                 foreach($thread->answers->first()->linked as $linked){
+        //                     $linked->delete();
+        //                 }
+        //             }
+        //             if($thread->answers->first()->comments->isNotEmpty()){
+        //                 foreach($thread->answers->first()->comments as $comment){
+        //                     $comment->delete();
+        //                 }
+        //             }
+        //             $thread->answers->first()->delete();   
+        //             $thread->decrement('answer_count');
+        //         }
 
-                $tags = collect(json_decode($thread->getRawOriginal('tags')));
-                $thread->tags = $tags;
-                $thread->save();
+        //         $tags = collect(json_decode($thread->getRawOriginal('tags')));
+        //         $thread->tags = $tags;
+        //         $thread->save();
 
-                $params['index'] = 'threads';
-                $params['id'] = $thread->id;
-                $params['body']['title'] = $thread->title;
-                $params['body']['slug'] = $thread->slug;
-                $params['body']['content'] = $thread->content;
-                $params['body']['tags'] = $thread->tags;
-                $params['body']['user'] = $thread->user;
-                $params['body']['category'] = $thread->category;
-                $params['body']['product'] = $thread->product;
-                $params['body']['accepted_answer_id'] = $thread->accepted_answer_id;
-                $params['body']['upvote'] = $thread->upvote;
-                $params['body']['comment_count'] = $thread->comment_count;
-                $params['body']['view_count'] = $thread->view_count;
-                $params['body']['answer_count'] = $thread->answer_count;
-                $params['body']['last_active_at'] = $thread->last_active_at;
-                $params['body']['created_at'] = $thread->created_at;
-                $params['body']['updated_at'] = $thread->updated_at;
-                $params['body']['closed_at'] = $thread->closed_at;
-                $params['body']['deleted_at'] = $thread->deleted_at;
+        //         $params['index'] = 'threads';
+        //         $params['id'] = $thread->id;
+        //         $params['body']['title'] = $thread->title;
+        //         $params['body']['slug'] = $thread->slug;
+        //         $params['body']['content'] = $thread->content;
+        //         $params['body']['tags'] = $thread->tags;
+        //         $params['body']['user'] = $thread->user;
+        //         $params['body']['category'] = $thread->category;
+        //         $params['body']['product'] = $thread->product;
+        //         $params['body']['accepted_answer_id'] = $thread->accepted_answer_id;
+        //         $params['body']['upvote'] = $thread->upvote;
+        //         $params['body']['comment_count'] = $thread->comment_count;
+        //         $params['body']['view_count'] = $thread->view_count;
+        //         $params['body']['answer_count'] = $thread->answer_count;
+        //         $params['body']['last_active_at'] = $thread->last_active_at;
+        //         $params['body']['created_at'] = $thread->created_at;
+        //         $params['body']['updated_at'] = $thread->updated_at;
+        //         $params['body']['closed_at'] = $thread->closed_at;
+        //         $params['body']['deleted_at'] = $thread->deleted_at;
         
-                $client->index($params);
+        //         $client->index($params);
 
-                echo $thread->id. PHP_EOL;
-            }
-        }
+        //         echo $thread->id. PHP_EOL;
+        //     }
+        // }
     }
 }

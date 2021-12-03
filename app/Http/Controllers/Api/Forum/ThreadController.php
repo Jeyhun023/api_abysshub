@@ -7,15 +7,15 @@ use App\Models\Product;
 use App\Models\ThreadsVote;
 use App\Models\ThreadsComment;
 use App\Models\ThreadLinkedProduct;
-use App\Http\Requests\Api\Forum\ThreadVoteRequest;
-use App\Http\Requests\Api\Forum\ThreadUnvoteRequest;
-use App\Http\Requests\Api\Forum\ThreadCommentRequest;
-use App\Http\Requests\Api\Forum\ProductThreadRequest;
-use App\Http\Requests\Api\Forum\ThreadCommentUpdateRequest;
-use App\Http\Requests\Api\Forum\ThreadCommentDeleteRequest;
-use App\Http\Requests\Api\Forum\ThreadRequest;
-use App\Http\Requests\Api\Forum\ThreadUpdateRequest;
-use App\Http\Requests\Api\Forum\ThreadDeleteRequest;
+use App\Http\Requests\Api\Forum\Thread\ThreadVoteRequest;
+use App\Http\Requests\Api\Forum\Thread\ThreadUnvoteRequest;
+use App\Http\Requests\Api\Forum\Thread\ThreadCommentRequest;
+use App\Http\Requests\Api\Forum\Thread\ProductThreadRequest;
+use App\Http\Requests\Api\Forum\Thread\ThreadCommentUpdateRequest;
+use App\Http\Requests\Api\Forum\Thread\ThreadCommentDeleteRequest;
+use App\Http\Requests\Api\Forum\Thread\ThreadRequest;
+use App\Http\Requests\Api\Forum\Thread\ThreadUpdateRequest;
+use App\Http\Requests\Api\Forum\Thread\ThreadDeleteRequest;
 use App\Http\Resources\Forum\ThreadCollection;
 use App\Http\Resources\Forum\ThreadCommentCollection;
 use App\Http\Resources\Forum\ThreadCommentResource;
@@ -68,7 +68,6 @@ class ThreadController extends Controller
         try {
             $thread = Thread::query()->create([
                 'user_id' => auth()->user()->id, 
-                'category_id' => $request->category_id,
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
                 'content' => $request->content,
@@ -100,7 +99,6 @@ class ThreadController extends Controller
             $thread = Thread::query()->create([
                 'product_id' => $product->id, 
                 'user_id' => auth()->user()->id, 
-                'category_id' => $request->category_id,
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
                 'content' => $request->content,
@@ -120,11 +118,10 @@ class ThreadController extends Controller
     public function update(Thread $thread, ThreadUpdateRequest $request)
     {
         try {
-            $thread->category_id = $request->category_id;
             $thread->title = $request->title;
             $thread->slug = Str::slug($request->title);
             $thread->content = $request->content;
-            $thread->tags = $request->tags;
+            $thread->tags = collect( explode(',' , $request->tags) );
             $thread->save();
             $thread = new ThreadResource($thread);
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum;
+namespace App\Http\Requests\Api\Forum\Answer;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\ThreadsVote;
+use App\Models\AnswersVote;
 use Illuminate\Validation\Rule;
 
-class ThreadUnvoteRequest extends FormRequest
+class AnswerVoteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,7 @@ class ThreadUnvoteRequest extends FormRequest
     public function authorize()
     {
         $this->merge([
-            'thread_id' => $this->route('thread')->id,
+            'answer_id' => $this->route('answer')->id,
             'user_id' => auth()->user()->id
         ]);
         return true;
@@ -30,15 +30,15 @@ class ThreadUnvoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => ['required', Rule::in(ThreadsVote::VOTE_TYPE_SELECT)],
-            'thread_id' => ['required', Rule::exists('threads_vote')
-                    ->where('thread_id', $this->thread_id)
-                    ->where('user_id', $this->user_id)
-                    ->where('type', $this->type)
-                ]
+            'type' => ['required', Rule::in(AnswersVote::VOTE_TYPE_SELECT)],
+            'answer_id' => ['required', Rule::unique('answers_vote')
+                ->where('answer_id', $this->answer_id)
+                ->where('user_id', $this->user_id)
+                ->where('type', $this->type)
+            ]
         ];
     }
-    
+
     public function attributes()
     {
         return [
@@ -49,7 +49,7 @@ class ThreadUnvoteRequest extends FormRequest
     public function messages()
     {
         return [
-            'thread_id.exists' => trans('messages.havent_voted'),
+            'answer_id.unique' => trans('messages.have_voted'),
         ];
     }
 }

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum;
+namespace App\Http\Requests\Api\Forum\Thread;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\ThreadsVote;
 use Illuminate\Validation\Rule;
 
-class ThreadDeleteRequest extends FormRequest
+class ThreadVoteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +16,7 @@ class ThreadDeleteRequest extends FormRequest
     public function authorize()
     {
         $this->merge([
-            'id' => $this->route('thread')->id,
+            'thread_id' => $this->route('thread')->id,
             'user_id' => auth()->user()->id
         ]);
         return true;
@@ -29,14 +30,22 @@ class ThreadDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('threads')->where('user_id', $this->user_id)]
+            'type' => ['required', Rule::in(ThreadsVote::VOTE_TYPE_SELECT)],
+            'thread_id' => ['required', Rule::unique('threads_vote')->where('thread_id', $this->thread_id)->where('user_id', $this->user_id)]
+        ];
+    }
+    
+    public function attributes()
+    {
+        return [
+            'type'  => 'vote type',
         ];
     }
 
     public function messages()
     {
         return [
-            'id.exists' => trans('messages.question_error'),
+            'thread_id.unique' => trans('messages.have_voted'),
         ];
     }
 }

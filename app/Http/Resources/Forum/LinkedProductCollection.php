@@ -4,7 +4,6 @@ namespace App\Http\Resources\Forum;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\Auth\UserResource;
-use App\Http\Resources\Other\CategoryResource;
 
 class LinkedProductCollection extends ResourceCollection
 {
@@ -20,7 +19,6 @@ class LinkedProductCollection extends ResourceCollection
             return [
                 'id' => $linked->product->id,
                 'user' => new UserResource($linked->product->user),
-                'category' => new CategoryResource($linked->product->category),
                 'name' => $linked->product->name,
                 'slug' => $linked->product->slug,
                 'description' => $linked->product->description,

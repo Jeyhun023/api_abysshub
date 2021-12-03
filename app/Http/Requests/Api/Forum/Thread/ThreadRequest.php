@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum;
+namespace App\Http\Requests\Api\Forum\Thread;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
 
-class AnswerRequest extends FormRequest
+class ThreadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,10 @@ class AnswerRequest extends FormRequest
     public function rules()
     {
         return [
-            'content' => ['required', new ProfanityCheck()]
+            'category_id' => 'required|integer|exists:categories,id',
+            'title' => ['required', 'string', 'max:255', new ProfanityCheck()],
+            'content' => ['required', new ProfanityCheck()],
+            'tags' => 'required|max:255',
         ];
     }
 }

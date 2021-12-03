@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum;
+namespace App\Http\Requests\Api\Forum\Answer;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
 
-class AnswerDeleteRequest extends FormRequest
+class AnswerUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +30,8 @@ class AnswerDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('answers')->where('user_id', $this->user_id)]
+            'id' => ['required', Rule::exists('answers')->where('user_id', $this->user_id)],
+            'content' => ['required', new ProfanityCheck()]
         ];
     }
 

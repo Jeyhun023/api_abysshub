@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum;
+namespace App\Http\Requests\Api\Forum\Answer;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
 
-class ProductThreadRequest extends FormRequest
+class AnswerCommentUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,8 @@ class ProductThreadRequest extends FormRequest
     public function authorize()
     {
         $this->merge([
-            'id' => $this->route('product')->id
+            'id' => $this->route('comment')->id,
+            'user_id' => auth()->user()->id
         ]);
         return true;
     }
@@ -29,12 +30,15 @@ class ProductThreadRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('products')],
-            'category_id' => 'required|integer|exists:categories,id',
-            'title' => ['required', 'string', 'max:255', new ProfanityCheck()],
-            'content' => ['required', new ProfanityCheck()],
-            'tags' => 'required|max:255',
+            'id' => ['required', Rule::exists('answers_comments')->where('user_id', $this->user_id)],
+            'content' => ['required', new ProfanityCheck()]
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'id.exists' => trans('messages.comment_error'),
+        ];
+    }
 }

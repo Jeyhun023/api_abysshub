@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\Chat\ChatController;
 use App\Http\Controllers\Api\Store\ProductController;
 use App\Http\Controllers\Api\Store\IterationController;
 use App\Http\Controllers\Api\Store\StoreSearchController;
+//Profile
+use App\Http\Controllers\Api\Profile\CaveController;
 
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
@@ -114,4 +116,10 @@ Route::group(['prefix' => 'store'], function () {
         Route::post('/{product}/iterate', [IterationController::class, 'store']);
         Route::delete('/{product}/product/delete', [ProductController::class, 'delete']); 
     });
+});
+
+//Profile
+Route::group(['prefix' => 'profile', 'middleware' => ['auth:api','verified']], function () {
+    Route::get('/cave', [CaveController::class, 'index']); 
+    Route::post('/cave/{product}/create', [CaveController::class, 'store']); 
 });

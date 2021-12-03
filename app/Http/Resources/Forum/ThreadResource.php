@@ -4,7 +4,6 @@ namespace App\Http\Resources\Forum;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Auth\UserResource;
-use App\Http\Resources\Other\CategoryResource;
 
 class ThreadResource extends JsonResource
 {
@@ -19,7 +18,6 @@ class ThreadResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => new UserResource($this->user),
-            'category' => new CategoryResource($this->category),
             'linked_products' => $this->linked,
             'title' => $this->title,
             'slug' => $this->slug,

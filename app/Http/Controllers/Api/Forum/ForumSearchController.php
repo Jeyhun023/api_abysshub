@@ -99,30 +99,3 @@ class ForumSearchController extends Controller
         }
     }
 }
-
-// $params = [
-//     'index' => 'threads',
-//     'size'  => 10,
-//     'from'  => $from,
-//     'body' => [
-//         'query' => [
-//             'bool' => [
-//                 "should" => [
-//                     // [ "term" => [ "tags" => "java" ] ],
-//                     // [ "term" => [ "tags" => "php" ] ],
-//                     // [ "term" => [ "tags" => "timezone" ] ],
-//                     // [ "term" => [ "tags" => "c++" ] ],
-
-//                     [ "multi_match" => [
-//                             "query" => $query, 
-//                             "fields" => ['title^3', 'tags','content']
-//                         ]
-//                     ],
-//                 ],
-//                 "minimum_should_match" => 2,
-//                 "boost" => 1.0
-//             ],
-        
-//         ]
-//     ]
-// ];
