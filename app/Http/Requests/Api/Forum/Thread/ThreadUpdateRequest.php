@@ -31,7 +31,6 @@ class ThreadUpdateRequest extends FormRequest
     {
         return [
             'id' => ['required', Rule::exists('threads')->where('user_id', $this->user_id)],
-            'category_id' => 'required|integer|exists:categories,id',
             'title' => ['required', 'string', 'max:255', new ProfanityCheck()],
             'content' => ['required', new ProfanityCheck()],
             'tags' => 'required|max:255',

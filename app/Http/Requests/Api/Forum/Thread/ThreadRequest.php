@@ -25,7 +25,6 @@ class ThreadRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'required|integer|exists:categories,id',
             'title' => ['required', 'string', 'max:255', new ProfanityCheck()],
             'content' => ['required', new ProfanityCheck()],
             'tags' => 'required|max:255',
