@@ -13,6 +13,12 @@ class Cave extends Model
 
     protected $fillable = ['user_id', 'product_id', 'type']; 
     
+    public const CAVE_TYPE = [
+        '1' => 'Add Cave',
+        '2' => 'Empty',
+        '3' => 'Empty'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

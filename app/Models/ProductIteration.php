@@ -12,6 +12,11 @@ class ProductIteration extends Model
     protected $fillable = ['user_id', 'product_id', 'name', 'note','file'];
     protected $guarded = ['rate', 'download_count', 'status'];
 
+    public const ITERATION_STATUS = [
+        '0' => 'Plagiarism detected',
+        '1' => 'Submitted'
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);

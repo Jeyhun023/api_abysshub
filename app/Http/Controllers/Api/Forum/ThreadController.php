@@ -66,14 +66,18 @@ class ThreadController extends Controller
     public function store(ThreadRequest $request)
     {
         try {
-            $thread = Thread::query()->create([
-                'user_id' => auth()->user()->id, 
-                'title' => $request->title,
-                'slug' => Str::slug($request->title),
-                'content' => $request->content,
-                'tags' => collect( explode(',' , $request->tags) ),
-                'last_active_at' => now(),
-            ]);
+            $thread = new Thread();
+            $thread->user_id = auth()->user()->id;
+            $thread->title = $request->title;
+            $thread->slug = Str::slug($request->title);
+            $thread->content = $request->content;
+            $thread->tags = collect( explode(',' , $request->tags) );
+            $thread->last_active_at = now();
+            $thread->type = $request->type;
+            if($request->type == 3){
+                $thread->product_id = $request->product_id;
+            }
+            $thread->save();
             $thread = new ThreadResource($thread);
             
             if ($request->has('linked_products')) {

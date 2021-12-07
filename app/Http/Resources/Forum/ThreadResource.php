@@ -4,6 +4,7 @@ namespace App\Http\Resources\Forum;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Auth\UserResource;
+use App\Models\Thread;
 
 class ThreadResource extends JsonResource
 {
@@ -29,6 +30,7 @@ class ThreadResource extends JsonResource
             'view_count' => $this->view_count == null ? 0 : $this->view_count,
             'upvote' => $this->upvote == null ? 0 : $this->upvote,
             'user_votes' => $this->userVotes,
+            'type' => Thread::THREAD_TYPE[$this->type],
             'last_active_at' => $this->last_active_at,
             'closed_at' => $this->closed_at,
             'created_at' => $this->created_at->format('d/m/Y'),

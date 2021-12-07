@@ -15,6 +15,12 @@ class Product extends Model
     protected $casts = ['tags' => 'json'];
     protected $guarded = ['rate', 'download_count']; 
 
+    public const PRODUCT_STATUS = [
+        '0' => 'Plagiarism detected',
+        '1' => 'Not plagiat',
+        '2' => 'Submitted'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

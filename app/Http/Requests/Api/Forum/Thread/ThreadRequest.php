@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Forum\Thread;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
+use Illuminate\Validation\Rule;
 
 class ThreadRequest extends FormRequest
 {
@@ -27,7 +28,9 @@ class ThreadRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255', new ProfanityCheck()],
             'content' => ['required', new ProfanityCheck()],
+            'type' => ['required', Rule::in(['1', '2', '3'])],
             'tags' => 'required|max:255',
+            'product_id' => ['required_if:type,==,3', 'exists:products,id'],
         ];
     }
 }
