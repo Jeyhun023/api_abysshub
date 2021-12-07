@@ -22,6 +22,7 @@ class ForumSearchCollection extends ResourceCollection
                 'slug' => $result['_source']['slug'],
                 'content' => $result['_source']['content'],
                 'user' => (isset($result['_source']['user'])) ? $result['_source']['user'] : null,
+                'product' => (isset($result['_source']['product'])) ? $result['_source']['product'] : null,
                 'tags' => $result['_source']['tags'],
                 'type' => (isset($result['_source']['type'])) ? Thread::THREAD_TYPE[$result['_source']['type']] : 'Question',
                 'created_at' => (isset($result['_source']['created_at'])) ? $result['_source']['created_at'] : null,

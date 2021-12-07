@@ -53,6 +53,9 @@ class ProductController extends Controller
             $product->description = $request->description;
             $product->price = $request->price;
             $product->save();
+            if($product->status = 2){
+                event(new StoreElasticEvent($product));
+            }
 
             return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
         } catch (Exception $e) {
