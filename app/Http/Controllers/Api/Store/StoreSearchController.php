@@ -37,26 +37,23 @@ class StoreSearchController extends Controller
         try {
             $query = (request()->input('query') !=null ) ? request()->input('query') : 0;
             $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
+            $tags = (request()->input('tags') !=null ) ? explode(',',request()->input('tags')) : null;
+
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
 
-            $params = [
-                'index' => 'products',
-                'size'  => 10,
-                'from'  => $from,
-                'body' => [
-                    'query' => [
-                        'bool' => [
-                            'should' => [
-                                [ 'multi_match' => [ 'query' => $query,
-                                        'fields' => ['name^3', 'tags','description']
-                                    ] 
-                                ],
-                            ]
-                        ]
-                    ]
-                ]
-            ];
+            $params['index'] = 'products';
+            $params['size'] = 10;
+            $params['from'] = $from;
+            $params['body']['query']['bool']['should'][] = [ "multi_match" => ["query" => $query, "fields" => ['name^3', 'description']]];
             
+            if($tags != null){
+                foreach($tags as $tag){
+                    $params['body']['query']['bool']['should'][] = [ "term" => ["tags" => $tag] ] ;
+                }
+                $params['body']['query']['bool']['minimum_should_match'] = 2;
+                $params['body']['query']['bool']['boost'] = 1.0;
+            }
+
             $response = $client->search($params);
             event(new NewSearchEvent($query));
 
