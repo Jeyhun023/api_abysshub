@@ -39,13 +39,13 @@ class ThreadController extends Controller
 
     public function index()
     {
-        $threads = Thread::with(['category', 'user'])->orderBy('id', 'DESC')->limit(12)->get();
+        $threads = Thread::with(['user'])->orderBy('id', 'DESC')->limit(12)->get();
         return $this->successResponse(new ThreadCollection($threads));
     }
     
     public function show($id, $slug)
     {
-        $thread = Thread::with(['category', 'user', 'userVotes', 'linked.product'])
+        $thread = Thread::with(['user', 'userVotes', 'linked.product'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
