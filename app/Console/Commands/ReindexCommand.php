@@ -104,10 +104,11 @@ class ReindexCommand extends Command
                 }
                 sleep(2);
             }
+
             $x++;
             $get_thread->upvote = $x;
             $get_thread->save();
-            echo $get_thread->upvote;
+
             if(time() > $time){
                 break;
             }
