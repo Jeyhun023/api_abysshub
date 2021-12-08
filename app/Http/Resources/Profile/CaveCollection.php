@@ -20,12 +20,19 @@ class CaveCollection extends ResourceCollection
             return [
                 'id' => $cave->id,
                 'user' => new UserResource($cave->user),
-                'product' => new ProductResource($cave->user),
+                'product' => new ProductResource($cave->product),
                 'type' => $cave->type,
                 'created_at' => $cave->created_at->format('d/m/Y'),
                 'updated_at' => $cave->updated_at->format('d/m/Y')
             ];
         })->toArray();
         return parent::toArray($request);
+    }
+    
+    public function withResponse($request, $response)
+    {
+        $jsonResponse = json_decode($response->getContent(), true);
+        unset($jsonResponse['links'],$jsonResponse['meta']['links'],$jsonResponse['meta']['path']);
+        $response->setContent(json_encode($jsonResponse));
     }
 }

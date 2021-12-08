@@ -20,7 +20,7 @@ class CreateCavesTable extends Migration
             $table->enum('type', [1, 2, 3]);
             $table->timestamps();
 
-            $table->unique('user_id', 'product_id');
+            // $table->unique('user_id', 'product_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });

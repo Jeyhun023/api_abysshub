@@ -23,16 +23,16 @@ class CaveController extends Controller
     public function index()
     {
         $cave = Cave::where('user_id', $this->user->id)
-        ->with(['product'])
-        ->paginate(10);
-
-        return $this->successResponse(new CaveCollection($cave));
+            ->with(['product'])
+            ->paginate(10);
+        
+        return new CaveCollection($cave);
     }
 
     public function store(Product $product)
     {
         try {
-            $cave = Cave::query()->firstOrCreate([
+            $cave = Cave::firstOrCreate([
                 'user_id' => $this->user->id, 
                 'product_id' => $product->id, 
                 'type' => 1

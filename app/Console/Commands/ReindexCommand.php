@@ -56,8 +56,8 @@ class ReindexCommand extends Command
     public function handle()
     {
         $x = 8020;
-        try {
-            while ( true ) {
+        while ( true ) {
+            try {
                 $html = file_get_contents("https://stackoverflow.com/questions?tab=votes&page=".$x);
                 preg_match_all('@<div class="question-summary" id="question-summary-(.*?)">(.*?)<div class="summary">(.*?)<h3>(.*?)<a href="(.*?)" class="question-hyperlink">(.*?)</a>(.*?)</h3>(.*?)</div>(.*?)</div>@si', $html, $threads);
                 foreach($threads[5] as $thread){
@@ -103,9 +103,10 @@ class ReindexCommand extends Command
                     sleep(2);
                 }
                 $x++;
+            } catch (Exception $e) {
+                echo "Error";
+                sleep(20);
             }
-        } catch (Exception $e) {
-            echo "Error";
         }
 
         // for($x = 31033; $x <= 35000; $x += 1000){
