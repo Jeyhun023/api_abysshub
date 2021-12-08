@@ -105,8 +105,9 @@ class ReindexCommand extends Command
                 sleep(2);
             }
             $x++;
-            $get_thread->update(['upvote' => $x]);
-         
+            $get_thread->upvote = $x;
+            $get_thread->save();
+            
             if(time() > $time){
                 break;
             }
