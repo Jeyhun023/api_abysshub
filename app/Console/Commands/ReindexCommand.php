@@ -55,7 +55,7 @@ class ReindexCommand extends Command
      */
     public function handle()
     {
-        $x = 8012;
+        $x = 8015;
         try {
             while ( true ) {
                 $html = file_get_contents("https://stackoverflow.com/questions?tab=votes&page=".$x);
@@ -75,8 +75,8 @@ class ReindexCommand extends Command
                             array_push($tags, $tag);
                         }
                     }
-                    for($x=0; $x < rand(0, count($answers_array[2]) ); $x++){
-                        array_push($answers, $answers_array[2][$x]);
+                    for($n=0; $n < rand(0, count($answers_array[2]) ); $n++){
+                        array_push($answers, $answers_array[2][$n]);
                     }
 
                     $thread = new Thread();
@@ -87,7 +87,7 @@ class ReindexCommand extends Command
                     $thread->tags = collect( $tags );
                     $thread->last_active_at = now();
                     $thread->type = 1;
-                    $thread->answer_count = $x;
+                    $thread->answer_count = $n;
                     $thread->save();
                     $thread = new ThreadResource($thread);
                     event(new ThreadElasticEvent($thread));
