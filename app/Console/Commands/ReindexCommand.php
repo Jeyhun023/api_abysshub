@@ -75,7 +75,7 @@ class ReindexCommand extends Command
                             array_push($tags, $tag);
                         }
                     }
-                    for($x=0; $x <= rand(0, count($answers_array[2]) ); $x++){
+                    for($x=0; $x < rand(0, count($answers_array[2]) ); $x++){
                         array_push($answers, $answers_array[2][$x]);
                     }
 
