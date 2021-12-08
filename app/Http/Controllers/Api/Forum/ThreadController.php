@@ -78,8 +78,7 @@ class ThreadController extends Controller
                 $thread->product_id = $request->product_id;
             }
             $thread->save();
-            $thread = new ThreadResource($thread);
-            
+
             if ($request->has('linked_products')) {
                 foreach(json_decode($request->linked_products) as $product){
                     ThreadLinkedProduct::create([
@@ -89,6 +88,7 @@ class ThreadController extends Controller
                 }
             }
 
+            $thread = new ThreadResource($thread);
             event(new ThreadElasticEvent($thread));
             
             return $this->successResponse($thread, trans('messages.thread_store_success'));
