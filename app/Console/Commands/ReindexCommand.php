@@ -55,7 +55,7 @@ class ReindexCommand extends Command
      */
     public function handle()
     {
-        $x = 8015;
+        $x = 8020;
         try {
             while ( true ) {
                 $html = file_get_contents("https://stackoverflow.com/questions?tab=votes&page=".$x);
@@ -100,6 +100,7 @@ class ReindexCommand extends Command
                     }
                     print_r($thread);
                     echo $x;
+                    sleep(2);
                 }
                 $x++;
             }
