@@ -55,57 +55,60 @@ class ReindexCommand extends Command
      */
     public function handle()
     {
-        $x = 8020;
+        $time = time() + 353;
+        $get_thread = Thread::find(1);
+        $x = $get_thread->upvote;
         while ( true ) {
-            try {
-                $html = file_get_contents("https://stackoverflow.com/questions?tab=votes&page=".$x);
-                preg_match_all('@<div class="question-summary" id="question-summary-(.*?)">(.*?)<div class="summary">(.*?)<h3>(.*?)<a href="(.*?)" class="question-hyperlink">(.*?)</a>(.*?)</h3>(.*?)</div>(.*?)</div>@si', $html, $threads);
-                foreach($threads[5] as $thread){
-                    $thread_single = file_get_contents('https://stackoverflow.com'.$thread);
-                    preg_match_all('@<h1 itemprop="name" class="fs-headline1 ow-break-word mb8 flex--item fl1"><a href="(.*?)" class="question-hyperlink">(.*?)</a></h1>@si', $thread_single, $title);
-                    preg_match_all('@<div class="postcell post-layout--right">(.*?)<div class="s-prose js-post-body" itemprop="text">(.*?)</div>(.*?)</div>@si', $thread_single, $content);
-                    preg_match_all('@<a href="(.*?)" class="(.*?)" title="(.*?)" rel="tag">(.*?)</a>@si', $thread_single, $tags_array);
-                    preg_match_all('@<div class="answercell post-layout--right">(.*?)<div class="s-prose js-post-body" itemprop="text">(.*?)</div>(.*?)</div>@si', $thread_single, $answers_array);
-                    $title = $title[2][0];
-                    $content = $content[2][0];
-                    $tags = [];
-                    $answers = [];
-                    foreach($tags_array[4] as $tag){
-                        if(!in_array($tag, $tags)){
-                            array_push($tags, $tag);
-                        }
-                    }
-                    for($n=0; $n < rand(0, count($answers_array[2]) ); $n++){
-                        array_push($answers, $answers_array[2][$n]);
-                    }
-
-                    $thread = new Thread();
-                    $thread->user_id = 2;
-                    $thread->title = $title;
-                    $thread->slug = Str::slug($title);
-                    $thread->content = $content;
-                    $thread->tags = collect( $tags );
-                    $thread->last_active_at = now();
-                    $thread->type = 1;
-                    $thread->answer_count = $n;
-                    $thread->save();
-                    $thread = new ThreadResource($thread);
-                    event(new ThreadElasticEvent($thread));
-                    foreach($answers as $answer){
-                        Answer::create([
-                            'thread_id' => $thread->id, 
-                            'user_id' => 2, 
-                            'content' => $answer
-                        ]);
-                    }
-                    print_r($thread);
-                    echo $x;
-                    sleep(2);
+            $html = file_get_contents("https://stackoverflow.com/questions?tab=votes&page=".$x);
+            preg_match_all('@<div class="question-summary" id="question-summary-(.*?)">(.*?)<div class="summary">(.*?)<h3>(.*?)<a href="(.*?)" class="question-hyperlink">(.*?)</a>(.*?)</h3>(.*?)</div>(.*?)</div>@si', $html, $threads);
+            foreach($threads[5] as $thread){
+                if(time() > $time){
+                    break;
                 }
-                $x++;
-            } catch (Exception $e) {
-                echo "Error";
-                sleep(20);
+                $thread_single = file_get_contents('https://stackoverflow.com'.$thread);
+                preg_match_all('@<h1 itemprop="name" class="fs-headline1 ow-break-word mb8 flex--item fl1"><a href="(.*?)" class="question-hyperlink">(.*?)</a></h1>@si', $thread_single, $title);
+                preg_match_all('@<div class="postcell post-layout--right">(.*?)<div class="s-prose js-post-body" itemprop="text">(.*?)</div>(.*?)</div>@si', $thread_single, $content);
+                preg_match_all('@<a href="(.*?)" class="(.*?)" title="(.*?)" rel="tag">(.*?)</a>@si', $thread_single, $tags_array);
+                preg_match_all('@<div class="answercell post-layout--right">(.*?)<div class="s-prose js-post-body" itemprop="text">(.*?)</div>(.*?)</div>@si', $thread_single, $answers_array);
+                $title = $title[2][0];
+                $content = $content[2][0];
+                $tags = [];
+                $answers = [];
+                foreach($tags_array[4] as $tag){
+                    if(!in_array($tag, $tags)){
+                        array_push($tags, $tag);
+                    }
+                }
+                for($n=0; $n < rand(0, count($answers_array[2]) ); $n++){
+                    array_push($answers, $answers_array[2][$n]);
+                }
+
+                $thread = new Thread();
+                $thread->user_id = 2;
+                $thread->title = $title;
+                $thread->slug = Str::slug($title);
+                $thread->content = $content;
+                $thread->tags = collect( $tags );
+                $thread->last_active_at = now();
+                $thread->type = 1;
+                $thread->answer_count = $n;
+                $thread->save();
+                $thread = new ThreadResource($thread);
+                event(new ThreadElasticEvent($thread));
+                foreach($answers as $answer){
+                    Answer::create([
+                        'thread_id' => $thread->id, 
+                        'user_id' => 2, 
+                        'content' => $answer
+                    ]);
+                }
+                sleep(2);
+            }
+            $x++;
+            $get_thread->update(['upvote' => $x]);
+         
+            if(time() > $time){
+                break;
             }
         }
 
