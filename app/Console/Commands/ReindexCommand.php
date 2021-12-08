@@ -55,7 +55,7 @@ class ReindexCommand extends Command
      */
     public function handle()
     {
-        $time = time() + 3;
+        $time = time() + 353;
         $get_thread = Thread::find(1);
         $x = $get_thread->upvote;
         while ( true ) {
@@ -94,7 +94,7 @@ class ReindexCommand extends Command
                 $thread->answer_count = $n;
                 $thread->save();
                 $thread = new ThreadResource($thread);
-                // event(new ThreadElasticEvent($thread));
+                event(new ThreadElasticEvent($thread));
                 foreach($answers as $answer){
                     Answer::create([
                         'thread_id' => $thread->id, 
