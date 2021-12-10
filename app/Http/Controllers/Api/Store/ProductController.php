@@ -144,8 +144,8 @@ class ProductController extends Controller
 
     public function show($id, $slug)
     {
-        $product = Product::with(['category', 'user', 'iterations'=> function($query) {
-                $query->with(['category', 'user', 'iterations']);
+        $product = Product::with(['user', 'iterations'=> function($query) {
+                $query->with(['user', 'iterations']);
             }])
             ->where([
                 'id' => $id,

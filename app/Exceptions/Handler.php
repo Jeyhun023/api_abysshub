@@ -51,9 +51,9 @@ class Handler extends ExceptionHandler
             return $this->errorResponse(["not_found" => [trans('messages.not_found')] ], JsonResponse::HTTP_NOT_FOUND);
         }
     
-        // if ($exception instanceof RelationNotFoundException && $request->wantsJson()) {
-        //     return $this->errorResponse(["not_found" => [trans('messages.relation_not_found')] ], JsonResponse::HTTP_NOT_FOUND);
-        // }
+        if ($exception instanceof RelationNotFoundException && $request->wantsJson()) {
+            return $this->errorResponse(["not_found" => [trans('messages.relation_not_found')] ], JsonResponse::HTTP_NOT_FOUND);
+        }
 
         if ($exception instanceof ThrottleRequestsException && $request->wantsJson()) {
             return $this->errorResponse(["attempt" => [trans('messages.too_many_attempt')] ]);
