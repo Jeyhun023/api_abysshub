@@ -153,6 +153,8 @@ class ProductController extends Controller
             ])
             ->firstOrFail();
 
+        $code = Storage::disk('products')->get($product->file);
+               
         activity('product')
             ->event('show')
             ->causedBy($this->user)
@@ -160,7 +162,7 @@ class ProductController extends Controller
             ->withProperties(['query' => request()->query('query'), 'ref' => request()->query('ref')])
             ->log( request()->ip() );
 
-        return $this->successResponse(new ProductResource($product));
+        return $this->successResponse(new ProductResource($product), ["code" => $code]);
     }
     
     public function review(Product $product, RatingRequest $request)
