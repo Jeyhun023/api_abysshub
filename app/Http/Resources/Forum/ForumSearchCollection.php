@@ -21,6 +21,7 @@ class ForumSearchCollection extends ResourceCollection
                 'title' => $result['_source']['title'],
                 'slug' => $result['_source']['slug'],
                 'content' => $result['_source']['content'],
+                'answer_count' => $result['_source']['answer_count'],
                 'user' => (isset($result['_source']['user'])) ? $result['_source']['user'] : null,
                 'product' => (isset($result['_source']['product'])) ? $result['_source']['product'] : null,
                 'tags' => $result['_source']['tags'],
