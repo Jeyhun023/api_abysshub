@@ -115,10 +115,7 @@ class ReindexCommand extends Command
         // }
 
         for($x = 1; $x <= 236113; $x += 1000){
-            $threads = Thread::with(['answers' => function($query) {
-                    $query->with('linked');
-                    $query->with('comments');
-            },'user', 'category', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
+            $threads = Thread::with(['user', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
             // $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
 
             foreach($threads as $thread) {
@@ -165,7 +162,7 @@ class ReindexCommand extends Command
         
                 // $client->index($params);
 
-                // echo $thread->id. PHP_EOL;
+                echo $thread->id. PHP_EOL;
             }
         }
     }
