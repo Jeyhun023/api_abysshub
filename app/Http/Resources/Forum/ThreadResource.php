@@ -30,7 +30,7 @@ class ThreadResource extends JsonResource
             'view_count' => $this->view_count == null ? 0 : $this->view_count,
             'upvote' => $this->upvote == null ? 0 : $this->upvote,
             'user_votes' => $this->userVotes,
-            'type' => 1,//Thread::THREAD_TYPE[$this->type],
+            'type' => Thread::THREAD_TYPE[$this->type],
             'last_active_at' => $this->last_active_at,
             'closed_at' => $this->closed_at,
             'created_at' => $this->created_at->format('d/m/Y'),
