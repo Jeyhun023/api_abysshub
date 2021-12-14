@@ -39,6 +39,7 @@ class ForumSearchController extends Controller
             $query = (request()->input('query') !=null ) ? request()->input('query') : 0;
             $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
             $tags = (request()->input('tags') !=null ) ? explode(',',request()->input('tags')) : null;
+            $type = (request()->input('type') !=null ) ? request()->input('type') : null;
 
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
             
@@ -55,6 +56,10 @@ class ForumSearchController extends Controller
                 $params['body']['query']['bool']['boost'] = 1.0;
             }
             
+            if($type != null){
+                $params['body']['query']['bool']['must'] = [ "term" => ["type" => $type] ] ;
+            }
+
             $response = $client->search($params);
             event(new NewSearchEvent($query));
 

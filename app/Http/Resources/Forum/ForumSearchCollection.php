@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Forum;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Models\Thread;
 
 class ForumSearchCollection extends ResourceCollection
 {
