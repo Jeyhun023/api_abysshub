@@ -142,8 +142,8 @@ class ReindexCommand extends Command
                 //     $thread->decrement('answer_count');
                 // }
 
-                $description = strip_tags(preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', ' · ', $thread->content));
-                $thread->description = $description;
+                $description = strip_tags(preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $thread->content));
+                $thread->description = substr($description, 246);
                 $thread->save();
 
                 // $tags = collect(json_decode($thread->getRawOriginal('tags')));
