@@ -144,7 +144,7 @@ class ReindexCommand extends Command
 
                 $description = str_replace('  ', ' ', 
                     strip_tags(
-                        preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $thread->content)
+                        preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s/\xB0/u', '·', $thread->content)
                     )
                 );
                 $thread->description = substr($description, 0, 246);
