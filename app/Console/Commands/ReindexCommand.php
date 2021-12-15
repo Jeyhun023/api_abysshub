@@ -147,7 +147,7 @@ class ReindexCommand extends Command
                         preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $thread->content)
                     )
                 ); 
-                $thread->description = preg_replace('/\xB0/u', '', substr($description, 0, 246));
+                $thread->description = trim(preg_replace('/\s\s+/', ' ', preg_replace('/\xB0/u', '', substr($description, 0, 246)) )); ;
                 $thread->save();
 
                 // $tags = collect(json_decode($thread->getRawOriginal('tags')));
