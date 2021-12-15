@@ -22,7 +22,7 @@ class ThreadCollection extends ResourceCollection
                 'user' => new UserResource($thread->user),
                 'title' => $thread->title,
                 'slug' => $thread->slug,
-                'content' => $thread->content,
+                'description' => $thread->description,
                 'tags' => $thread->tags,
                 'accepted_answer_id' => $thread->accepted_answer_id,
                 'answer_count' => $thread->answer_count,

@@ -15,7 +15,14 @@ class ThreadRequest extends FormRequest
      */
     public function authorize()
     { 
-        $description = strip_tags(preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', ' · ', $this['content']));
+        $description = preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $this['content']);
+        $description = strip_tags($description);
+        $description = str_replace('  ', ' ', $description);
+        $description = substr($description, 0, 246);
+        $description = preg_replace('/\xB0/u', '', $description);
+        $description = preg_replace('/\s\s+/', ' ', $description);
+        $description = trim($description);
+        
         $this->merge([
             'description' => $description
         ]);

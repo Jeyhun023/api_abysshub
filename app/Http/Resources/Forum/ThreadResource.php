@@ -23,6 +23,7 @@ class ThreadResource extends JsonResource
             'title' => $this->title,
             'slug' => $this->slug,
             'content' => $this->content,
+            'description' => $this->description,
             'tags' => $this->tags,
             'accepted_answer_id' => $this->accepted_answer_id,
             'answer_count' => $this->answer_count == null ? 0 : $this->answer_count,

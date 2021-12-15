@@ -18,15 +18,16 @@ class ForumSearchCollection extends ResourceCollection
         return $this->collection->transform(function ($result) {
             return [
                 'id' => $result['_id'],
-                'score' => $result['_score'],
                 'title' => $result['_source']['title'],
                 'slug' => $result['_source']['slug'],
-                'content' => $result['_source']['content'],
+                'description' => (isset($result['_source']['description'])) ? $result['_source']['description'] : null,
                 'answer_count' => $result['_source']['answer_count'],
                 'user' => (isset($result['_source']['user'])) ? $result['_source']['user'] : null,
                 'product' => (isset($result['_source']['product'])) ? $result['_source']['product'] : null,
                 'tags' => $result['_source']['tags'],
                 'type' => (isset($result['_source']['type'])) ? Thread::THREAD_TYPE[$result['_source']['type']] : 'Question',
+                'upvote' => (isset($result['_source']['upvote'])) ? $result['_source']['upvote'] : 0,
+                'downvote' => (isset($result['_source']['downvote'])) ? $result['_source']['downvote'] : 0,
                 'created_at' => (isset($result['_source']['created_at'])) ? $result['_source']['created_at'] : null,
                 'updated_at' => (isset($result['_source']['updated_at'])) ? $result['_source']['updated_at'] : null,
             ];
