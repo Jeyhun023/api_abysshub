@@ -19,6 +19,7 @@ class CreateThreadsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->string('title', 255);
             $table->text('content');
+            $table->string('description', 255);
             $table->json('tags');
             $table->string('slug', 300);
             

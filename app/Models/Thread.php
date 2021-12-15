@@ -11,7 +11,7 @@ class Thread extends Model
 
     public $table = "threads";
 
-    protected $fillable = ['user_id', 'product_id', 'title','slug','content','tags','last_active_at', 'type'];
+    protected $fillable = ['user_id', 'product_id', 'title','description','slug','content','tags','last_active_at', 'type'];
     protected $guarded = ['accepted_answer_id', 'closed_at', 'answer_count', 'comment_count', 'view_count', 'upvote']; 
     protected $casts = ['tags' => 'json'];
     protected $dates = ['last_active_at','closed_at'];

@@ -65,10 +65,12 @@ class ThreadController extends Controller
 
     public function store(ThreadRequest $request)
     {
+        return $request->description;
         try {
             $thread = new Thread();
             $thread->user_id = auth()->user()->id;
             $thread->title = $request->title;
+            $thread->description = $request->description;
             $thread->slug = Str::slug($request->title);
             $thread->content = $request->content;
             $thread->tags = collect( explode(',' , $request->tags) );
