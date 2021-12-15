@@ -144,7 +144,7 @@ class ReindexCommand extends Command
 
                 $description = strip_tags(preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $thread->content));
                 $thread->description = substr($description, 246);
-                return strlen($thread->description);
+                echo strlen($thread->description);
                 $thread->save();
 
                 // $tags = collect(json_decode($thread->getRawOriginal('tags')));
