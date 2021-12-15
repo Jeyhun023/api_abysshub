@@ -69,7 +69,7 @@ class ThreadController extends Controller
             $thread = new Thread();
             $thread->user_id = auth()->user()->id;
             $thread->title = $request->title;
-            $thread->description = substr($request->description, 246);
+            $thread->description = substr($request->description, 0, 246);
             $thread->slug = Str::slug($request->title);
             $thread->content = $request->content;
             $thread->tags = collect( explode(',' , $request->tags) );
