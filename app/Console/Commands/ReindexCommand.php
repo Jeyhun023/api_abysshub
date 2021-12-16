@@ -120,11 +120,11 @@ class ReindexCommand extends Command
 
 
 
-        for($x = 149786; $x <= 266195; $x += 1000){
-            $threads = Thread::with(['user', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
+        // for($x = 247182; $x <= 266195; $x += 1000){
+            $threads = Thread::with(['user', 'product'])->where('id', 171851)->first();
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
 
-            foreach($threads as $thread) {
+            // foreach($threads as $thread) {
                 // $thread = new ThreadResource($thread);
                 // event(new ThreadElasticEvent($thread));
                 // if($thread->answers->isNotEmpty()){
@@ -149,7 +149,7 @@ class ReindexCommand extends Command
                 $description = preg_replace('/\xB0/u', '', $description);
                 $description = preg_replace('/\s\s+/', ' ', $description);
                 $description = trim($description);
-                
+                echo $description;
                 // $description = str_replace('  ', ' ', 
                 //     strip_tags(
                 //         preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $thread->content)
@@ -187,9 +187,9 @@ class ReindexCommand extends Command
         
                 $client->index($params);
 
-                echo $thread->id. PHP_EOL;
-            }
-        }
+                // echo $thread->id. PHP_EOL;
+            // }
+        // }
 
     }
 }
