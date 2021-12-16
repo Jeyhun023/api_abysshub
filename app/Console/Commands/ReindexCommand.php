@@ -120,11 +120,11 @@ class ReindexCommand extends Command
 
 
 
-        // for($x = 247182; $x <= 266195; $x += 1000){
-            $thread = Thread::with(['user', 'product'])->where('id', 171851)->first();
+        for($x = 149000; $x <= 266195; $x += 1000){
+            $threads = Thread::with(['user', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
 
-            // foreach($threads as $thread) {
+            foreach($threads as $thread) {
                 // $thread = new ThreadResource($thread);
                 // event(new ThreadElasticEvent($thread));
                 // if($thread->answers->isNotEmpty()){
@@ -149,14 +149,13 @@ class ReindexCommand extends Command
                 $description = preg_replace('/\xB0/u', '', $description);
                 $description = preg_replace('/\s\s+/', ' ', $description);
                 $description = trim($description);
-                echo $description;
+                
                 // $description = str_replace('  ', ' ', 
                 //     strip_tags(
                 //         preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $thread->content)
                 //     )
                 // ); 
                 // $thread->description = trim(preg_replace('/\s\s+/', ' ', preg_replace('/\xB0/u', '', substr($description, 0, 246)) )); ;
-                
                 $thread->description = $description;
                 $thread->save();
 
@@ -169,7 +168,7 @@ class ReindexCommand extends Command
                 $params['body']['title'] = $thread->title;
                 $params['body']['slug'] = $thread->slug;
                 $params['body']['content'] = $thread->content;
-                $params['body']['description'] = $description;
+                $params['body']['description'] = $thread->description;
                 $params['body']['tags'] = $thread->tags;
                 $params['body']['type'] = $thread->type;
                 $params['body']['user'] = $thread->user;
@@ -188,9 +187,9 @@ class ReindexCommand extends Command
         
                 $client->index($params);
 
-                // echo $thread->id. PHP_EOL;
-            // }
-        // }
+                echo $thread->id. PHP_EOL;
+            }
+        }
 
     }
 }
