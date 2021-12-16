@@ -157,6 +157,7 @@ class ReindexCommand extends Command
                 // ); 
                 // $thread->description = trim(preg_replace('/\s\s+/', ' ', preg_replace('/\xB0/u', '', substr($description, 0, 246)) )); ;
                 
+                $thread->description = $description;
                 $thread->save();
 
                 // $tags = collect(json_decode($thread->getRawOriginal('tags')));
@@ -168,7 +169,7 @@ class ReindexCommand extends Command
                 $params['body']['title'] = $thread->title;
                 $params['body']['slug'] = $thread->slug;
                 $params['body']['content'] = $thread->content;
-                $params['body']['description'] = $thread->description;
+                $params['body']['description'] = $description;
                 $params['body']['tags'] = $thread->tags;
                 $params['body']['type'] = $thread->type;
                 $params['body']['user'] = $thread->user;
