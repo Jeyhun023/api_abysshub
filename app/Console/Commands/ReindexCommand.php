@@ -120,7 +120,7 @@ class ReindexCommand extends Command
 
 
 
-        for($x = 440; $x <= 149786; $x += 1000){
+        for($x = 149786; $x <= 266195; $x += 1000){
             $threads = Thread::with(['user', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
 
