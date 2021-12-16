@@ -45,6 +45,7 @@ class ThreadElasticListener implements ShouldQueue
         $params['body']['title'] = $event->data->title;
         $params['body']['slug'] = $event->data->slug;
         $params['body']['content'] = $event->data->content;
+        $params['body']['description'] = $event->data->description;
         $params['body']['tags'] = $event->data->tags;
         $params['body']['type'] = $event->data->type;
         $params['body']['user'] = $event->data->user;
