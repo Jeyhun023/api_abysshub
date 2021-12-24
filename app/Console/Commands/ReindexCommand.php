@@ -116,11 +116,10 @@ class ReindexCommand extends Command
 
         for($x = 180000; $x <= 266195; $x += 1000){
             $threads = Thread::with(['user', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
-            $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
+            // $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
 
             foreach($threads as $thread) {
-                // $thread = new ThreadResource($thread);
-                // event(new ThreadElasticEvent($thread));
+             
                 // if($thread->answers->isNotEmpty()){
                 //     if($thread->answers->first()->linked->isNotEmpty()){
                 //         foreach($thread->answers->first()->linked as $linked){
@@ -143,43 +142,40 @@ class ReindexCommand extends Command
                 $description = preg_replace('/\xB0/u', '', $description);
                 $description = preg_replace('/\s\s+/', ' ', $description);
                 $description = trim($description);
-                
-                // $description = str_replace('  ', ' ', 
-                //     strip_tags(
-                //         preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $thread->content)
-                //     )
-                // ); 
-                // $thread->description = trim(preg_replace('/\s\s+/', ' ', preg_replace('/\xB0/u', '', substr($description, 0, 246)) )); ;
+
                 $thread->description = $description;
                 $thread->save();
+
+                $thread = new ThreadResource($thread);
+                event(new ThreadElasticEvent($thread));
 
                 // $tags = collect(json_decode($thread->getRawOriginal('tags')));
                 // $thread->tags = $tags;
                 // $thread->save();
 
-                $params['index'] = 'threads';
-                $params['id'] = $thread->id;
-                $params['body']['title'] = $thread->title;
-                $params['body']['slug'] = $thread->slug;
-                $params['body']['content'] = $thread->content;
-                $params['body']['description'] = $thread->description;
-                $params['body']['tags'] = $thread->tags;
-                $params['body']['type'] = $thread->type;
-                $params['body']['user'] = $thread->user;
-                $params['body']['category'] = $thread->category;
-                $params['body']['product'] = $thread->product;
-                $params['body']['accepted_answer_id'] = $thread->accepted_answer_id;
-                $params['body']['upvote'] = $thread->upvote;
-                $params['body']['comment_count'] = $thread->comment_count;
-                $params['body']['view_count'] = $thread->view_count;
-                $params['body']['answer_count'] = $thread->answer_count;
-                $params['body']['last_active_at'] = $thread->last_active_at;
-                $params['body']['created_at'] = $thread->created_at;
-                $params['body']['updated_at'] = $thread->updated_at;
-                $params['body']['closed_at'] = $thread->closed_at;
-                $params['body']['deleted_at'] = $thread->deleted_at;
+                // $params['index'] = 'threads';
+                // $params['id'] = $thread->id;
+                // $params['body']['title'] = $thread->title;
+                // $params['body']['slug'] = $thread->slug;
+                // $params['body']['content'] = $thread->content;
+                // $params['body']['description'] = $thread->description;
+                // $params['body']['tags'] = $thread->tags;
+                // $params['body']['type'] = $thread->type;
+                // $params['body']['user'] = $thread->user;
+                // $params['body']['category'] = $thread->category;
+                // $params['body']['product'] = $thread->product;
+                // $params['body']['accepted_answer_id'] = $thread->accepted_answer_id;
+                // $params['body']['upvote'] = $thread->upvote;
+                // $params['body']['comment_count'] = $thread->comment_count;
+                // $params['body']['view_count'] = $thread->view_count;
+                // $params['body']['answer_count'] = $thread->answer_count;
+                // $params['body']['last_active_at'] = $thread->last_active_at;
+                // $params['body']['created_at'] = $thread->created_at;
+                // $params['body']['updated_at'] = $thread->updated_at;
+                // $params['body']['closed_at'] = $thread->closed_at;
+                // $params['body']['deleted_at'] = $thread->deleted_at;
         
-                $client->index($params);
+                // $client->index($params);
 
                 echo $thread->id. PHP_EOL;
             }

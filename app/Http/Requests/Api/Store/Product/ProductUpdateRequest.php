@@ -31,9 +31,10 @@ class ProductUpdateRequest extends FormRequest
     {
         return [
             'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)],
-            'name' => [Rule::requiredIf($this->route('product')->status == 1) , 'max:255', new ProfanityCheck()],
-            'description' => Rule::requiredIf($this->route('product')->status == 1),
-            'price' => [Rule::requiredIf($this->route('product')->status == 1), 'max:1000']
+            'name' => [Rule::requiredIf($this->route('product')->status == 2) , 'max:255', new ProfanityCheck()],
+            'description' => Rule::requiredIf($this->route('product')->status == 2),
+            'tags' => [Rule::requiredIf($this->route('product')->status == 2), 'max:1000'],
+            'price' => [Rule::requiredIf($this->route('product')->status == 2), 'max:1000']
         ];
     }
 
