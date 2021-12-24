@@ -18,7 +18,7 @@ class CaveCollection extends ResourceCollection
         return $this->collection->transform(function ($cave) {
             return [
                 'id' => $cave->id,
-                'product' => new ProductResource($cave->product),
+                'product' => $cave->product,
                 'type' => $cave->type,
                 'created_at' => $cave->created_at->format('d/m/Y'),
                 'updated_at' => $cave->updated_at->format('d/m/Y')
