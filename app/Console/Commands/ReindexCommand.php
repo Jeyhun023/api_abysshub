@@ -146,8 +146,8 @@ class ReindexCommand extends Command
                 $thread->description = $description;
                 $thread->save();
 
-                // $thread = new ThreadResource($thread);
-                // event(new ThreadElasticEvent($thread));
+                $thread = new ThreadResource($thread);
+                event(new ThreadElasticEvent($thread));
 
                 // $tags = collect(json_decode($thread->getRawOriginal('tags')));
                 // $thread->tags = $tags;
