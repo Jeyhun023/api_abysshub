@@ -114,7 +114,7 @@ class ReindexCommand extends Command
         //     }
         // }
 
-        for($x = 0; $x <= 266195; $x += 1000){
+        for($x = 190000; $x <= 266195; $x += 1000){
             $threads = Thread::with(['user', 'product'])->where('id', '<=', $x + 1000)->where('id', '>', $x)->get();
             // $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
 
@@ -146,8 +146,8 @@ class ReindexCommand extends Command
                 $thread->description = $description;
                 $thread->save();
 
-                $thread = new ThreadResource($thread);
-                event(new ThreadElasticEvent($thread));
+                // $thread = new ThreadResource($thread);
+                // event(new ThreadElasticEvent($thread));
 
                 // $tags = collect(json_decode($thread->getRawOriginal('tags')));
                 // $thread->tags = $tags;
