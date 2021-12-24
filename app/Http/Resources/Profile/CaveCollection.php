@@ -20,7 +20,7 @@ class CaveCollection extends ResourceCollection
             return [
                 'id' => $cave->id,
                 // 'user' => new UserResource($cave->user),
-                'product' => $cave->product,
+                // 'product' => $cave->product,
                 'type' => $cave->type,
                 'created_at' => $cave->created_at->format('d/m/Y'),
                 'updated_at' => $cave->updated_at->format('d/m/Y')
