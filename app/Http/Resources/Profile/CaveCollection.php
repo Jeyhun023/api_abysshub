@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Profile;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\Auth\UserResource;
 use App\Http\Resources\Store\ProductResource;
 
 class CaveCollection extends ResourceCollection
@@ -19,8 +18,7 @@ class CaveCollection extends ResourceCollection
         return $this->collection->transform(function ($cave) {
             return [
                 'id' => $cave->id,
-                // 'user' => new UserResource($cave->user),
-                // 'product' => $cave->product,
+                'product' => new ProductResource($cave->product),
                 'type' => $cave->type,
                 'created_at' => $cave->created_at->format('d/m/Y'),
                 'updated_at' => $cave->updated_at->format('d/m/Y')
