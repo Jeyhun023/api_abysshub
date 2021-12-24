@@ -32,6 +32,16 @@ class Thread extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function upvote()
+    {
+        return $this->hasMany(ThreadsVote::class)->where('type', 'upvote');
+    }
+
+    public function downvote()
+    {
+        return $this->hasMany(ThreadsVote::class)->where('type', 'downvote');
+    }
+
     public function linked()
     {
         return $this->hasMany(ThreadLinkedProduct::class);

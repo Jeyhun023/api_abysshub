@@ -52,4 +52,5 @@ return [
     'product_already_submitted' => 'Your product have already submitted',
     'can_be_iteration' => 'Your product can be iteration',
     'cave_store_success' => 'Successfully added to cave',
+    'store_fill_details' => 'Please provide whole details',
 ];

@@ -9,7 +9,7 @@ class ThreadsVote extends Model
 {
     use HasFactory;
 
-    const VOTE_TYPE_SELECT = ['upvote'];
+    const VOTE_TYPE_SELECT = ['upvote','downvote'];
     
     public $table = "threads_vote";
 

@@ -66,22 +66,25 @@ class ProductController extends Controller
     public function submit(Product $product, ProductSubmitRequest $request)
     {
         try {
-            switch ($product->status) {
-                case 1:
-                    Storage::disk('products')->move($product->file, 'live/'.basename($product->file));
-                    $product->update(['status' => '2', 'file' => 'live/'.basename($product->file)]);
-                    event(new StoreElasticEvent($product));
-                    return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
-                  break;
-                case 0:
-                    return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
-                  break;
-                case 2:
-                    return $this->errorResponse(["failed" => [trans('messages.product_already_submitted')] ]);
-                  break;
-                default:
-                    return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+            if($product->name != null & $product->file != null & $product->description != null & $product->tags != null ){
+                switch ($product->status) {
+                    case 1:
+                        Storage::disk('products')->move($product->file, 'live/'.basename($product->file));
+                        $product->update(['status' => '2', 'file' => 'live/'.basename($product->file)]);
+                        event(new StoreElasticEvent($product));
+                        return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
+                    break;
+                    case 0:
+                        return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
+                    break;
+                    case 2:
+                        return $this->errorResponse(["failed" => [trans('messages.product_already_submitted')] ]);
+                    break;
+                    default:
+                        return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+                }
             }
+            return $this->errorResponse(["failed" => [trans('messages.store_fill_details')] ]);
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

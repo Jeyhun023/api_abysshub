@@ -46,7 +46,7 @@ class ForumSearchController extends Controller
             $params['index'] = 'threads';
             $params['size'] = 10;
             $params['from'] = $from;
-            $params['body']['query']['bool']['should'][] = [ "multi_match" => ["query" => $query, "fields" => ['title^3', 'content']]];
+            $params['body']['query']['bool']['should'][] = [ "multi_match" => ["query" => $query, "fields" => ['title^3', 'description']]];
             
             if($tags != null){
                 foreach($tags as $tag){

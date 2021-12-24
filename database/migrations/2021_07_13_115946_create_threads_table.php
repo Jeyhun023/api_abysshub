@@ -26,7 +26,6 @@ class CreateThreadsTable extends Migration
             $table->integer('answer_count')->default(0);
             $table->integer('comment_count')->default(0);
             $table->integer('view_count')->default(0);
-            $table->integer('upvote')->default(0);
             $table->enum('type', [1, 2, 3]);
 
             $table->datetime('last_active_at');

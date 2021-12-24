@@ -44,15 +44,14 @@ class ThreadElasticListener implements ShouldQueue
         $params['id'] = $event->data->id;
         $params['body']['title'] = $event->data->title;
         $params['body']['slug'] = $event->data->slug;
-        $params['body']['content'] = $event->data->content;
         $params['body']['description'] = $event->data->description;
         $params['body']['tags'] = $event->data->tags;
         $params['body']['type'] = $event->data->type;
         $params['body']['user'] = $event->data->user;
-        $params['body']['category'] = $event->data->category;
         $params['body']['product'] = $event->data->product;
         $params['body']['accepted_answer_id'] = $event->data->accepted_answer_id;
-        $params['body']['upvote'] = $event->data->upvote;
+        $params['body']['upvote'] = $event->data->upvote()->count;
+        $params['body']['downvote'] = $event->data->downvote()->count;
         $params['body']['comment_count'] = $event->data->comment_count;
         $params['body']['view_count'] = $event->data->view_count;
         $params['body']['answer_count'] = $event->data->answer_count;

@@ -46,6 +46,7 @@ class ThreadController extends Controller
     public function show($id, $slug)
     {
         $thread = Thread::with(['user', 'userVotes', 'linked.product'])
+            ->withCount(['upvote','downvote'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
@@ -152,12 +153,16 @@ class ThreadController extends Controller
     public function vote(Thread $thread, ThreadVoteRequest $request)
     {
         try {
-            $threadVote = ThreadsVote::query()->create([
+            $threadVote = ThreadsVote::where([
+                'thread_id' => $thread->id, 
+                'user_id' => auth()->user()->id, 
+            ])->where('type', '!=', $request->type)->delete();
+
+            $threadVote = ThreadsVote::firstOrCreate([
                 'thread_id' => $thread->id, 
                 'user_id' => auth()->user()->id, 
                 'type' => $request->type
             ]);
-            $thread->increment($request->type);
 
             return $this->successResponse($threadVote, trans('messages.vote_success'));
         } catch (Exception $e) {
@@ -173,7 +178,6 @@ class ThreadController extends Controller
                 'user_id' => auth()->user()->id, 
                 'type' => $request->type
             ])->delete();
-            $thread->decrement($request->type);
 
             return $this->successResponse(null, trans('messages.unvote_success'));
         } catch (Exception $e) {

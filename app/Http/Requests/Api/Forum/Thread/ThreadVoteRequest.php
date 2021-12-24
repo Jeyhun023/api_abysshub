@@ -31,7 +31,7 @@ class ThreadVoteRequest extends FormRequest
     {
         return [
             'type' => ['required', Rule::in(ThreadsVote::VOTE_TYPE_SELECT)],
-            'thread_id' => ['required', Rule::unique('threads_vote')->where('thread_id', $this->thread_id)->where('user_id', $this->user_id)]
+            'thread_id' => ['required', Rule::unique('threads_vote')->where('thread_id', $this->thread_id)->where('user_id', $this->user_id)->where('type', $this->type)]
         ];
     }
     

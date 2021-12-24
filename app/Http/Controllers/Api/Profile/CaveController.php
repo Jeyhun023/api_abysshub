@@ -23,7 +23,7 @@ class CaveController extends Controller
     public function index()
     {
         $cave = Cave::where('user_id', $this->user->id)
-            ->with(['product'])
+            ->with(['product.user','user', 'product.threads'])
             ->paginate(10);
         
         return new CaveCollection($cave);
