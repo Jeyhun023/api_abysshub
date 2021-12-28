@@ -51,6 +51,9 @@ return [
     'plagiat_error' => 'Plagiarism detected',
     'product_already_submitted' => 'Your product have already submitted',
     'can_be_iteration' => 'Your product can be iteration',
-    'cave_store_success' => 'Successfully added to cave',
+    'inventory_store_success' => 'Successfully added to Inventory',
     'store_fill_details' => 'Please provide whole details',
+    'inventory_already_exist' => 'This product is already added',
+    'inventory_not_exist' => 'This product is not available in your cave dude',
+    'inventory_delete_success' => 'Product deleted from your cave',
 ];

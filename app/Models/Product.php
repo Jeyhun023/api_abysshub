@@ -40,4 +40,9 @@ class Product extends Model
     {
         return $this->belongsTo(Shop::class);
     }
+    
+    public function userCave()
+    {
+        return $this->hasOne(Inventory::class)->where('user_id', auth()->guard('api')->user()?->id);
+    }
 }

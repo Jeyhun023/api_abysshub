@@ -21,11 +21,11 @@ class CreateProductsTable extends Migration
             $table->string('slug')->nullable();
             $table->string('file')->nullable();
             $table->longText('description')->nullable();
-            $table->decimal('price', 6, 2)->default(0);
+            $table->decimal('price', 6, 2)->default(0)->nullable();
             $table->integer('rate')->default(0)->nullable();
             $table->bigInteger('download_count')->default(0)->nullable();
             $table->enum('status', [0, 1, 2])->default(0);
-            $table->json('tags');
+            $table->json('tags')->nullable();
             $table->timestamps();
             $table->softDeletes();
             

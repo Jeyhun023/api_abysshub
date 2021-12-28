@@ -73,7 +73,7 @@ class ThreadController extends Controller
             $thread->description = $request->description;
             $thread->slug = Str::slug($request->title);
             $thread->content = $request->content;
-            $thread->tags = collect( explode(',' , $request->tags) );
+            $thread->tags = collect( $request->tags );
             $thread->last_active_at = now();
             $thread->type = $request->type;
             if($request->type == 3){

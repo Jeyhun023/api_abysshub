@@ -14,7 +14,12 @@ use App\Http\Controllers\Api\Store\ProductController;
 use App\Http\Controllers\Api\Store\IterationController;
 use App\Http\Controllers\Api\Store\StoreSearchController;
 //Profile
-use App\Http\Controllers\Api\Profile\CaveController;
+use App\Http\Controllers\Api\Profile\InventoryController;
+use App\Http\Controllers\Api\Profile\AccountController;
+use App\Http\Controllers\Api\Profile\LibraryController;
+//Other
+use App\Http\Controllers\Api\Other\SkillController;
+use App\Http\Controllers\Api\Other\TagController;
 
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
@@ -120,6 +125,20 @@ Route::group(['prefix' => 'store'], function () {
 
 //Profile
 Route::group(['prefix' => 'profile', 'middleware' => ['auth:api','verified']], function () {
-    Route::get('/cave', [CaveController::class, 'index']); 
-    Route::post('/cave/{product}/create', [CaveController::class, 'store']); 
+    //Account
+    Route::post('/account/update', [AccountController::class, 'update']); 
+    //Inventory
+    Route::get('/inventory', [InventoryController::class, 'index']); 
+    Route::post('/inventory/{product}/create', [InventoryController::class, 'store']); 
+    Route::delete('/inventory/{product}/delete', [InventoryController::class, 'delete']);
+    Route::get('/inventory/history', [InventoryController::class, 'history']); 
+    //Library
+    Route::get('/library/history', [LibraryController::class, 'history']); 
+});
+
+
+//Other
+Route::group(['prefix' => 'other', 'middleware' => ['auth:api','verified']], function () {
+    Route::get('/tags/{tag}', [TagController::class, 'search']); 
+    Route::get('/skills/{skill}', [SkillController::class, 'search']); 
 });

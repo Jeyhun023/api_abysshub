@@ -34,7 +34,7 @@ class ProductUpdateRequest extends FormRequest
             'name' => [Rule::requiredIf($this->route('product')->status == 2) , 'max:255', new ProfanityCheck()],
             'description' => Rule::requiredIf($this->route('product')->status == 2),
             'tags' => [Rule::requiredIf($this->route('product')->status == 2), 'max:1000'],
-            'price' => [Rule::requiredIf($this->route('product')->status == 2), 'max:1000']
+            'price' => ['nullable', 'max:1000']
         ];
     }
 

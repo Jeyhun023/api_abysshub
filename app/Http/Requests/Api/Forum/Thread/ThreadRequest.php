@@ -23,8 +23,12 @@ class ThreadRequest extends FormRequest
         $description = preg_replace('/\s\s+/', ' ', $description);
         $description = trim($description);
         
+        $tags = explode(',' , $this->tags);
+        $tags = array_map('trim', $tags);
+        
         $this->merge([
-            'description' => $description
+            'description' => $description,
+            'tags' => $tags
         ]);
         return true;
     }
@@ -41,7 +45,7 @@ class ThreadRequest extends FormRequest
             'description' => ['required', 'string', 'min:50', new ProfanityCheck()],
             'content' => ['required'],
             'type' => ['required', Rule::in(['1', '2', '3'])],
-            'tags' => 'required|max:255',
+            'tags' => ['required', 'array', 'max:10', 'min:5'],
             'product_id' => ['required_if:type,==,3', 'exists:products,id'],
         ];
     }

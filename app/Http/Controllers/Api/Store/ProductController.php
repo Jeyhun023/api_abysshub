@@ -66,7 +66,7 @@ class ProductController extends Controller
     public function submit(Product $product, ProductSubmitRequest $request)
     {
         try {
-            if($product->name != null & $product->file != null & $product->description != null & $product->tags != null ){
+            if($product->name != null & $product->description != null & $product->tags != null ){
                 switch ($product->status) {
                     case 1:
                         Storage::disk('products')->move($product->file, 'live/'.basename($product->file));
@@ -147,7 +147,7 @@ class ProductController extends Controller
 
     public function show($id, $slug)
     {
-        $product = Product::with(['user', 'iterations'=> function($query) {
+        $product = Product::with(['user', 'userCave', 'iterations'=> function($query) {
                 $query->with(['user', 'iterations']);
             }])
             ->where([
@@ -155,9 +155,7 @@ class ProductController extends Controller
                 'slug' => $slug
             ])
             ->firstOrFail();
-
-        $code = Storage::disk('products')->get($product->file);
-               
+        
         activity('product')
             ->event('show')
             ->causedBy($this->user)
@@ -165,7 +163,7 @@ class ProductController extends Controller
             ->withProperties(['query' => request()->query('query'), 'ref' => request()->query('ref')])
             ->log( request()->ip() );
 
-        return $this->successResponse(new ProductResource($product), ["code" => $code]);
+        return $this->successResponse(new ProductResource($product));
     }
     
     public function review(Product $product, RatingRequest $request)

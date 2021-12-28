@@ -27,6 +27,9 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'rate' => $this->rate,
             'tags' => $this->tags,
+            'user_check' => [
+                'cave' => ($this->userCave == null) ? 0 : 1,
+            ],
             'download_count' => $this->download_count,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y')

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Profile;
+namespace App\Http\Resources\Profile\Inventory;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\Store\ProductResource;
 
-class CaveCollection extends ResourceCollection
+class InventoryCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,13 +15,13 @@ class CaveCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return $this->collection->transform(function ($cave) {
+        return $this->collection->transform(function ($inventory) {
             return [
-                'id' => $cave->id,
-                'product' => $cave->product,
-                'type' => $cave->type,
-                'created_at' => $cave->created_at->format('d/m/Y'),
-                'updated_at' => $cave->updated_at->format('d/m/Y')
+                'id' => $inventory->id,
+                'product' => $inventory->product,
+                'type' => $inventory->type,
+                'created_at' => $inventory->created_at->format('d/m/Y'),
+                'updated_at' => $inventory->updated_at->format('d/m/Y')
             ];
         })->toArray();
         return parent::toArray($request);
