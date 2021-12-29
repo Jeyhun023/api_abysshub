@@ -38,6 +38,7 @@ class StoreSearchController extends Controller
             $query = (request()->input('query') !=null ) ? request()->input('query') : 0;
             $from = (request()->input('from') !=null ) ? request()->input('from') : 0;
             $tags = (request()->input('tags') !=null ) ? explode(',',request()->input('tags')) : null;
+            $must_not = (request()->input('must_not') !=null ) ? explode(',',request()->input('must_not')) : null;
 
             $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
 
@@ -52,6 +53,12 @@ class StoreSearchController extends Controller
                 }
                 $params['body']['query']['bool']['minimum_should_match'] = 2;
                 $params['body']['query']['bool']['boost'] = 1.0;
+            }
+
+            if($must_not != null){
+                foreach($must_not as $tag){
+                    $params['body']['query']['bool']['must_not'][] = [ "term" => ["tags" => $tag] ] ;
+                }
             }
 
             $response = $client->search($params);

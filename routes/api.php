@@ -138,7 +138,7 @@ Route::group(['prefix' => 'profile', 'middleware' => ['auth:api','verified']], f
 
 
 //Other
-Route::group(['prefix' => 'other', 'middleware' => ['auth:api','verified']], function () {
+Route::group(['prefix' => 'other'], function () {
     Route::get('/tags/{tag}', [TagController::class, 'search']); 
     Route::get('/skills/{skill}', [SkillController::class, 'search']); 
 });
