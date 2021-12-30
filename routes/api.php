@@ -76,7 +76,6 @@ Route::group(['prefix' => 'forum'], function () {
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
         //Thread
         Route::post('/create', [ThreadController::class, 'store']); 
-        Route::post('/{product}/product/discuss', [ThreadController::class, 'productDiscuss']);
         Route::put('/{thread}/thread/edit', [ThreadController::class, 'update']); 
         Route::delete('/{thread}/thread/delete', [ThreadController::class, 'delete']); 
         Route::post('/{thread}/thread/vote', [ThreadController::class, 'vote']); 

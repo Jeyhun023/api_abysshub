@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AnswersComment extends Model
+class Comment extends Model
 {
     use HasFactory;
+
+    public $table = "comments";
+    protected $fillable = ['user_id', 'commentable_type', 'commentable_id', 'content'];
     
-    public $table = "answers_comments";
-    
-    protected $fillable = ['answer_id','user_id','content'];
-    
-    public function answer()
+    public function commentable()
     {
-        return $this->belongsTo(Answer::class);
+        return $this->morphTo();
     }
     
     public function user()

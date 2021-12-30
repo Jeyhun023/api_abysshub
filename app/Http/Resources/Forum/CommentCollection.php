@@ -5,7 +5,7 @@ namespace App\Http\Resources\Forum;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Http\Resources\Auth\UserResource;
 
-class AnswerCommentCollection extends ResourceCollection
+class CommentCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -19,7 +19,7 @@ class AnswerCommentCollection extends ResourceCollection
             return [
                 'id' => $comment->id,
                 'user' => new UserResource($comment->user),
-                'answer_id' => $comment->answer_id,
+                'commentable_id' => $comment->commentable_id,
                 'content' => $comment->content,
                 'created_at' => $comment->created_at->format('d/m/Y'),
                 'updated_at' => $comment->updated_at->format('d/m/Y')

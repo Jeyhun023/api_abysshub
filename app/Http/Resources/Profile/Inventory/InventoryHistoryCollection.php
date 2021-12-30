@@ -17,17 +17,17 @@ class InventoryHistoryCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($history) {
             return [
-                'id' => $history->product->id,
-                'user' => new UserResource($history->product->user),
-                'name' => $history->product->name,
-                'slug' => $history->product->slug,
-                'description' => $history->product->description,
-                'price' => $history->product->price,
-                'rate' => $history->product->rate,
-                'tags' => $history->product->tags,
-                'download_count' => $history->product->download_count,
-                'created_at' => $history->product->created_at->format('d/m/Y'),
-                'updated_at' => $history->product->updated_at->format('d/m/Y')
+                'id' => $history->subject->id,
+                'user' => new UserResource($history->subject->user),
+                'name' => $history->subject->name,
+                'slug' => $history->subject->slug,
+                'description' => $history->subject->description,
+                'price' => $history->subject->price,
+                'rate' => $history->subject->rate,
+                'tags' => $history->subject->tags,
+                'download_count' => $history->subject->download_count,
+                'created_at' => $history->subject->created_at->format('d/m/Y'),
+                'updated_at' => $history->subject->updated_at->format('d/m/Y')
             ];
         })->toArray();
         return parent::toArray($request);

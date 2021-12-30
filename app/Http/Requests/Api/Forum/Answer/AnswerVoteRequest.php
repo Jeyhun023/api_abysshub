@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\Forum\Answer;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnswersVote;
+use App\Models\Vote;
 use Illuminate\Validation\Rule;
 
 class AnswerVoteRequest extends FormRequest
@@ -16,7 +16,7 @@ class AnswerVoteRequest extends FormRequest
     public function authorize()
     {
         $this->merge([
-            'answer_id' => $this->route('answer')->id,
+            'voteable_id' => $this->route('answer')->id,
             'user_id' => auth()->user()->id
         ]);
         return true;
@@ -30,11 +30,12 @@ class AnswerVoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => ['required', Rule::in(AnswersVote::VOTE_TYPE_SELECT)],
-            'answer_id' => ['required', Rule::unique('answers_vote')
-                ->where('answer_id', $this->answer_id)
+            'type' => ['required', Rule::in(Vote::VOTE_TYPE_SELECT)],
+            'voteable_id' => ['required', Rule::unique('votes')
+                ->where('voteable_type', 'App\Models\Answer')
+                ->where('voteable_id', $this->voteable_id)
                 ->where('user_id', $this->user_id)
-                ->where('type', $this->type)
+                ->where('type', $this->type) 
             ]
         ];
     }
@@ -49,7 +50,7 @@ class AnswerVoteRequest extends FormRequest
     public function messages()
     {
         return [
-            'answer_id.unique' => trans('messages.have_voted'),
+            'voteable_id.unique' => trans('messages.have_voted'),
         ];
     }
 }

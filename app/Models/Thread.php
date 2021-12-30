@@ -12,7 +12,7 @@ class Thread extends Model
     public $table = "threads";
 
     protected $fillable = ['user_id', 'product_id', 'title','description','slug','content','tags','last_active_at', 'type'];
-    protected $guarded = ['accepted_answer_id', 'closed_at', 'answer_count', 'comment_count', 'view_count', 'upvote']; 
+    protected $guarded = ['accepted_answer_id', 'closed_at', 'answer_count', 'comment_count', 'view_count', 'upvote', 'downvote']; 
     protected $casts = ['tags' => 'json'];
     protected $dates = ['last_active_at','closed_at'];
 
@@ -32,21 +32,6 @@ class Thread extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function upvote()
-    {
-        return $this->hasMany(ThreadsVote::class)->where('type', 'upvote');
-    }
-
-    public function downvote()
-    {
-        return $this->hasMany(ThreadsVote::class)->where('type', 'downvote');
-    }
-
-    public function linked()
-    {
-        return $this->hasMany(ThreadLinkedProduct::class);
-    }
-
     public function answers()
     {
         return $this->hasMany(Answer::class);
@@ -54,11 +39,16 @@ class Thread extends Model
 
     public function userVotes()
     {
-        return $this->hasOne(ThreadsVote::class)->where('user_id', auth()->guard('api')->user()?->id);
+        return $this->morphOne(Vote::class, 'voteable')->where('user_id', auth()->guard('api')->user()?->id);
     }
 
     public function comments()
     {
-        return $this->hasMany(ThreadsComment::class);
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function linked()
+    {
+        return $this->morphMany(LinkedProduct::class, 'linkable');
     }
 }

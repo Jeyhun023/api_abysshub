@@ -18,8 +18,9 @@ class CreateAnswersTable extends Migration
             $table->unsignedBigInteger('thread_id');
             $table->unsignedBigInteger('user_id');
             $table->text('content');
-            $table->integer('comment_count')->default(0);
-            $table->integer('upvote')->default(0);
+            $table->bigInteger('comment_count')->default(0);
+            $table->bigInteger('upvote')->default(0);
+            $table->bigInteger('downvote')->default(0);
             $table->timestamps();
             $table->softDeletes();
             

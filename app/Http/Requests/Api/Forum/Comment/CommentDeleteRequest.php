@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum\Answer;
+namespace App\Http\Requests\Api\Forum\Comment;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
 
-class AnswerCommentUpdateRequest extends FormRequest
+class CommentDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,8 +29,7 @@ class AnswerCommentUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['required', Rule::exists('answers_comments')->where('user_id', $this->user_id)],
-            'content' => ['required', new ProfanityCheck()]
+            'id' => ['required', Rule::exists('comments')->where('user_id', $this->user_id)]
         ];
     }
 

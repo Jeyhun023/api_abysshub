@@ -4,22 +4,21 @@ namespace App\Http\Controllers\Api\Forum;
 
 use App\Models\Thread;
 use App\Models\Product;
-use App\Models\ThreadsVote;
-use App\Models\ThreadsComment;
-use App\Models\ThreadLinkedProduct;
+use App\Models\Vote;
+use App\Models\Comment;
+use App\Models\LinkedProduct;
 use App\Http\Requests\Api\Forum\Thread\ThreadVoteRequest;
 use App\Http\Requests\Api\Forum\Thread\ThreadUnvoteRequest;
-use App\Http\Requests\Api\Forum\Thread\ThreadCommentRequest;
-use App\Http\Requests\Api\Forum\Thread\ProductThreadRequest;
-use App\Http\Requests\Api\Forum\Thread\ThreadCommentUpdateRequest;
-use App\Http\Requests\Api\Forum\Thread\ThreadCommentDeleteRequest;
+use App\Http\Requests\Api\Forum\Comment\CommentRequest;
+use App\Http\Requests\Api\Forum\Comment\CommentUpdateRequest;
+use App\Http\Requests\Api\Forum\Comment\CommentDeleteRequest;
 use App\Http\Requests\Api\Forum\Thread\ThreadRequest;
 use App\Http\Requests\Api\Forum\Thread\ThreadUpdateRequest;
 use App\Http\Requests\Api\Forum\Thread\ThreadDeleteRequest;
 use App\Http\Resources\Forum\ThreadCollection;
-use App\Http\Resources\Forum\ThreadCommentCollection;
-use App\Http\Resources\Forum\ThreadCommentResource;
 use App\Http\Resources\Forum\ThreadResource;
+use App\Http\Resources\Forum\CommentCollection;
+use App\Http\Resources\Forum\CommentResource;
 use Illuminate\Support\Str;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
@@ -46,14 +45,13 @@ class ThreadController extends Controller
     public function show($id, $slug)
     {
         $thread = Thread::with(['user', 'userVotes', 'linked.product'])
-            ->withCount(['upvote','downvote'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
             ])
             ->firstOrFail();
         $thread->increment('view_count');
-       
+
         activity('thread')
             ->event('show')
             ->causedBy($this->user)
@@ -81,13 +79,12 @@ class ThreadController extends Controller
             }
             $thread->save();
 
-            if ($request->has('linked_products')) {
-                foreach(json_decode($request->linked_products) as $product){
-                    ThreadLinkedProduct::create([
-                        'thread_id' => $thread->id,
-                        'product_id' => $product
-                    ]);
-                }
+            foreach($request->linked_products as $product){
+                LinkedProduct::create([
+                    'linkable_id' => $thread->id,
+                    'linkable_type' => Thread::class, 
+                    'product_id' => $product
+                ]);
             }
 
             $thread = new ThreadResource($thread);
@@ -99,28 +96,6 @@ class ThreadController extends Controller
         }
     }
     
-    public function productDiscuss(Product $product, ProductThreadRequest $request)
-    {
-        try {
-            $thread = Thread::query()->create([
-                'product_id' => $product->id, 
-                'user_id' => auth()->user()->id, 
-                'title' => $request->title,
-                'slug' => Str::slug($request->title),
-                'content' => $request->content,
-                'tags' => $request->tags,
-                'last_active_at' => now(),
-            ]);
-            $thread = new ThreadResource($thread);
-
-            event(new ThreadElasticEvent($thread));
-
-            return $this->successResponse($thread, trans('messages.thread_store_success'));
-        } catch (Exception $e) {
-            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-        }
-    }
-
     public function update(Thread $thread, ThreadUpdateRequest $request)
     {
         try {
@@ -131,6 +106,29 @@ class ThreadController extends Controller
             $thread->save();
             $thread = new ThreadResource($thread);
 
+            $thread_linked_products = LinkedProduct::where([
+                'linkable_id' => $thread->id,
+                'linkable_type' => Thread::class
+            ])->pluck('product_id')->toArray();
+           
+            $need_delete = array_diff($thread_linked_products, $request->linked_products);
+            $need_add = array_diff($request->linked_products , $thread_linked_products);
+
+            LinkedProduct::where([
+                'linkable_id' => $thread->id,
+                'linkable_type' => Thread::class
+            ])
+            ->WhereIn('product_id', $need_delete)
+            ->delete();
+
+            foreach($need_add as $product){
+                LinkedProduct::create([
+                    'linkable_id' => $thread->id,
+                    'linkable_type' => Thread::class, 
+                    'product_id' => $product
+                ]);
+            }
+           
             event(new ThreadElasticEvent($thread));
 
             return $this->successResponse($thread, trans('messages.thread_update_success'));
@@ -153,16 +151,25 @@ class ThreadController extends Controller
     public function vote(Thread $thread, ThreadVoteRequest $request)
     {
         try {
-            $threadVote = ThreadsVote::where([
-                'thread_id' => $thread->id, 
+            $threadVote = Vote::where([
+                'voteable_id' => $thread->id,
+                'voteable_type' => Thread::class, 
                 'user_id' => auth()->user()->id, 
-            ])->where('type', '!=', $request->type)->delete();
+            ])->where('type', '!=', $request->type)->first();
 
-            $threadVote = ThreadsVote::firstOrCreate([
-                'thread_id' => $thread->id, 
+            if(!empty($threadVote)){
+                $thread->decrement($threadVote->type);
+                $threadVote->delete();
+            }
+
+            $threadVote = Vote::firstOrCreate([
+                'voteable_id' => $thread->id,
+                'voteable_type' => Thread::class, 
                 'user_id' => auth()->user()->id, 
                 'type' => $request->type
             ]);
+
+            $thread->increment($request->type);
 
             return $this->successResponse($threadVote, trans('messages.vote_success'));
         } catch (Exception $e) {
@@ -173,11 +180,13 @@ class ThreadController extends Controller
     public function unvote(Thread $thread, ThreadUnvoteRequest $request)
     {
         try {
-            $threadVote = ThreadsVote::query()->where([
-                'thread_id' => $thread->id, 
+            $threadVote = Vote::query()->where([
+                'voteable_id' => $thread->id,
+                'voteable_type' => Thread::class, 
                 'user_id' => auth()->user()->id, 
                 'type' => $request->type
             ])->delete();
+            $thread->decrement($request->type);
 
             return $this->successResponse(null, trans('messages.unvote_success'));
         } catch (Exception $e) {
@@ -185,38 +194,39 @@ class ThreadController extends Controller
         }
     }
 
-    public function comment(Thread $thread, ThreadCommentRequest $request)
+    public function comment(Thread $thread, CommentRequest $request)
     {
         try {
-            $threadComment = ThreadsComment::query()->create([
-                'thread_id' => $thread->id, 
+            $threadComment = Comment::query()->create([
+                'commentable_id' => $thread->id,
+                'commentable_type' => Thread::class, 
                 'user_id' => auth()->user()->id, 
                 'content' => $request->content
             ]);
             $thread->increment('comment_count');
 
-            return $this->successResponse(new ThreadCommentResource($threadComment), trans('messages.comment_success'));
+            return $this->successResponse(new CommentResource($threadComment), trans('messages.comment_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
 
-    public function commentUpdate(ThreadsComment $comment, ThreadCommentUpdateRequest $request)
+    public function commentUpdate(Comment $comment, CommentUpdateRequest $request)
     {
         try {
             $comment->content = $request->content;
             $comment->save();
             
-            return $this->successResponse(new ThreadCommentResource($comment), trans('messages.comment_update_success'));
+            return $this->successResponse(new CommentResource($comment), trans('messages.comment_update_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
 
-    public function commentDelete(ThreadsComment $comment, ThreadCommentDeleteRequest $request)
+    public function commentDelete(Comment $comment, CommentDeleteRequest $request)
     {
         try {
-            $comment->thread->decrement('comment_count');
+            $comment->commentable->decrement('comment_count');
             $comment->delete();
             
             return $this->successResponse(null, trans('messages.comment_delete_success'));
@@ -227,8 +237,11 @@ class ThreadController extends Controller
 
     public function getComment($thread)
     {
-        $threadComments = ThreadsComment::where('thread_id', $thread)->with('user')->get();
-        return $this->successResponse(new ThreadCommentCollection($threadComments));
+        $threadComments = Comment::where([
+            'commentable_id' => $thread,
+            'commentable_type' => Thread::class,
+        ])->with('user')->get();
+        return $this->successResponse(new CommentCollection($threadComments));
     }
 
 }

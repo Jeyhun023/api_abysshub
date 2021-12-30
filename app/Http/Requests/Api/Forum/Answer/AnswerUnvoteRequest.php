@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api\Forum\Answer;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\AnswersVote;
+use App\Models\Vote;
 use Illuminate\Validation\Rule;
 
 class AnswerUnvoteRequest extends FormRequest
@@ -16,7 +16,7 @@ class AnswerUnvoteRequest extends FormRequest
     public function authorize()
     {
         $this->merge([
-            'answer_id' => $this->route('answer')->id,
+            'voteable_id' => $this->route('answer')->id,
             'user_id' => auth()->user()->id
         ]);
         return true;
@@ -30,12 +30,13 @@ class AnswerUnvoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => ['required', Rule::in(AnswersVote::VOTE_TYPE_SELECT)],
-            'answer_id' => ['required', Rule::exists('answers_vote')
-                    ->where('answer_id', $this->answer_id)
-                    ->where('user_id', $this->user_id)
-                    ->where('type', $this->type)
-                ]
+            'type' => ['required', Rule::in(Vote::VOTE_TYPE_SELECT)],
+            'voteable_id' => ['required', Rule::exists('votes')
+                ->where('voteable_type', 'App\Models\Answer')
+                ->where('voteable_id', $this->voteable_id)
+                ->where('user_id', $this->user_id)
+                ->where('type', $this->type)
+            ]
         ];
     }
 
@@ -49,7 +50,7 @@ class AnswerUnvoteRequest extends FormRequest
     public function messages()
     {
         return [
-            'answer_id.exists' => trans('messages.havent_voted'),
+            'voteable_id.exists' => trans('messages.havent_voted'),
         ];
     }
 }

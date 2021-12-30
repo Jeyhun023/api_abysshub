@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\Forum\Thread;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
+use Helper;
 
 class ThreadRequest extends FormRequest
 {
@@ -15,20 +16,14 @@ class ThreadRequest extends FormRequest
      */
     public function authorize()
     { 
-        $description = preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s', '·', $this['content']);
-        $description = strip_tags($description);
-        $description = str_replace('  ', ' ', $description);
-        $description = substr($description, 0, 246);
-        $description = preg_replace('/\xB0/u', '', $description);
-        $description = preg_replace('/\s\s+/', ' ', $description);
-        $description = trim($description);
-        
-        $tags = explode(',' , $this->tags);
-        $tags = array_map('trim', $tags);
-        
+        $description = Helper::get_description($this['content']);
+        $tags = Helper::get_explode($this->tags);
+        $linked_products = Helper::get_explode($this->linked_products);
+
         $this->merge([
             'description' => $description,
-            'tags' => $tags
+            'tags' => $tags,
+            'linked_products' => $linked_products
         ]);
         return true;
     }
@@ -47,6 +42,7 @@ class ThreadRequest extends FormRequest
             'type' => ['required', Rule::in(['1', '2', '3'])],
             'tags' => ['required', 'array', 'max:10', 'min:5'],
             'product_id' => ['required_if:type,==,3', 'exists:products,id'],
+            'linked_products.*' => ['required', 'integer', 'exists:products,id'],
         ];
     }
 }

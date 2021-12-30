@@ -6,22 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Answer;
 use App\Models\Thread;
-use App\Models\AnswersVote;
-use App\Models\AnswersComment;
-use App\Models\AnswerLinkedProduct;
+use App\Models\Vote;
+use App\Models\Comment;
+use App\Models\LinkedProduct;
 use App\Http\Resources\Forum\AnswerResource;
 use App\Http\Resources\Forum\AnswerCollection;
 use App\Http\Resources\Forum\LinkedProductCollection;
-use App\Http\Resources\Forum\AnswerCommentCollection;
-use App\Http\Resources\Forum\AnswerCommentResource;
+use App\Http\Resources\Forum\CommentCollection;
+use App\Http\Resources\Forum\CommentResource;
 use App\Http\Requests\Api\Forum\Answer\AnswerRequest;
 use App\Http\Requests\Api\Forum\Answer\AnswerUpdateRequest;
 use App\Http\Requests\Api\Forum\Answer\AnswerDeleteRequest;
 use App\Http\Requests\Api\Forum\Answer\AnswerVoteRequest;
 use App\Http\Requests\Api\Forum\Answer\AnswerUnvoteRequest;
-use App\Http\Requests\Api\Forum\Answer\AnswerCommentRequest;
-use App\Http\Requests\Api\Forum\Answer\AnswerCommentUpdateRequest;
-use App\Http\Requests\Api\Forum\Answer\AnswerCommentDeleteRequest;
+use App\Http\Requests\Api\Forum\Comment\CommentRequest;
+use App\Http\Requests\Api\Forum\Comment\CommentUpdateRequest;
+use App\Http\Requests\Api\Forum\Comment\CommentDeleteRequest;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use DB;
@@ -39,14 +39,13 @@ class AnswerController extends Controller
                 'content' => $request->content
             ]);
             $thread->increment('answer_count');
-
-            if ($request->has('linked_products')) {
-                foreach(json_decode($request->linked_products) as $product){
-                    AnswerLinkedProduct::create([
-                        'answer_id' => $answer->id,
-                        'product_id' => $product
-                    ]);
-                }
+            
+            foreach($request->linked_products as $product){
+                LinkedProduct::create([
+                    'linkable_id' => $answer->id,
+                    'linkable_type' => Answer::class, 
+                    'product_id' => $product
+                ]);
             }
 
             return $this->successResponse(new AnswerResource($answer), trans('messages.answer_store_success'));
@@ -60,6 +59,29 @@ class AnswerController extends Controller
         try {
             $answer->content = $request->content;
             $answer->save();
+
+            $answer_linked_products = LinkedProduct::where([
+                'linkable_id' => $answer->id,
+                'linkable_type' => Answer::class
+            ])->pluck('product_id')->toArray();
+           
+            $need_delete = array_diff($answer_linked_products, $request->linked_products);
+            $need_add = array_diff($request->linked_products , $answer_linked_products);
+
+            LinkedProduct::where([
+                'linkable_id' => $answer->id,
+                'linkable_type' => Answer::class
+            ])
+            ->WhereIn('product_id', $need_delete)
+            ->delete();
+
+            foreach($need_add as $product){
+                LinkedProduct::create([
+                    'linkable_id' => $answer->id,
+                    'linkable_type' => Answer::class, 
+                    'product_id' => $product
+                ]);
+            }
 
             return $this->successResponse(new AnswerResource($answer), trans('messages.answer_update_success'));
         } catch (Exception $e) {
@@ -82,8 +104,15 @@ class AnswerController extends Controller
     public function vote(Answer $answer, AnswerVoteRequest $request)
     {
         try {
-            $answerVote = AnswersVote::query()->create([
-                'answer_id' => $answer->id, 
+            $answerVote = Vote::where([
+                'voteable_id' => $answer->id,
+                'voteable_type' => Answer::class, 
+                'user_id' => auth()->user()->id, 
+            ])->where('type', '!=', $request->type)->delete();
+
+            $answerVote = Vote::firstOrCreate([
+                'voteable_id' => $answer->id,
+                'voteable_type' => Answer::class, 
                 'user_id' => auth()->user()->id, 
                 'type' => $request->type
             ]);
@@ -98,8 +127,9 @@ class AnswerController extends Controller
     public function unvote(Answer $answer, AnswerUnvoteRequest $request)
     {
         try {
-            $answerVote = AnswersVote::query()->where([
-                'answer_id' => $answer->id, 
+            $answerVote = Vote::query()->where([
+                'voteable_id' => $answer->id,
+                'voteable_type' => Answer::class, 
                 'user_id' => auth()->user()->id, 
                 'type' => $request->type
             ])->delete();
@@ -111,38 +141,39 @@ class AnswerController extends Controller
         }
     }
 
-    public function comment(Answer $answer, AnswerCommentRequest $request)
+    public function comment(Answer $answer, CommentRequest $request)
     {
         try {
-            $answerComment = AnswersComment::query()->create([
-                'answer_id' => $answer->id, 
+            $answerComment = Comment::query()->create([
+                'commentable_id' => $answer->id,
+                'commentable_type' => Answer::class, 
                 'user_id' => auth()->user()->id, 
                 'content' => $request->content
             ]);
             $answer->increment('comment_count');
 
-            return $this->successResponse(new AnswerCommentResource($answerComment), trans('messages.comment_success'));
+            return $this->successResponse(new CommentResource($answerComment), trans('messages.comment_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
 
-    public function commentUpdate(AnswersComment $comment, AnswerCommentUpdateRequest $request)
+    public function commentUpdate(Comment $comment, CommentUpdateRequest $request)
     {
         try {
             $comment->content = $request->content;
             $comment->save();
             
-            return $this->successResponse(new AnswerCommentResource($comment), trans('messages.comment_update_success'));
+            return $this->successResponse(new CommentResource($comment), trans('messages.comment_update_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
     }
 
-    public function commentDelete(AnswersComment $comment, AnswerCommentDeleteRequest $request)
+    public function commentDelete(Comment $comment, CommentDeleteRequest $request)
     {
         try {
-            $comment->answer->decrement('comment_count');
+            $comment->commentable->decrement('comment_count');
             $comment->delete();
             
             return $this->successResponse(null, trans('messages.comment_delete_success'));
@@ -153,8 +184,11 @@ class AnswerController extends Controller
 
     public function getComment($answer)
     {
-        $answerComments = AnswersComment::where('answer_id', $answer)->with('user')->get();
-        return $this->successResponse(new AnswerCommentCollection($answerComments));
+        $answerComments = Comment::where([
+            'commentable_id' => $answer,
+            'commentable_type' => Answer::class,
+        ])->with('user')->get();
+        return $this->successResponse(new CommentCollection($answerComments));
     }
     
     public function loadAnswers($thread)

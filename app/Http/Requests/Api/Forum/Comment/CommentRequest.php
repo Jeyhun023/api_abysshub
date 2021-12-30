@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Forum\Answer;
+namespace App\Http\Requests\Api\Forum\Comment;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
 
-class AnswerCommentRequest extends FormRequest
+class CommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

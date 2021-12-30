@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateThreadsCommentsTable extends Migration
+class CreateNotificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateThreadsCommentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('threads_comments', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('thread_id');
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->unsignedBigInteger('user_id');
-            $table->text('content');
+            $table->enum('type', [1, 2, 3]);
+            $table->nullableMorphs('subject', 'subject');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
-            $table->softDeletes();
-            
-            $table->foreign('thread_id')->references('id')->on('threads')->onDelete('cascade');
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
@@ -33,6 +33,6 @@ class CreateThreadsCommentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('threads_comments');
+        Schema::dropIfExists('notifications');
     }
 }

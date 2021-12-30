@@ -12,7 +12,7 @@ class Answer extends Model
     public $table = "answers";
 
     protected $fillable = ['user_id', 'thread_id','content'];
-    protected $guarded = ['upvote', 'comment_count']; 
+    protected $guarded = ['comment_count', 'upvote', 'downvote']; 
 
     public function thread()
     {
@@ -26,16 +26,16 @@ class Answer extends Model
 
     public function userVotes()
     {
-        return $this->hasOne(AnswersVote::class)->where('user_id', auth()->guard('api')->user()?->id);
+        return $this->morphOne(Vote::class, 'voteable')->where('user_id', auth()->guard('api')->user()?->id);
     }
 
     public function comments()
     {
-        return $this->hasMany(AnswersComment::class);
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function linked()
     {
-        return $this->hasMany(AnswerLinkedProduct::class);
+        return $this->morphMany(LinkedProduct::class, 'linkable');
     }
 }

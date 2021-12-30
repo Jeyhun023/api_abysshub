@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateThreadLinkedProductsTable extends Migration
+class CreateLinkedProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateThreadLinkedProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('thread_linked_products', function (Blueprint $table) {
+        Schema::create('linked_products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('thread_id');
+            $table->morphs('linkable');
             $table->unsignedBigInteger('product_id');
             $table->timestamps();
 
-            $table->foreign('thread_id')->references('id')->on('threads');
             $table->foreign('product_id')->references('id')->on('products');
         });
     }
@@ -31,6 +30,6 @@ class CreateThreadLinkedProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('thread_linked_products');
+        Schema::dropIfExists('linked_products');
     }
 }

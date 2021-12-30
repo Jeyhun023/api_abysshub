@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
+use Helper;
 
 class AccountUpdateRequest extends FormRequest
 {
@@ -14,8 +15,8 @@ class AccountUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        $skills = explode(',' , $this->skills);
-        $skills = array_map('trim', $skills);
+        $skills = Helper::get_explode($this->skills);
+
         $this->merge([
             'skills' => $skills
         ]);

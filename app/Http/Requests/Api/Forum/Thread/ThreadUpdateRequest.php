@@ -5,6 +5,7 @@ namespace App\Http\Requests\Api\Forum\Thread;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
+use Helper;
 
 class ThreadUpdateRequest extends FormRequest
 {
@@ -15,9 +16,12 @@ class ThreadUpdateRequest extends FormRequest
      */
     public function authorize()
     {
+        $linked_products = Helper::get_explode($this->linked_products);
+
         $this->merge([
             'id' => $this->route('thread')->id,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
+            'linked_products' => $linked_products
         ]);
         return true;
     }
@@ -34,6 +38,7 @@ class ThreadUpdateRequest extends FormRequest
             'title' => ['required', 'string', 'max:255', new ProfanityCheck()],
             'content' => ['required', new ProfanityCheck()],
             'tags' => 'required|max:255',
+            'linked_products.*' => ['required', 'integer', 'exists:products,id']
         ];
     }
 

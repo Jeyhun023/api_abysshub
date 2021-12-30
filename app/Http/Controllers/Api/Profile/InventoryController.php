@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Api\Profile;
 
 use App\Models\Inventory;
 use App\Models\Product;
-use App\Models\Activity;
 use App\Http\Resources\Profile\Inventory\InventoryHistoryCollection;
 use App\Http\Resources\Profile\Inventory\InventoryCollection;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Spatie\Activitylog\Models\Activity;
 
 class InventoryController extends Controller
 {
@@ -70,9 +70,9 @@ class InventoryController extends Controller
         $history = Activity::where([
             'causer_id' => $this->user->id,
             'causer_type' => 'App\Models\User',
-            'event' => 'show',
             'subject_type' => 'App\Models\Product',
-        ])->with('product.user')->paginate(10);
+            'event' => 'show'
+        ])->with('subject.user')->get();
 
         return $this->successResponse(new InventoryHistoryCollection($history), null);
     }

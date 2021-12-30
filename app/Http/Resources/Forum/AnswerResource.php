@@ -20,6 +20,7 @@ class AnswerResource extends JsonResource
             'user' => new UserResource($this->user),
             'content' => $this->content,
             'upvote' => $this->upvote,
+            'downvote' => $this->downvote,
             'comment_count' => $this->comment_count == null ? 0 : $this->comment_count,
             'user_votes' => $this->userVotes,
             'created_at' => $this->created_at->format('d/m/Y'),

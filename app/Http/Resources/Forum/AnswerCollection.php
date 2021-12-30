@@ -22,6 +22,7 @@ class AnswerCollection extends ResourceCollection
                 'linked_products' => $answer->linked,
                 'content' => $answer->content,
                 'upvote' => $answer->upvote,
+                'downvote' => $answer->downvote,
                 'comment_count' => $answer->comment_count,
                 'user_votes' => $answer->userVotes,
                 'created_at' => $answer->created_at->format('d/m/Y'),
