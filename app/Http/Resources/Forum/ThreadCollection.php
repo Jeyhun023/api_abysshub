@@ -30,7 +30,7 @@ class ThreadCollection extends ResourceCollection
                 'view_count' => $thread->view_count,
                 'upvote' => $thread->upvote,
                 'downvote' => $thread->downvote,
-                'type' => Thread::THREAD_TYPE[$result['_source']['type']],
+                'type' => Thread::THREAD_TYPE[$thread->type],
                 'product' => $thread->product,
                 'last_active_at' => $thread->last_active_at,
                 'closed_at' => $thread->closed_at,
