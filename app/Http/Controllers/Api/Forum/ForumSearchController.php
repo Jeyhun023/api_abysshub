@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use Elasticsearch\ClientBuilder;
-use App\Http\Resources\Forum\ForumSearchCollection;
+use App\Http\Resources\Forum\ThreadCollection;
 use App\Events\NewSearchEvent;
 use Illuminate\Support\Arr;
 
@@ -73,9 +73,7 @@ class ForumSearchController extends Controller
            
             $ids = Arr::pluck($response, '_id');
      
-            $threads = Thread::with(['user'])->findMany($ids);
-
-            return $threads;
+            $threads = Thread::with(['user','product'])->findMany($ids);
 
             event(new NewSearchEvent($query));
 
@@ -89,7 +87,7 @@ class ForumSearchController extends Controller
                 'total' => $response['hits']['total']['value'], 
                 'from'  => $from,
                 'max_score' => $response['hits']['max_score'], 
-                'results' => new ForumSearchCollection($response['hits']['hits'])
+                'results' => new ThreadCollection($threads)
             ], null);
 
         } catch (Exception $e) {
