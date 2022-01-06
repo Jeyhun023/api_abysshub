@@ -73,7 +73,7 @@ class ForumSearchController extends Controller
            
             $ids = Arr::pluck($response, '_id');
      
-            $threads = Thread::findMany($ids);
+            $threads = Thread::with(['user'])->findMany($ids);
 
             return $threads;
 
