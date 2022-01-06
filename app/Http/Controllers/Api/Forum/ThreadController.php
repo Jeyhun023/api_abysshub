@@ -50,14 +50,14 @@ class ThreadController extends Controller
                 'slug' => $slug
             ])
             ->firstOrFail();
-        $thread->increment('view_count');
+        // $thread->increment('view_count');
 
-        activity('thread')
-            ->event('show')
-            ->causedBy($this->user)
-            ->performedOn($thread)
-            ->withProperties(['query' => request()->query('query') ])
-            ->log( request()->ip() );
+        // activity('thread')
+        //     ->event('show')
+        //     ->causedBy($this->user)
+        //     ->performedOn($thread)
+        //     ->withProperties(['query' => request()->query('query') ])
+        //     ->log( request()->ip() );
 
         return $this->successResponse(new ThreadResource($thread));
     }
