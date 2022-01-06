@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Elasticsearch\ClientBuilder;
 use App\Http\Resources\Forum\ForumSearchCollection;
 use App\Events\NewSearchEvent;
-
+use Arr;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Thread;
@@ -72,7 +72,7 @@ class ForumSearchController extends Controller
 
             $ids = Arr::pluck($response['hits']['hits'], '_id');
             $threads = Thread::findMany($ids);
-            
+
             return $threads;
 
             event(new NewSearchEvent($query));
