@@ -44,20 +44,20 @@ class ThreadController extends Controller
     
     public function show($id, $slug)
     {
-        $thread = Thread::with(['user'])
+        $thread = Thread::with(['user', 'userVotes', 'linked.product'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
             ])
             ->firstOrFail();
-        // $thread->increment('view_count');
+        $thread->increment('view_count');
 
-        // activity('thread')
-        //     ->event('show')
-        //     ->causedBy($this->user)
-        //     ->performedOn($thread)
-        //     ->withProperties(['query' => request()->query('query') ])
-        //     ->log( request()->ip() );
+        activity('thread')
+            ->event('show')
+            ->causedBy($this->user)
+            ->performedOn($thread)
+            ->withProperties(['query' => request()->query('query') ])
+            ->log( request()->ip() );
 
         return $this->successResponse(new ThreadResource($thread));
     }
