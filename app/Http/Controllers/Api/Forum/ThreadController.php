@@ -44,7 +44,7 @@ class ThreadController extends Controller
     
     public function show($id, $slug)
     {
-        $thread = Thread::with(['user', 'userVotes', 'linked.product'])
+        $thread = Thread::with(['user'])
             ->where([
                 'id' => $id,
                 'slug' => $slug
