@@ -200,9 +200,7 @@ class AnswerController extends Controller
 
     public function loadProducts($thread)
     {
-        $loadProducts = LinkedProduct::where([
-                'linkable_type' => Answer::class
-            ])->with('product')->whereHas('answer.thread', function ($q) use ($thread){
+        $loadProducts = LinkedProduct::with('product')->whereHas('answer.thread', function ($q) use ($thread){
                 $q->where('id', $thread);   
             })
             ->select('product_id', DB::raw('count(*) as total'))
