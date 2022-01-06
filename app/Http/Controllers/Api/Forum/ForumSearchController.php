@@ -69,10 +69,8 @@ class ForumSearchController extends Controller
                 $params['body']['query']['bool']['must'] = [ "term" => ["type" => $type] ] ;
             }
 
-            $response = $client->search($params)['hits']['hits'];
-           
-            $ids = Arr::pluck($response, '_id');
-     
+            $response = $client->search($params);
+            $ids = Arr::pluck($response['hits']['hits'], '_id');
             $threads = Thread::with(['user','product'])->findMany($ids);
 
             event(new NewSearchEvent($query));
