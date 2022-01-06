@@ -90,6 +90,10 @@ class ReindexCommand extends Command
                 $description = preg_replace('/\xB0/u', '', $description);
                 $description = preg_replace('/\s\s+/', ' ', $description);
                 $description = trim($description);
+                
+                if($description == null){
+                    $description = "How do I specify the environment to use in Angular 6+? The .angular-cli.json file seems to have changed to angular.json from previous versions and with it the structure of the json within.How/where in this file do I specify the environments to use?";
+                }
 
                 $thread = new Thread();
                 $thread->user_id = 1;
