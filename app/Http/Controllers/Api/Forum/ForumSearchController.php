@@ -12,6 +12,7 @@ use App\Events\NewSearchEvent;
 
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Thread;
 
 class ForumSearchController extends Controller
 {
@@ -68,6 +69,12 @@ class ForumSearchController extends Controller
             }
 
             $response = $client->search($params);
+
+            $ids = Arr::pluck($response['hits']['hits'], '_id');
+            $threads = Thread::findMany($ids);
+            
+            return $threads;
+
             event(new NewSearchEvent($query));
 
             activity('thread')
