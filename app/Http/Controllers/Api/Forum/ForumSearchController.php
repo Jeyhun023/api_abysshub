@@ -9,7 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Elasticsearch\ClientBuilder;
 use App\Http\Resources\Forum\ForumSearchCollection;
 use App\Events\NewSearchEvent;
-use Arr;
+use Illuminate\Support\Arr;
+
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Thread;
@@ -42,9 +43,9 @@ class ForumSearchController extends Controller
             $tags = (request()->input('tags') !=null ) ? explode(',',request()->input('tags')) : null;
             $type = (request()->input('type') !=null ) ? request()->input('type') : null;
             $must_not = (request()->input('must_not') !=null ) ? explode(',',request()->input('must_not')) : null;
-
-            $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
             
+            $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build(); 
+          
             $params['index'] = 'threads';
             $params['size'] = 10;
             $params['from'] = $from;
@@ -68,9 +69,10 @@ class ForumSearchController extends Controller
                 $params['body']['query']['bool']['must'] = [ "term" => ["type" => $type] ] ;
             }
 
-            $response = $client->search($params);
-
-            $ids = Arr::pluck($response['hits']['hits'], '_id');
+            $response = $client->search($params)['hits']['hits'];
+           
+            $ids = Arr::pluck($response, '_id');
+     
             $threads = Thread::findMany($ids);
 
             return $threads;
