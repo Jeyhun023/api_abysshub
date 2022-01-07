@@ -9,7 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class PasswordResetToken extends Notification
 {
-
     /**
      * Create a new notification instance.
      *
