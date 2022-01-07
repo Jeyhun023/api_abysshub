@@ -36,7 +36,7 @@ class PasswordResetController extends Controller
                 'token' => Str::random(128)
             ]);
 
-            $user->notify((new PasswordResetToken($passwordReset->token))->onQueue("high"));
+            $user->notify((new PasswordResetToken($passwordReset->token)));
 
             return $this->successResponse(null, trans('messages.sent_reset_link'));
         } catch (\Exception $e) {
