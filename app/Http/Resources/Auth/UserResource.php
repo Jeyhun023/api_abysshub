@@ -21,7 +21,8 @@ class UserResource extends JsonResource
             'image' => $this->image,
             'description' => $this->description,
             'skills' => $this->skills, 
-            'email' => $this->email
+            'email' => $this->email,
+            'isVerified' => ($this->email == null) ? false : true,
         ];
     }
 }
