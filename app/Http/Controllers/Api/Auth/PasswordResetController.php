@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Notifications\Auth\PasswordResetToken;
 use App\Notifications\Auth\PasswordResetSuccess;
 use App\Http\Requests\Api\Auth\PasswordResetRequest;
+use App\Http\Resources\Auth\UserResource;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ use Illuminate\Support\Str;
 class PasswordResetController extends Controller
 {
     use ApiResponser;
-    
+
     private $pac = "Abyss Personal Access Client";
     /**
      * Create token password reset
