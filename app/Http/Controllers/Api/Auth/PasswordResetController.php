@@ -17,6 +17,8 @@ use Illuminate\Support\Str;
 class PasswordResetController extends Controller
 {
     use ApiResponser;
+    
+    private $pac = "Abyss Personal Access Client";
     /**
      * Create token password reset
      *
