@@ -96,7 +96,13 @@ class PasswordResetController extends Controller
             $passwordReset->delete();
             $user->notify((new PasswordResetSuccess($passwordReset))->onQueue("medium"));
 
-            return $this->successResponse($user, trans('messages.password_changed'));
+            $tokenResult = $user->createToken($this->pac);
+            $success['user'] = new UserResource($user);
+            $success['access_token'] = $tokenResult->accessToken;
+            $success['token_type'] = 'Bearer';
+            $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
+ 
+            return $this->successResponse($success, trans('messages.password_changed'));
         } catch (\Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
