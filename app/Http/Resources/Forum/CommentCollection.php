@@ -21,7 +21,7 @@ class CommentCollection extends ResourceCollection
                 'user' => new UserResource($comment->user),
                 'commentable_id' => $comment->commentable_id,
                 'content' => $comment->content,
-                'isEdited' => ($this->created_at == $this->updated_at) ? false : true,
+                'isEdited' => ($comment->created_at == $comment->updated_at) ? false : true,
                 'created_at' => $comment->created_at->format('d/m/Y'),
                 'updated_at' => $comment->updated_at->format('d/m/Y')
             ];
