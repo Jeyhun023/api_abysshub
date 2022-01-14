@@ -25,6 +25,7 @@ class AnswerCollection extends ResourceCollection
                 'downvote' => $answer->downvote,
                 'comment_count' => $answer->comment_count,
                 'user_votes' => $answer->userVotes,
+                'isEdited' => ($this->created_at == $this->updated_at) ? false : true,
                 'created_at' => $answer->created_at->format('d/m/Y'),
                 'updated_at' => $answer->updated_at->format('d/m/Y'),
             ];

@@ -34,6 +34,7 @@ class ThreadCollection extends ResourceCollection
                 'product' => $thread->product,
                 'last_active_at' => $thread->last_active_at,
                 'closed_at' => $thread->closed_at,
+                'isEdited' => ($this->created_at == $this->updated_at) ? false : true,
                 'created_at' => $thread->created_at->format('d/m/Y'),
                 'updated_at' => $thread->updated_at->format('d/m/Y')
             ];
