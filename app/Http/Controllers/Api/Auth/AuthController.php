@@ -72,8 +72,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $user = User::find(1);
-        if($request->SuppressSending){
-            $user->name = "yesssss";
+        if($request->SuppressSending == true){
+            $user->name = "Jeyhunnn";
         }else{
             $user->name = "nooooooo";
         }
