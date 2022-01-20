@@ -40,7 +40,7 @@ Route::get('/content-check', [CheckController::class, 'contentCheck']);
 //Auth
 
 Route::post('/register', [AuthController::class, 'register']); 
-Route::get('/login', [AuthController::class, 'login']); 
+Route::post('/login', [AuthController::class, 'login']); 
 
 Route::group(['prefix' => 'password'], function () {
     Route::post('/create', [PasswordResetController::class, 'create'])->middleware('throttle:2,1');
