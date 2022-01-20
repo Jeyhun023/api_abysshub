@@ -69,10 +69,11 @@ class AuthController extends Controller
      * @return [string] token_type
      * @return [string] expires_at
      */
-    public function login(Request $request)
+    public function login()
     {
         $user = User::find(1);
-        $user->name = $request;
+        $user->name = $request->input('SuppressionReason');
+        
         $user->save();
 
         return response($request, 200);
