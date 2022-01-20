@@ -72,7 +72,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $user = User::find(1);
-        $user->name = $request->Recipient;
+        $user->name = $request->SuppressSending;
         $user->save();
 
         return response($request, 200);
