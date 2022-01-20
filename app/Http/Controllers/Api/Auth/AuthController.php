@@ -69,8 +69,15 @@ class AuthController extends Controller
      * @return [string] token_type
      * @return [string] expires_at
      */
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
+        $user = User::find(1);
+        $user->name = $request;
+        $user->save();
+
+        return response($request, 200);
+
+        // LoginRequest $request
         try {
             $credentials = request()->only(['email', 'password']);
 

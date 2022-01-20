@@ -16,9 +16,10 @@ class Product extends Model
     protected $guarded = ['rate', 'download_count']; 
 
     public const PRODUCT_STATUS = [
-        '0' => 'Plagiarism detected',
-        '1' => 'Not plagiat',
-        '2' => 'Submitted'
+        '0' => 'Not Checked',
+        '1' => 'Plagiarism detected',
+        '2' => 'Not plagiat',
+        '3' => 'Submitted'
     ];
 
     public function user()
