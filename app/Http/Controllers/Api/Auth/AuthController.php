@@ -73,7 +73,7 @@ class AuthController extends Controller
     {
         $user = User::find(1);
         
-        $user->name = json_encode($request);
+        $user->name = (array) $request;
         $user->save();
 
         return response($request, 200);
