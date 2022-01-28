@@ -141,3 +141,5 @@ Route::group(['prefix' => 'other'], function () {
     Route::get('/tags/{tag}', [TagController::class, 'search']); 
     Route::get('/skills/{skill}', [SkillController::class, 'search']); 
 });
+
+
