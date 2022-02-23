@@ -145,16 +145,11 @@ class ProductController extends Controller
         }
     }
 
-    public function show($id, $slug)
+    public function show($id)
     {
         $product = Product::with(['user', 'userCave', 'iterations'=> function($query) {
                 $query->with(['user', 'iterations']);
-            }])
-            ->where([
-                'id' => $id,
-                'slug' => $slug
-            ])
-            ->firstOrFail();
+            }])->find($id);
         
         activity('product')
             ->event('show')

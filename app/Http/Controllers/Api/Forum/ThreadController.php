@@ -42,14 +42,9 @@ class ThreadController extends Controller
         return $this->successResponse(new ThreadCollection($threads));
     }
     
-    public function show($id, $slug)
+    public function show($id)
     {
-        $thread = Thread::with(['user', 'userVotes', 'linked.product'])
-            ->where([
-                'id' => $id,
-                'slug' => $slug
-            ])
-            ->firstOrFail();
+        $thread = Thread::with(['user', 'userVotes', 'linked.product'])->find($id);
         $thread->increment('view_count');
 
         activity('thread')

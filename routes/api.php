@@ -65,7 +65,7 @@ Route::group(['prefix' => 'forum'], function () {
     Route::get('/user/{query}', [ForumSearchController::class, 'user']);
     Route::get('/product/{query}', [ForumSearchController::class, 'product']);
     Route::get('/', [ThreadController::class, 'index']); 
-    Route::get('/{thread}/{slug}', [ThreadController::class, 'show']); 
+    Route::get('/{thread}', [ThreadController::class, 'show']); 
     Route::get('/{thread}/thread/getcomment', [ThreadController::class, 'getComment']);
     //Answer
     Route::get('/{answer}/answer/getcomment', [AnswerController::class, 'getComment']); 
@@ -106,7 +106,7 @@ Route::group(['prefix' => 'chat', 'middleware' => ['auth:api','verified']], func
 //Product
 Route::group(['prefix' => 'store'], function () {
     Route::get('/search', [StoreSearchController::class, 'index']); 
-    Route::get('/{product}/{slug}', [ProductController::class, 'show']); 
+    Route::get('/{product}', [ProductController::class, 'show']); 
 
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
         Route::post('/{product}/product/review', [ProductController::class, 'review']); 
