@@ -149,7 +149,7 @@ class ProductController extends Controller
     {
         $product = Product::with(['user', 'userCave', 'iterations'=> function($query) {
                 $query->with(['user', 'iterations']);
-            }])->find($id);
+            }])->findOrFail($id);
         
         activity('product')
             ->event('show')
