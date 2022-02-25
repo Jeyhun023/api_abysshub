@@ -92,6 +92,7 @@ class ProductController extends Controller
 
     public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
     {
+        return $this->successResponse($result, trans('messages.plagiat_success'));
         try {
             $file = trim(md5(time()).'.'.$request->extension);
             Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
