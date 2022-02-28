@@ -31,7 +31,7 @@ class ProductIterateRequest extends FormRequest
         return [
             'id' => ['required', Rule::exists('products')],
             'name' => ['required', 'string', 'max:255', new ProfanityCheck()],
-            'note' => ['required', 'string', new ProfanityCheck()],
+            'description' => ['required', 'string', new ProfanityCheck()],
             'source_code' => 'required'
         ];
     }

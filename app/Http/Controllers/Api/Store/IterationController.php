@@ -23,16 +23,16 @@ class IterationController extends Controller
     public function store(Product $product, ProductIterateRequest $request)
     {
         try {
-            $file = 'temporary/' .md5(time()). '.py';
-            Storage::disk('products')->put($file, $request->source_code);
+            // $file = 'temporary/' .md5(time()). '.py';
+            // Storage::disk('products')->put($file, $request->source_code);
             
             $iteration = ProductIteration::query()->create([
                 'user_id' => $this->user->id,
                 'product_id' => $product->id,  
                 'name' => $request->name, 
-                'file' => $file,
+                'file' => $request->source_code,
                 'slug' => Str::slug($request->name),
-                'note' => $request->note
+                'note' => $request->description
             ]);
 
             return $this->successResponse(new ProductIterationResource($iteration), trans('messages.iteration_store_success'));
