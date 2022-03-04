@@ -56,4 +56,5 @@ return [
     'inventory_already_exist' => 'This product is already added',
     'inventory_not_exist' => 'This product is not available in your cave dude',
     'inventory_delete_success' => 'Product deleted from your cave',
+    'not_checked' => 'Your product plagiarism did not checked',
 ];

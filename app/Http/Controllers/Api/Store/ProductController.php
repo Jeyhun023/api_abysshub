@@ -20,6 +20,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Events\StoreElasticEvent;
+use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller
 {
@@ -50,7 +51,7 @@ class ProductController extends Controller
             $product->name = $request->name;
             $product->tags = collect( explode(',' , $request->tags) );
             $product->slug = Str::slug($request->name);
-            $product->description = $request->description;
+            $product->description = json_encode($request->details);
             $product->price = $request->price;
             $product->save();
             if($product->status = 2){
@@ -68,16 +69,19 @@ class ProductController extends Controller
         try {
             if($product->name != null & $product->description != null & $product->tags != null ){
                 switch ($product->status) {
-                    case 1:
-                        Storage::disk('products')->move($product->file, 'live/'.basename($product->file));
-                        $product->update(['status' => '2', 'file' => 'live/'.basename($product->file)]);
-                        event(new StoreElasticEvent($product));
-                        return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
-                    break;
                     case 0:
+                        return $this->errorResponse(["failed" => [trans('messages.not_checked')] ]);
+                    break;
+                    case 1:
                         return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
                     break;
                     case 2:
+                        $product->status = 3;
+                        $product->save();
+                        event(new StoreElasticEvent($product));
+                        return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
+                    break;
+                    case 3:
                         return $this->errorResponse(["failed" => [trans('messages.product_already_submitted')] ]);
                     break;
                     default:
@@ -92,44 +96,22 @@ class ProductController extends Controller
 
     public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
     {
-        return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
         try {
-            $file = trim(md5(time()).'.'.$request->extension);
-            Storage::disk('products')->put( 'temporary/'.$file, $request->source_code);
-            $url = "python3 /var/www/abysshub/public/python/copydetect/check.py ";
-            // $url = "python C:/Users/User/Desktop/www/abyss-hub/public/python/copydetect/check.py 2>&1";
-            $result = shell_exec( $url . $file .' '. basename($product->file) );        
-            $result = 35;
+            $product->file = $request->source_code;
+            $product->save();
 
-            switch (true) {
-                case $result <= 90:
-                    if($product->status != 2){
-                        Storage::disk('products')->delete($product->file);
-                        $product->update(['status' => '1', 'file' => 'temporary/'.$file]);
-                    }else{
-                        Storage::disk('products')->move('temporary/'.$file, 'live/'.$file);
-                        Storage::disk('products')->delete($product->file);
-                        $product->update(['file' => 'live/'.$file]);
-                    }
-                    if($result <= 40){
-                        return $this->successResponse($result, trans('messages.plagiat_success'));
-                    }else{
-                        return $this->successResponse($result, trans('messages.can_be_iteration'));
-                    }
-                    break;
-                case $result <= 100:
-                    if($product->status != 2){
-                        Storage::disk('products')->delete($product->file);
-                        $product->update(['file' => 'temporary/'.$file]);
-                    }else{
-                        Storage::disk('products')->delete('temporary/'.$file);
-                    }
-                    return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
-                    break;
-                default:
-                    return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-                    break;
+            $response = Http::post('http://django.abysshub.com/api/plagiarism/check/'.$product->id.'?json');
+            
+            if($response->failed()){
+                $product->status = 1;
+                $product->save();
+                return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
             }
+            
+            $product->status = 2;
+            $product->save();
+            
+            return $this->successResponse($result, trans('messages.plagiat_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

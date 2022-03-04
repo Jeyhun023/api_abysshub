@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('shop_id')->nullable()->unsigned();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
-            $table->string('file')->nullable();
+            $table->longText('file')->nullable();
             $table->longText('description')->nullable();
             $table->decimal('price', 6, 2)->default(0)->nullable();
             $table->integer('rate')->default(0)->nullable();
