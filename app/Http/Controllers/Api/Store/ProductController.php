@@ -111,7 +111,7 @@ class ProductController extends Controller
             $product->status = 2;
             $product->save();
             
-            return $this->successResponse($result, trans('messages.plagiat_success'));
+            return $this->successResponse(null, trans('messages.plagiat_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
