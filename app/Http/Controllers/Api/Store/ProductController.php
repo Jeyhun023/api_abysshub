@@ -79,7 +79,7 @@ class ProductController extends Controller
                         return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
                     break;
                     case 2:
-                        $product->status = 3;
+                        $product->status = '3';
                         $product->save();
                         event(new StoreElasticEvent($product));
                         return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
@@ -106,14 +106,14 @@ class ProductController extends Controller
             $response = Http::post('http://django.abysshub.com/api/plagiarism/check/'.$product->id.'?json');
             
             if($response->failed()){
-                $product->status = 1;
+                $product->status = '1';
                 $product->save();
                 return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
             }
             
-            $product->status = 2;
+            $product->status = '2';
             $product->save();
-            
+           
             return $this->successResponse(null, trans('messages.plagiat_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
