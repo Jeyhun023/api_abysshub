@@ -53,7 +53,7 @@ class ProductController extends Controller
             $product->slug = Str::slug($request->name);
             $product->description = json_encode($request->details);
             $product->price = $request->price;
-            if($request->isPublic){
+            if($request->isPublic != null){
                 $product->is_public = $request->isPublic;
             }
             $product->save();
