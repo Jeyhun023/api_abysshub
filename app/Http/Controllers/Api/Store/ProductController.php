@@ -53,7 +53,9 @@ class ProductController extends Controller
             $product->slug = Str::slug($request->name);
             $product->description = json_encode($request->details);
             $product->price = $request->price;
-            $product->is_public = $request->isPublic;
+            if($request->isPublic){
+                $product->is_public = $request->isPublic;
+            }
             $product->save();
             if($product->status = 2){
                 event(new StoreElasticEvent($product));
@@ -131,9 +133,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with(['user', 'userCave', 'iterations'=> function($query) {
-                $query->with(['user', 'iterations']);
-            }])->findOrFail($id);
+        $product = Product::with(['user', 'userCave', 'iterations.user'])->findOrFail($id);
         
         activity('product')
             ->event('show')

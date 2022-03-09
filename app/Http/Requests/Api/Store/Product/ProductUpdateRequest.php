@@ -38,7 +38,7 @@ class ProductUpdateRequest extends FormRequest
             'details.*' => 'sometimes|nullable|string',
             'tags' => [Rule::requiredIf($this->route('product')->status == 3), 'max:1000'],
             'price' => ['nullable', 'max:1000'],
-            'isPublic' => 'required|boolean',
+            'isPublic' => 'sometimes|nullable|boolean',
         ];
     }
 
