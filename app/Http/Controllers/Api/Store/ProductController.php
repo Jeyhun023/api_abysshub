@@ -53,11 +53,11 @@ class ProductController extends Controller
             $product->slug = Str::slug($request->name);
             $product->description = json_encode($request->details);
             $product->price = $request->price;
-            if($request->isPublic != null){
+            if($request->isPublic !== null){
                 $product->is_public = $request->isPublic;
             }
             $product->save();
-            if($product->status = 2){
+            if($product->status = 3){
                 event(new StoreElasticEvent($product));
             }
 
