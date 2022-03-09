@@ -30,6 +30,7 @@ class ProductResource extends JsonResource
             'user_check' => [
                 'cave' => ($this->userCave == null) ? 0 : 1,
             ],
+            'isPublic' => $this->is_public,
             'download_count' => $this->download_count,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y')
