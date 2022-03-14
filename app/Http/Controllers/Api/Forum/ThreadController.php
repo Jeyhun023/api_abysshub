@@ -183,7 +183,7 @@ class ThreadController extends Controller
             ])->delete();
             $thread->decrement($request->type);
 
-            return $this->successResponse(null, trans('messages.unvote_success'));
+            return $this->successResponse($threadVote, trans('messages.unvote_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
