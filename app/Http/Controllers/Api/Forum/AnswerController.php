@@ -132,7 +132,8 @@ class AnswerController extends Controller
                 'voteable_type' => Answer::class, 
                 'user_id' => auth()->user()->id, 
                 'type' => $request->type
-            ])->delete();
+            ])->first();
+            $answerVote->delete();
             $answer->decrement($request->type);
 
             return $this->successResponse($answerVote, trans('messages.unvote_success'));

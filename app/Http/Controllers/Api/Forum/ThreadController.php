@@ -180,7 +180,8 @@ class ThreadController extends Controller
                 'voteable_type' => Thread::class, 
                 'user_id' => auth()->user()->id, 
                 'type' => $request->type
-            ])->delete();
+            ])->first();
+            $threadVote->delete();
             $thread->decrement($request->type);
 
             return $this->successResponse($threadVote, trans('messages.unvote_success'));
