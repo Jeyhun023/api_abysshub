@@ -103,7 +103,7 @@ class ProductController extends Controller
             $product->file = $request->source_code;
             $product->save();
 
-            $response = Http::post('http://django.abysshub.com/api/plagiarism/check/'.$product->id.'?json');
+            $response = Http::get('http://django.abysshub.com/api/plagiarism/check/'.$product->id);
             
             if($response->failed()){
                 $product->status = '1';
