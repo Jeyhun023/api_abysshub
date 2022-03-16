@@ -2,10 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\ThreadElasticEvent;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Elasticsearch\ClientBuilder;
+use App\Events\ThreadElasticEvent;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ThreadElasticListener implements ShouldQueue
 {
@@ -39,6 +40,10 @@ class ThreadElasticListener implements ShouldQueue
      */
     public function handle(ThreadElasticEvent $event)
     {
+        $response = Http::acceptJson()->asForm()->post('http://django.abysshub.com/api/vectorize', [
+            'data' => $event->data->title.' '.$event->data->content
+        ]);
+       
         $client = ClientBuilder::create()->setRetries(2)->setHosts($this->hosts)->build();
         $params['index'] = 'threads';
         $params['id'] = $event->data->id;
@@ -55,6 +60,7 @@ class ThreadElasticListener implements ShouldQueue
         $params['body']['comment_count'] = $event->data->comment_count;
         $params['body']['view_count'] = $event->data->view_count;
         $params['body']['answer_count'] = $event->data->answer_count;
+        $params['body']['vector'] = json_decode($response->body());
         $params['body']['last_active_at'] = $event->data->last_active_at;
         $params['body']['created_at'] = $event->data->created_at;
         $params['body']['updated_at'] = $event->data->updated_at;
