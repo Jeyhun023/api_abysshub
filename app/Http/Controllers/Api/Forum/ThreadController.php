@@ -137,7 +137,7 @@ class ThreadController extends Controller
         try {
             $thread->delete();
 
-            return $this->successResponse(null, trans('messages.thread_delete_success'));
+            return $this->successResponse($thread, trans('messages.thread_delete_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -225,7 +225,7 @@ class ThreadController extends Controller
             $comment->commentable->decrement('comment_count');
             $comment->delete();
             
-            return $this->successResponse(null, trans('messages.comment_delete_success'));
+            return $this->successResponse($comment, trans('messages.comment_delete_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

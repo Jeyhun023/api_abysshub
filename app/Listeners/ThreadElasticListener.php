@@ -40,7 +40,7 @@ class ThreadElasticListener implements ShouldQueue
      */
     public function handle(ThreadElasticEvent $event)
     {
-        $response = Http::acceptJson()->asForm()->post('http://django.abysshub.com/api/vectorize', [
+        $response = Http::acceptJson()->asForm()->post('https://django.abysshub.com/api/vectorize', [
             'data' => $event->data->title.' '.$event->data->content
         ]);
        

@@ -103,7 +103,7 @@ class ProductController extends Controller
             $product->file = $request->source_code;
             $product->save();
 
-            $response = Http::get('http://django.abysshub.com/api/plagiarism/check/'.$product->id);
+            $response = Http::get('https://django.abysshub.com/api/plagiarism/check/'.$product->id);
             
             if($response->failed()){
                 $product->status = '1';
@@ -125,7 +125,7 @@ class ProductController extends Controller
         try {
             $product->delete();
 
-            return $this->successResponse(null, trans('messages.product_delete_success'));
+            return $this->successResponse($product, trans('messages.product_delete_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }

@@ -95,7 +95,7 @@ class AnswerController extends Controller
             $answer->thread->decrement('answer_count');
             $answer->delete();
 
-            return $this->successResponse(null, trans('messages.answer_delete_success'));
+            return $this->successResponse($answer, trans('messages.answer_delete_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
