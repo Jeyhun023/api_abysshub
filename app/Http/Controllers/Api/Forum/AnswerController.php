@@ -108,7 +108,12 @@ class AnswerController extends Controller
                 'voteable_id' => $answer->id,
                 'voteable_type' => Answer::class, 
                 'user_id' => auth()->user()->id, 
-            ])->where('type', '!=', $request->type)->delete();
+            ])->where('type', '!=', $request->type)->first();
+
+            if(!empty($answerVote)){
+                $answer->decrement($answerVote->type);
+                $answerVote->delete();
+            }
 
             $answerVote = Vote::firstOrCreate([
                 'voteable_id' => $answer->id,
