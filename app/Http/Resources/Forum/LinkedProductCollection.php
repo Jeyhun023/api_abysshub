@@ -23,6 +23,7 @@ class LinkedProductCollection extends ResourceCollection
                 'slug' => $linked->product->slug,
                 'description' => $linked->product->description,
                 'price' => $linked->product->price,
+                'tags' => $linked->product->tags,
                 'rate' => $linked->product->rate,
                 'view_count' => $linked->product->view_count,
                 'download_count' => $linked->product->download_count,

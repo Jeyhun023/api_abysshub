@@ -17,6 +17,11 @@ class LinkedProduct extends Model
         return $this->morphTo();
     }
 
+    public function answer()
+    {
+        return $this->belongsTo(Answer::class, 'linkable_id')->where('linkable_type', 'App\Models\Answer');
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);
