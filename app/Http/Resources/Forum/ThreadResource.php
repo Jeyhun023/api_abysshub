@@ -31,7 +31,7 @@ class ThreadResource extends JsonResource
             'view_count' => $this->view_count == null ? 0 : $this->view_count,
             'upvote' => $this->upvote,
             'downvote' => $this->downvote,
-            'user_votes' => (isset( $this->userVotes->type)) ? ['type' => $this->userVotes->type] : null, 
+            'user_vote' => $this->userVotes?->type, 
             'type' => $this->type,
             'last_active_at' => $this->last_active_at,
             'closed_at' => $this->closed_at,

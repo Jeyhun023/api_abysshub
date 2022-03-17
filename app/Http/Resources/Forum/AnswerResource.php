@@ -22,7 +22,7 @@ class AnswerResource extends JsonResource
             'upvote' => $this->upvote,
             'downvote' => $this->downvote,
             'comment_count' => $this->comment_count == null ? 0 : $this->comment_count,
-            'user_votes' => $this->userVotes,
+            'user_vote' => $this->userVotes->type,
             'isEdited' => ($this->created_at == $this->updated_at) ? false : true,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y')
