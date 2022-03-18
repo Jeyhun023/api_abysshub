@@ -199,7 +199,11 @@ class AnswerController extends Controller
     
     public function loadAnswers($thread)
     {
-        $loadAnswers = Answer::with('linked.product')->where('thread_id', $thread)->paginate(5);
+        $loadAnswers = Answer::with('linked.product')
+            ->where('thread_id', $thread)
+            ->orderByRaw("CASE WHEN user_id = ".auth('api')->id()." THEN 1 ELSE 0 END DESC")
+            ->orderBy('upvote')
+            ->paginate(5);
 
         return new AnswerCollection($loadAnswers);
     }
