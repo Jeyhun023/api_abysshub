@@ -70,7 +70,7 @@ class ProductController extends Controller
     public function submit(Product $product, ProductSubmitRequest $request)
     {
         try {
-            if($product->name != null & $product->description != null & $product->tags != null ){
+            if($product->name !== null && $product->description !== null && $product->tags !== null ){
                 switch ($product->status) {
                     case 0:
                         return $this->errorResponse(["failed" => [trans('messages.not_checked')] ]);
