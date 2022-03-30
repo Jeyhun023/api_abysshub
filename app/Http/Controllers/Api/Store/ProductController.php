@@ -12,6 +12,7 @@ use App\Http\Requests\Api\Store\Product\FullRatingRequest;
 use App\Http\Requests\Api\Store\Product\ProductUpdateRequest;
 use App\Http\Requests\Api\Store\Product\ProductDeleteRequest;
 use App\Http\Resources\Store\ProductResource;
+use App\Http\Resources\Store\ProductCollection;
 use App\Http\Resources\Store\RatingResource;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -171,5 +172,11 @@ class ProductController extends Controller
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
+    }
+
+    public function search()
+    {
+        $products = Product::orderByDesc('id')->paginate(10);
+        return $this->successResponse(new ProductCollection($products), null);
     }
 }

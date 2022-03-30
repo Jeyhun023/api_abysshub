@@ -240,4 +240,9 @@ class ThreadController extends Controller
         return $this->successResponse(new CommentCollection($threadComments));
     }
 
+    public function search()
+    {
+        $threads = Thread::orderByDesc('id')->paginate(10);
+        return $this->successResponse(new ThreadCollection($threads), null);
+    }
 }

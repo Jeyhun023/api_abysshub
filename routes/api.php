@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/content-check', [CheckController::class, 'contentCheck']); 
 
+Route::get('threads/search', [ThreadController::class, 'search']); 
+Route::get('products/search', [ProductController::class, 'search']); 
 //Auth
 
 Route::post('/register', [AuthController::class, 'register']); 

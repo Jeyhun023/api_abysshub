@@ -19,7 +19,7 @@ class ProductCollection extends ResourceCollection
             return [
                 'id' => $product->id,
                 'user' => new UserResource($product->user),
-                'iterations' => $product->whenLoaded('iterations', new ProductCollection($product->iterations), null),
+                // 'iterations' => $product->whenLoaded('iterations', new ProductCollection($product->iterations), null),
                 'name' => $product->name,
                 'slug' => $product->slug,
                 'description' => $product->description,
