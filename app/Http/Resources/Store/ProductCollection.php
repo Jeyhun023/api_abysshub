@@ -18,8 +18,7 @@ class ProductCollection extends ResourceCollection
         return $this->collection->transform(function ($product) {
             return [
                 'id' => $product->id,
-                'user' => new UserResource($product->user),
-                // 'iterations' => $product->whenLoaded('iterations', new ProductCollection($product->iterations), null),
+                'user' => new UserResource($product->whenLoaded('user')),
                 'name' => $product->name,
                 'slug' => $product->slug,
                 'description' => $product->description,

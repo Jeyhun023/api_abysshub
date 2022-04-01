@@ -19,12 +19,16 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('shop_id')->nullable()->unsigned();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
+            $table->longText('draft')->nullable();
             $table->longText('file')->nullable();
             $table->longText('description')->nullable();
             $table->decimal('price', 6, 2)->default(0)->nullable();
             $table->integer('rate')->default(0)->nullable();
             $table->bigInteger('download_count')->default(0)->nullable();
-            $table->enum('status', [0, 1, 2, 3])->default(0);
+            $table->boolean('is_plagiat')->default(1);
+            $table->boolean('is_submitted')->default(0);
+            $table->boolean('is_public')->default(0);
+            $table->boolean('is_free')->default(0);
             $table->json('tags')->nullable();
             $table->timestamps();
             $table->softDeletes();

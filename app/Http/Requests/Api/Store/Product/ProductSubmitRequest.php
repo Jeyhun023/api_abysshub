@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Api\Store\Product;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class ProductSubmitRequest extends FormRequest
 {

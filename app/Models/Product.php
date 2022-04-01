@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -12,16 +13,10 @@ class Product extends Model
 
     public $table = "products";
 
-    protected $fillable = ['user_id', 'shop_id', 'file', 'name','slug','description','price', 'status'];
+    protected $fillable = ['user_id', 'shop_id', 'draft', 'file', 'name', 'price', 
+        'slug', 'description', 'is_free', 'is_plagiat', 'is_submitted', 'is_public', 'tags'];
     protected $casts = ['tags' => 'json'];
     protected $guarded = ['rate', 'download_count']; 
-
-    public const PRODUCT_STATUS = [
-        '0' => 'Not Checked',
-        '1' => 'Plagiarism detected',
-        '2' => 'Not plagiat',
-        '3' => 'Submitted'
-    ];
 
     public function user()
     {
@@ -46,5 +41,23 @@ class Product extends Model
     public function userCave()
     {
         return $this->hasOne(Inventory::class)->where('user_id', auth()->guard('api')->user()?->id);
+    }
+
+    public function scopeSubmitted(Builder $query): Builder
+    {
+        $query = $query->where('is_submitted', true);
+        return $query;
+    }
+
+    public function scopeFree(Builder $query): Builder
+    {
+        $query = $query->where('is_free', true);
+        return $query;
+    }
+
+    public function scopePublic(Builder $query): Builder
+    {
+        $query = $query->where('is_public', true);
+        return $query;
     }
 }

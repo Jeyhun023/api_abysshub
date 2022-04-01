@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Models\Rating;
 use App\Models\Product;
 use App\Models\ProductIteration;
-use App\Models\Rating;
-use App\Http\Requests\Api\Store\Product\ProductPlagiarismRequest;
-use App\Http\Requests\Api\Store\Product\ProductSubmitRequest;
-use App\Http\Requests\Api\Store\Product\RatingRequest;
-use App\Http\Requests\Api\Store\Product\FullRatingRequest;
-use App\Http\Requests\Api\Store\Product\ProductUpdateRequest;
-use App\Http\Requests\Api\Store\Product\ProductDeleteRequest;
+use App\Events\StoreElasticEvent;
+use App\Http\Resources\Store\RatingResource;
 use App\Http\Resources\Store\ProductResource;
 use App\Http\Resources\Store\ProductCollection;
-use App\Http\Resources\Store\RatingResource;
-use Illuminate\Support\Str;
+use App\Http\Requests\Api\Store\Product\RatingRequest;
+use App\Http\Requests\Api\Store\Product\FullRatingRequest;
+use App\Http\Requests\Api\Store\Product\ProductSubmitRequest;
+use App\Http\Requests\Api\Store\Product\ProductUpdateRequest;
+use App\Http\Requests\Api\Store\Product\ProductDeleteRequest;
+use App\Http\Requests\Api\Store\Product\ProductPlagiarismRequest;
+
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
-use App\Events\StoreElasticEvent;
-use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller
 {
@@ -49,19 +49,11 @@ class ProductController extends Controller
     public function update(Product $product, ProductUpdateRequest $request)
     {
         try {
-            $product->name = $request->name;
-            $product->tags = collect( explode(',' , $request->tags) );
-            $product->slug = Str::slug($request->name);
-            $product->description = json_encode($request->details);
-            $product->price = $request->price;
-            if($request->isPublic !== null){
-                $product->is_public = $request->isPublic;
-            }
+            $product->fill($request->validated());
             $product->save();
-            if($product->status = 3){
+            if($product->is_submitted){
                 event(new StoreElasticEvent($product));
             }
-
             return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
@@ -70,52 +62,35 @@ class ProductController extends Controller
 
     public function submit(Product $product, ProductSubmitRequest $request)
     {
-        try {
-            if($product->name !== null && $product->description !== null && $product->tags !== null ){
-                switch ($product->status) {
-                    case 0:
-                        return $this->errorResponse(["failed" => [trans('messages.not_checked')] ]);
-                    break;
-                    case 1:
-                        return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
-                    break;
-                    case 2:
-                        $product->status = '3';
-                        $product->save();
-                        event(new StoreElasticEvent($product));
-                        return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
-                    break;
-                    case 3:
-                        return $this->errorResponse(["failed" => [trans('messages.product_already_submitted')] ]);
-                    break;
-                    default:
-                        return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-                }
-            }
+        if(!$product->name || !$product->tags || !isset(json_decode($product->description)->description) || 
+        !isset(json_decode($product->description)->applicability) || !isset(json_decode($product->description)->problemFormulation)){
             return $this->errorResponse(["failed" => [trans('messages.store_fill_details')] ]);
-        } catch (Exception $e) {
-            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
+        if($product->is_plagiat){
+            return $this->errorResponse(["failed" => [trans('messages.plagiat_error')]]);
+        }
+
+        $product->file = $product->draft;
+        $product->draft = null;
+        $product->is_plagiat = true;
+        $product->is_submitted = true;
+        $product->save();
+        event(new StoreElasticEvent($product));
+
+        return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
     }
 
     public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
     {
         try {
-            $product->file = $request->source_code;
-            $product->save();
-
             $response = Http::get('https://django.abysshub.com/api/plagiarism/check/'.$product->id);
-            
             if($response->failed()){
-                $product->status = '1';
-                $product->save();
                 return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
             }
-            
-            $product->status = '2';
+            $product->is_plagiat = false;
             $product->save();
            
-            return $this->successResponse(null, trans('messages.plagiat_success'));
+            return $this->successResponse(new ProductResource($product), trans('messages.plagiat_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -125,8 +100,7 @@ class ProductController extends Controller
     {
         try {
             $product->delete();
-
-            return $this->successResponse($product, trans('messages.product_delete_success'));
+            return $this->successResponse(new ProductResource($product), trans('messages.product_delete_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
         }
@@ -135,7 +109,6 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::with(['user', 'userCave', 'iterations.user'])->findOrFail($id);
-        
         activity('product')
             ->event('show')
             ->causedBy($this->user)

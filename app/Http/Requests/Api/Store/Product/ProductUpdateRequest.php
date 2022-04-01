@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests\Api\Store\Product;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use App\Rules\ProfanityCheck;
 use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class ProductUpdateRequest extends FormRequest
 {
@@ -15,9 +16,18 @@ class ProductUpdateRequest extends FormRequest
      */
     public function authorize()
     {
+        if($this->name){
+            $this->merge(['slug' => Str::slug($this->name)]);
+        }
+        if($this->tags){
+            $this->merge(['tags' => explode(',' , $this->tags)]);
+        }
+        if($this->details){
+            $this->merge(['description' => json_encode($this->details)]);
+        }
         $this->merge([
             'id' => $this->route('product')->id,
-            'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id,
         ]);
         return true;
     }
@@ -31,14 +41,18 @@ class ProductUpdateRequest extends FormRequest
     {
         return [
             'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)],
-            'name' => [Rule::requiredIf($this->route('product')->status == 3) , 'max:255', new ProfanityCheck()],
-            'details.description' => Rule::requiredIf($this->route('product')->status == 3),
-            'details.applicability' => Rule::requiredIf($this->route('product')->status == 3),
-            'details.problemFormulation' => Rule::requiredIf($this->route('product')->status == 3),
-            'details.*' => 'sometimes|nullable|string',
-            'tags' => [Rule::requiredIf($this->route('product')->status == 3), 'max:1000'],
-            'price' => ['nullable', 'max:1000'],
-            'isPublic' => 'sometimes|nullable|boolean',
+            'name' => ['sometimes' , 'max:255', new ProfanityCheck()],
+            'slug' => 'sometimes',
+            'price' => 'sometimes|integer|min:1|max:3',
+            'draft' => 'sometimes',
+            'description' => 'sometimes',
+            'details.description' => 'sometimes|min:50|max:5000|string',
+            'details.applicability' => 'sometimes|min:50|max:5000|string',
+            'details.problemFormulation' => 'sometimes|min:50|max:5000|string',
+            'details.*' => 'sometimes|min:50|max:5000|string',
+            'tags' => 'sometimes|array|min:3|max:5',
+            'is_public' => 'sometimes|nullable|boolean',
+            'is_free' => 'sometimes|nullable|boolean',
         ];
     }
 

@@ -2,30 +2,22 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\RegisterRequest;
-use App\Http\Requests\Api\Auth\LoginRequest;
-use App\Http\Resources\Auth\UserResource;
 use App\Models\User;
 use App\Models\Shop;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Traits\ApiResponser;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\Auth\UserResource;
+use App\Http\Requests\Api\Auth\LoginRequest;
+use App\Http\Requests\Api\Auth\RegisterRequest;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
     use ApiResponser;
-
-    /**
-     * Create user
-     *
-     * @param  [string] phone
-     * @param  [string] password
-     * @return [string] message
-     */
     private $pac = "Abyss Personal Access Client";
 
     public function register(RegisterRequest $request)
@@ -38,11 +30,10 @@ class AuthController extends Controller
             ]);
             $user->save();
             
-            $shop = new Shop([
-                'user_id' => $user->id,
-                'name' => $user->name."'s shop",
-                'slug' => Str::slug($user->name."'s shop")
-            ]);
+            $shop = new Shop();
+            $shop->user_id = $user->id;
+            $shop->name = $user->name."'s shop";
+            $shop->slug = Str::slug($shop->name);
             $shop->save();
 
             $tokenResult = $user->createToken($this->pac);
@@ -59,16 +50,6 @@ class AuthController extends Controller
         
     }
 
-    /**
-     * Login user and create token
-     *
-     * @param  [string] phone
-     * @param  [string] password
-     * @param  [boolean] remember_me
-     * @return [string] access_token
-     * @return [string] token_type
-     * @return [string] expires_at
-     */
     public function login(LoginRequest $request)
     {
         try {
@@ -105,15 +86,9 @@ class AuthController extends Controller
         return $this->successResponse(new UserResource($user));
     }
 
-    /**
-     * Logout user (Revoke the token)
-     *
-     * @return [string] message
-     */
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
         return $this->successResponse(null, trans('messages.logout_success'));
     }
-
 }
