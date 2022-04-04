@@ -213,7 +213,7 @@ class AnswerController extends Controller
         $loadProducts = LinkedProduct::where([
                 'linkable_type' => Answer::class
             ])->whereHas('product', function ($query){
-                $query->where('status', '3');   
+                $query->submitted();   
                 $query->where('is_public', 1);   
             })->whereHas('answer.thread', function ($q) use ($thread){
                 $q->where('id', $thread);   
