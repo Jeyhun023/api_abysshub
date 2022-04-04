@@ -70,7 +70,7 @@ class ProductController extends Controller
             return $this->errorResponse(["failed" => [trans('messages.store_fill_details')] ]);
         }
         if($product->is_plagiat){
-            return $this->errorResponse(["failed" => [trans('messages.plagiat_error')]]);
+            return $this->errorResponse(["plagiarismDetected" => [trans('messages.plagiat_error')]]);
         }
 
         $product->file = $product->draft;
@@ -88,7 +88,7 @@ class ProductController extends Controller
         try {
             $response = Http::get('https://django.abysshub.com/api/plagiarism/check/'.$product->id);
             if($response->failed()){
-                return $this->errorResponse(["failed" => [trans('messages.plagiat_error')] ]);
+                return $this->errorResponse(["plagiarismDetected" => [trans('messages.plagiat_error')] ]);
             }
             $product->is_plagiat = false;
             $product->save();
