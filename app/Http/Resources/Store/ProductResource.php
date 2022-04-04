@@ -29,12 +29,10 @@ class ProductResource extends JsonResource
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y')
         ];
-        if($this->user_id == auth()->id()){
-            $response["draft"] = $this->draft;
-        }
-        if($this->user_id == auth()->id()){
-            $response["sourceCode"] = $this->file;
-        }
+        
+        $response["draft"] = $this->draft;
+        $response["sourceCode"] = $this->file;
+
         return $response;
     }
 }
