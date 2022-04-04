@@ -17,6 +17,7 @@ class ProductResource extends JsonResource
             'threads' => new ThreadCollection($this->whenLoaded('threads')),
             'name' => $this->name,
             'slug' => $this->slug,
+            'extension' => $this->extension,
             'details' => $this->description,
             'price' => $this->price,
             'rate' => $this->rate,
