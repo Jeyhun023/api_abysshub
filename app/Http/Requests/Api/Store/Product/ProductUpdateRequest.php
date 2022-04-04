@@ -45,6 +45,7 @@ class ProductUpdateRequest extends FormRequest
             'slug' => 'sometimes',
             'price' => 'sometimes|integer|min:1|max:3',
             'draft' => 'sometimes',
+            'extension' => 'sometimes',
             'description' => 'sometimes',
             'details.description' => 'sometimes|min:50|max:5000|string',
             'details.applicability' => 'sometimes|min:50|max:5000|string',

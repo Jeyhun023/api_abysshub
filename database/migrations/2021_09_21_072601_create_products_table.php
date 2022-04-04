@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('slug')->nullable();
             $table->longText('draft')->nullable();
             $table->longText('file')->nullable();
+            $table->string('extension')->nullable();
             $table->longText('description')->nullable();
             $table->decimal('price', 6, 2)->default(0)->nullable();
             $table->integer('rate')->default(0)->nullable();

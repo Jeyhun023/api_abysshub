@@ -14,7 +14,7 @@ class Product extends Model
     public $table = "products";
 
     protected $fillable = ['user_id', 'shop_id', 'draft', 'file', 'name', 'price', 
-        'slug', 'description', 'is_free', 'is_plagiat', 'is_submitted', 'is_public', 'tags'];
+        'slug', 'description', 'is_free', 'is_plagiat', 'is_submitted', 'is_public', 'tags', 'extension'];
     protected $casts = ['tags' => 'json'];
     protected $guarded = ['rate', 'download_count']; 
 
