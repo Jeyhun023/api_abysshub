@@ -85,6 +85,7 @@ class ProductController extends Controller
 
     private function plagiarismCheck(Product $product)
     {
+        return $this->successResponse(new ProductResource($product), trans('messages.plagiat_success'));
         try {
             $response = Http::get('https://django.abysshub.com/api/plagiarism/check/'.$product->id);
             if($response->failed()){
