@@ -69,13 +69,14 @@ class ProductController extends Controller
         !isset(json_decode($product->description)->applicability) || !isset(json_decode($product->description)->problemFormulation)){
             return $this->errorResponse(["failed" => [trans('messages.store_fill_details')] ]);
         }
-        if($product->is_plagiat){
+        if($product->draft !== null && $product->is_plagiat){
             return $this->errorResponse(["plagiarismDetected" => [trans('messages.plagiat_error')]]);
         }
-
-        $product->file = $product->draft;
-        $product->draft = null;
-        $product->is_plagiat = true;
+        if($product->draft !== null){
+            $product->file = $product->draft;
+            $product->draft = null;
+            $product->is_plagiat = true;
+        }
         $product->is_submitted = true;
         $product->save();
         event(new StoreElasticEvent($product));
@@ -87,9 +88,9 @@ class ProductController extends Controller
     {
         try {
             $response = Http::get('https://django.abysshub.com/api/plagiarism/check/'.$product->id);
-            // if($response->failed()){
-            //     return $this->errorResponse(["plagiarismDetected" => [trans('messages.plagiat_error')] ]);
-            // }
+            if($response->failed()){
+                return $this->errorResponse(["plagiarismDetected" => [trans('messages.plagiat_error')] ]);
+            }
             $product->is_plagiat = false;
             $product->save();
            
