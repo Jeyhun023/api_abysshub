@@ -115,8 +115,7 @@ Route::group(['prefix' => 'store'], function () {
         Route::post('/{product}/product/fullreview', [ProductController::class, 'fullReview']); 
         
         Route::post('/create', [ProductController::class, 'store']);
-        Route::put('/{product}/product/edit', [ProductController::class, 'update']); 
-        Route::post('/{product}/product/plagiarism', [ProductController::class, 'plagiarismCheck']); 
+        Route::put('/{product}/product/edit', [ProductController::class, 'update']);  
         Route::post('/{product}/product/submit', [ProductController::class, 'submit']); 
 
         Route::post('/{product}/iterate', [IterationController::class, 'store']);

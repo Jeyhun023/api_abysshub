@@ -14,7 +14,6 @@ use App\Http\Requests\Api\Store\Product\FullRatingRequest;
 use App\Http\Requests\Api\Store\Product\ProductSubmitRequest;
 use App\Http\Requests\Api\Store\Product\ProductUpdateRequest;
 use App\Http\Requests\Api\Store\Product\ProductDeleteRequest;
-use App\Http\Requests\Api\Store\Product\ProductPlagiarismRequest;
 
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
@@ -51,8 +50,12 @@ class ProductController extends Controller
         try {
             $product->fill($request->validated());
             $product->save();
+
             if($product->is_submitted){
                 event(new StoreElasticEvent($product));
+            }
+            if($request->draft){
+                return $this->plagiarismCheck($product);
             }
             return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
         } catch (Exception $e) {
@@ -80,7 +83,7 @@ class ProductController extends Controller
         return $this->successResponse(new ProductResource($product), trans('messages.product_submitted_success'));
     }
 
-    public function plagiarismCheck(Product $product, ProductPlagiarismRequest $request)
+    private function plagiarismCheck(Product $product)
     {
         try {
             $response = Http::get('https://django.abysshub.com/api/plagiarism/check/'.$product->id);
