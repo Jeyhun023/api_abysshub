@@ -32,6 +32,9 @@ class ProductResource extends JsonResource
         if($this->user_id == auth()->id()){
             $response["draft"] = $this->draft;
         }
+        if($this->user_id == auth()->id()){
+            $response["sourceCode"] = $this->file;
+        }
         return $response;
     }
 }
