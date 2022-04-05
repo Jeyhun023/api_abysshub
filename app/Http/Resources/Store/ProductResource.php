@@ -22,17 +22,17 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'rate' => $this->rate,
             'tags' => $this->tags,
-            'isFree' => $this->is_free,
-            'isPublic' => $this->is_public,
-            'isSubmitted' => $this->is_submitted,
+            'is_free' => $this->is_free,
+            'is_public' => $this->is_public,
+            'is_submitted' => $this->is_submitted,
             'download_count' => $this->download_count,
-            'userCave' => $this->userCave == null ? false : true,
+            'user_cave' => $this->userCave == null ? false : true,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y')
         ];
         
         $response["draft"] = $this->draft;
-        $response["sourceCode"] = $this->file;
+        $response["source_code"] = $this->file;
 
         return $response;
     }

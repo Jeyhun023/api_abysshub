@@ -43,7 +43,7 @@ class ProductUpdateRequest extends FormRequest
             'id' => ['required', Rule::exists('products')->where('user_id', $this->user_id)],
             'name' => ['sometimes' , 'max:255', new ProfanityCheck()],
             'slug' => 'sometimes',
-            'price' => 'sometimes|integer|min:1|max:3',
+            'price' => 'sometimes|integer|max:3',
             'draft' => 'sometimes',
             'extension' => 'sometimes',
             'description' => 'sometimes',
