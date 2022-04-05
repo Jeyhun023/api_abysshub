@@ -11,7 +11,6 @@ use App\Http\Resources\Store\ProductResource;
 use App\Http\Resources\Store\ProductCollection;
 use App\Http\Requests\Api\Store\Product\RatingRequest;
 use App\Http\Requests\Api\Store\Product\FullRatingRequest;
-use App\Http\Requests\Api\Store\Product\ProductSubmitRequest;
 use App\Http\Requests\Api\Store\Product\ProductUpdateRequest;
 use App\Http\Requests\Api\Store\Product\ProductDeleteRequest;
 
@@ -51,11 +50,11 @@ class ProductController extends Controller
             $product->fill($request->validated());
             $product->save();
 
-            if($product->is_submitted){
-                event(new StoreElasticEvent($product));
-            }
             if($request->draft){
                 return $this->plagiarismCheck($product);
+            }
+            if($request->input('submit')){
+                return $this->submit($product, $request);
             }
             return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
         } catch (Exception $e) {
@@ -63,7 +62,7 @@ class ProductController extends Controller
         }
     }
 
-    public function submit(Product $product, ProductSubmitRequest $request)
+    private function submit(Product $product, $request)
     {
         if(!$product->name || !$product->tags || !isset(json_decode($product->description)->description) || 
         !isset(json_decode($product->description)->applicability) || !isset(json_decode($product->description)->problemFormulation)){
