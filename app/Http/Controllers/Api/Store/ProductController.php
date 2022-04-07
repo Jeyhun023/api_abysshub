@@ -152,7 +152,7 @@ class ProductController extends Controller
 
     public function search()
     {
-        $products = Product::orderByDesc('id')->paginate(10);
+        $products = Product::with('user')->orderByDesc('id')->paginate(10);
         return $this->successResponse(new ProductCollection($products), null);
     }
 }

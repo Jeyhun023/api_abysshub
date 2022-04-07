@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255', new ProfanityCheck()],
+            'name' => ['required', 'string', 'max:16', new ProfanityCheck()],
             'email' => 'required|email|max:255|unique:users,email',
             'password' => ['required', 'string', 'min:7'] // 'regex:/^[a-zA-Z0-9]*([a-zA-Z][0-9]|[0-9][a-zA-Z])[a-zA-Z0-9]*$/'
         ];
