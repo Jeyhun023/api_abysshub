@@ -28,6 +28,11 @@ class Product extends Model
         return $this->hasMany(ProductIteration::class);
     }
 
+    public function linkedProducts()
+    {
+        return $this->hasMany(LinkedProduct::class);
+    }
+
     public function threads()
     {
         return $this->hasMany(Thread::class);

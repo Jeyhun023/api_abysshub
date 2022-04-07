@@ -26,6 +26,8 @@ class ProductCollection extends ResourceCollection
                 'rate' => $product->rate,
                 'tags' => $product->tags,
                 'is_public' => $product->is_public,
+                'linked_products_count' => $product->linkedProducts_count,
+                'iterations_count' => $product->iterations_count,
                 'download_count' => $product->download_count,
                 'created_at' => $product->created_at->format('d/m/Y'),
                 'updated_at' => $product->updated_at->format('d/m/Y')
