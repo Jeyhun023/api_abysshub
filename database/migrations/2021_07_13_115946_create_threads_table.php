@@ -22,9 +22,9 @@ class CreateThreadsTable extends Migration
             $table->json('tags');
             $table->string('slug', 300);
             
-            $table->integer('answer_count')->default(0);
-            $table->integer('comment_count')->default(0);
-            $table->integer('view_count')->default(0);
+            $table->bigInteger('answer_count')->default(0);
+            $table->bigInteger('comment_count')->default(0);
+            $table->bigInteger('view_count')->default(0);
             $table->bigInteger('upvote')->default(0);
             $table->bigInteger('downvote')->default(0);
             $table->enum('type', [1, 2, 3]);

@@ -112,6 +112,9 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::with(['user', 'userCave', 'iterations.user'])->findOrFail($id);
+        $product->view_count->increment();
+        $product->save();
+        
         activity('product')
             ->event('show')
             ->causedBy($this->user)

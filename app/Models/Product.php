@@ -16,7 +16,7 @@ class Product extends Model
     protected $fillable = ['user_id', 'shop_id', 'draft', 'file', 'name', 'price', 
         'slug', 'description', 'is_free', 'is_plagiat', 'is_submitted', 'is_public', 'tags', 'extension'];
     protected $casts = ['tags' => 'json'];
-    protected $guarded = ['rate', 'download_count']; 
+    protected $guarded = ['rate', 'download_count', 'view_count']; 
 
     public function user()
     {

@@ -25,7 +25,8 @@ class CreateProductsTable extends Migration
             $table->longText('description')->nullable();
             $table->decimal('price', 6, 2)->default(0)->nullable();
             $table->integer('rate')->default(0)->nullable();
-            $table->bigInteger('download_count')->default(0)->nullable();
+            $table->bigInteger('download_count')->default(0);
+            $table->bigInteger('view_count')->default(0);
             $table->boolean('is_plagiat')->default(1);
             $table->boolean('is_submitted')->default(0);
             $table->boolean('is_public')->default(0);

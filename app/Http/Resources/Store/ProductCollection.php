@@ -29,6 +29,7 @@ class ProductCollection extends ResourceCollection
                 'mention_count' => $product->linked_products_count,
                 'iteration_count' => $product->iterations_count,
                 'download_count' => $product->download_count,
+                'view_count' => $product->view_count,
                 'created_at' => $product->created_at->format('d/m/Y'),
                 'updated_at' => $product->updated_at->format('d/m/Y')
             ];
