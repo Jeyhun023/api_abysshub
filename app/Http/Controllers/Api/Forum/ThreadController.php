@@ -242,7 +242,8 @@ class ThreadController extends Controller
 
     public function search()
     {
-        $threads = Thread::with('user')->orderByDesc('id')->paginate(10);
+        $threads = Thread::with('user')->withCount('linkedProducts')
+            ->orderByDesc('id')->paginate(10);
         return $this->successResponse(new ThreadCollection($threads), null);
     }
 }
