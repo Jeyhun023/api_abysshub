@@ -27,7 +27,7 @@ class ThreadCollection extends ResourceCollection
                 'accepted_answer_id' => $thread->accepted_answer_id,
                 'answer_count' => $thread->answer_count,
                 'comment_count' => $thread->comment_count,
-                'mention_count' => $thread->linked_products_count,
+                'mention_count' => $thread->linked_count,
                 'view_count' => $thread->view_count,
                 'upvote' => $thread->upvote,
                 'downvote' => $thread->downvote,
