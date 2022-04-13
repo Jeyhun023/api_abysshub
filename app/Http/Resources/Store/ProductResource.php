@@ -26,7 +26,7 @@ class ProductResource extends JsonResource
             'is_public' => $this->is_public,
             'is_submitted' => $this->is_submitted,
             'download_count' => $this->download_count,
-            'view_count' => $product->view_count,
+            'view_count' => $this->view_count,
             'user_cave' => $this->userCave == null ? false : true,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at

@@ -145,6 +145,9 @@ Route::group(['prefix' => 'other'], function () {
 
 
 Route::post('/user/subscribe', function (Request $request) {
-
-   return auth('api')->user()->addPaymentMethod('sepa_debit');
+    $user = auth('api')->user();
+    return $user->newSubscription(
+        'default', 'price_1Kne6cJIjCailGvpK1w0HTin'
+    )->create($user->pm_type);
+//    return ->addPaymentMethod('pm_1Ko1AZJIjCailGvpSttx7nEU');
 });
