@@ -45,6 +45,7 @@ class ThreadController extends Controller
     public function show($id)
     {
         $thread = Thread::with(['user', 'userVotes', 'linked.product'])->findOrFail($id);
+        $thread->increment('view_count');
 
         activity('thread')
             ->event('show')
