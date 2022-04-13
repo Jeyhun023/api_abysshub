@@ -25,8 +25,8 @@ class AnswerCollection extends ResourceCollection
                 'downvote' => $answer->downvote,
                 'comment_count' => $answer->comment_count,
                 'user_vote' => $answer->userVotes?->type,
-                'created_at' => $answer->created_at->format('d/m/Y'),
-                'updated_at' => $answer->updated_at->format('d/m/Y'),
+                'created_at' => $answer->created_at,
+                'updated_at' => $answer->updated_at,
             ];
         })->toArray();
         return parent::toArray($request);

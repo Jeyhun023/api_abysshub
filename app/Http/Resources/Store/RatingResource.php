@@ -14,8 +14,8 @@ class RatingResource extends JsonResource
             'user' => new UserResource($this->whenLoaded('user')),
             'value' => $this->value,
             'content' => $this->content,
-            'created_at' => $this->created_at->format('d/m/Y'),
-            'updated_at' => $this->updated_at->format('d/m/Y')
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 }

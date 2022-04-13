@@ -23,8 +23,8 @@ class ChatCollection extends ResourceCollection
                 ),
                 'messages' => [],
                 'last_activity' => $message->last_activity->format('H:i'),
-                'created_at' => $message->created_at->format('d/m/Y'),
-                'updated_at' => $message->updated_at->format('d/m/Y')
+                'created_at' => $message->created_at,
+                'updated_at' => $message->updated_at
             ];
         })->toArray();
         return parent::toArray($request);

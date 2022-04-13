@@ -22,9 +22,9 @@ class ChatResource extends JsonResource
                 $this->user_id_from == auth()->id() ? $this->user_to : $this->user_from
             ),
             'messages' => $this->whenLoaded('messages', new MessageCollection($this->messages), null),
-            'last_activity' => $this->last_activity->format('d/m/Y'),
-            'created_at' => $this->created_at->format('d/m/Y'),
-            'updated_at' => $this->updated_at->format('d/m/Y')
+            'last_activity' => $this->last_activity,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 }

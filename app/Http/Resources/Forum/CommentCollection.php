@@ -22,8 +22,8 @@ class CommentCollection extends ResourceCollection
                 'commentable_id' => $comment->commentable_id,
                 'content' => $comment->content,
                 'isEdited' => ($comment->created_at == $comment->updated_at) ? false : true,
-                'created_at' => $comment->created_at->format('d/m/Y'),
-                'updated_at' => $comment->updated_at->format('d/m/Y')
+                'created_at' => $comment->created_at,
+                'updated_at' => $comment->updated_at
             ];
         })->toArray();
         return parent::toArray($request);

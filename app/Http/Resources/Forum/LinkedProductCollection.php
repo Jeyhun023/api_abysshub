@@ -27,8 +27,8 @@ class LinkedProductCollection extends ResourceCollection
                 'rate' => $linked->product->rate,
                 'view_count' => $linked->product->view_count,
                 'download_count' => $linked->product->download_count,
-                'created_at' => $linked->product->created_at->format('d/m/Y'),
-                'updated_at' => $linked->product->updated_at->format('d/m/Y')
+                'created_at' => $linked->product->created_at,
+                'updated_at' => $linked->product->updated_at
             ];
         })->toArray();
         return parent::toArray($request);

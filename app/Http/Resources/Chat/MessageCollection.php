@@ -20,8 +20,8 @@ class MessageCollection extends ResourceCollection
                 'id' => $message->id,
                 'user' => new UserResource($message->user),
                 'content' => $message->content,
-                'created_at' => $message->created_at->format('d/m/Y'),
-                'updated_at' => $message->updated_at->format('d/m/Y'),
+                'created_at' => $message->created_at,
+                'updated_at' => $message->updated_at,
             ];
         })->toArray();
         return parent::toArray($request);

@@ -35,8 +35,8 @@ class ThreadCollection extends ResourceCollection
                 'product' => $thread->product,
                 'last_active_at' => $thread->last_active_at,
                 'closed_at' => $thread->closed_at,
-                'created_at' => $thread->created_at->format('d/m/Y'),
-                'updated_at' => $thread->updated_at->format('d/m/Y')
+                'created_at' => $thread->created_at,
+                'updated_at' => $thread->updated_at
             ];
         })->toArray();
         return parent::toArray($request);

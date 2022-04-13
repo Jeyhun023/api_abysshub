@@ -35,8 +35,8 @@ class ThreadResource extends JsonResource
             'type' => $this->type,
             'last_active_at' => $this->last_active_at,
             'closed_at' => $this->closed_at,
-            'created_at' => $this->created_at->format('d/m/Y'),
-            'updated_at' => $this->updated_at->format('d/m/Y')
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
 }

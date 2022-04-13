@@ -28,8 +28,8 @@ class ProductResource extends JsonResource
             'download_count' => $this->download_count,
             'view_count' => $product->view_count,
             'user_cave' => $this->userCave == null ? false : true,
-            'created_at' => $this->created_at->format('d/m/Y'),
-            'updated_at' => $this->updated_at->format('d/m/Y')
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
         
         $response["draft"] = $this->draft;
