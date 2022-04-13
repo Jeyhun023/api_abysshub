@@ -201,10 +201,12 @@ class AnswerController extends Controller
     {
         $loadAnswers = Answer::with('linked.product')
             ->where('thread_id', $thread)
-            ->orderByRaw("CASE WHEN user_id = ".auth('api')->id()." THEN 1 ELSE 0 END DESC")
-            ->orderBy('upvote')
-            ->paginate(5);
-
+            ->orderBy('upvote');
+        if(auth('api')->check()){
+            $loadAnswers = $loadAnswers->orderByRaw("CASE WHEN user_id = ".auth('api')->id()." THEN 1 ELSE 0 END DESC");
+        }
+        $loadAnswers->paginate(5);
+        
         return new AnswerCollection($loadAnswers);
     }
 

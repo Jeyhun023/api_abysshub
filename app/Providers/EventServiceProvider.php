@@ -14,6 +14,8 @@ use App\Events\ThreadElasticEvent;
 use App\Listeners\ThreadElasticListener;
 use App\Events\StoreElasticEvent;
 use App\Listeners\StoreElasticListener;
+use Laravel\Cashier\Events\WebhookReceived;
+use App\Listeners\StripeEventListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -37,7 +39,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         StoreElasticEvent::class => [
             StoreElasticListener::class
-        ]
+        ],
+        WebhookReceived::class => [
+            StripeEventListener::class,
+        ],
     ];
 
     /**

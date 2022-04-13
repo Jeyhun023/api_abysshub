@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+use App\Models\User;
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/update', function () {
+    return view('update-payment-method', [
+        'intent' => User::find(1)->createSetupIntent()
+    ]);
 });

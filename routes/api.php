@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Other\TagController;
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -143,3 +144,7 @@ Route::group(['prefix' => 'other'], function () {
 });
 
 
+Route::post('/user/subscribe', function (Request $request) {
+
+   return auth('api')->user()->addPaymentMethod('sepa_debit');
+});
