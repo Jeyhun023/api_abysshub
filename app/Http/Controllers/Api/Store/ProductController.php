@@ -50,12 +50,16 @@ class ProductController extends Controller
             $product->fill($request->validated());
             $product->save();
 
+            if($request->input('submit')){
+                if($request->draft){
+                    $this->plagiarismCheck($product);
+                }
+                return $this->submit($product, $request);
+            }
             if($request->draft){
                 return $this->plagiarismCheck($product);
             }
-            if($request->input('submit')){
-                return $this->submit($product, $request);
-            }
+            
             return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
@@ -113,7 +117,7 @@ class ProductController extends Controller
     {
         $product = Product::with(['user', 'userCave', 'iterations.user'])->findOrFail($id);
         $product->increment('view_count');
-        
+
         activity('product')
             ->event('show')
             ->causedBy($this->user)
