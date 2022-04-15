@@ -54,13 +54,13 @@ class ProductController extends Controller
                foreach($request->file('addedImages') as $file)
                {
                    $name = time().'.'.$file->extension();
-                   return $this->errorResponse(["failed" => [$request] ]);
+                   return $this->errorResponse(["failed" => "SAdsad" ]);
                    $file->move(public_path().'/files/', $name);  
                    $data[] = $name;  
                }
             }
 
-            return $this->errorResponse(["failed" => [$request] ]);
+            return $this->errorResponse(["failed" => [$request->all()] ]);
             $product->fill($request->validated());
             $product->save();
 
