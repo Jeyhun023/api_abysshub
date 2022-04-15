@@ -28,6 +28,11 @@ class Product extends Model
         return $this->hasMany(ProductIteration::class);
     }
 
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
     public function linkedProducts()
     {
         return $this->hasMany(LinkedProduct::class);

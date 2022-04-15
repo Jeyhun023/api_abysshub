@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Models\Image;
 use App\Models\Rating;
 use App\Models\Product;
 use App\Models\ProductIteration;
@@ -50,6 +51,8 @@ class ProductController extends Controller
             $product->fill($request->validated());
             $product->save();
 
+            $this->imagesApply($product, $request);
+
             if($request->input('submit')){
                 if($request->draft){
                     $this->plagiarismCheck($product);
@@ -63,6 +66,15 @@ class ProductController extends Controller
             return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    private function imagesApply(Product $product, $request)
+    {
+        if($request->added){
+            foreach($request->added as $key => $value){
+                $image = $request->file('key')->store('product/'.$prodcut->id.$value.'salamagdamliqaqas.jpg');
+            }
         }
     }
 
