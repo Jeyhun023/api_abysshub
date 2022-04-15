@@ -48,6 +48,18 @@ class ProductController extends Controller
     public function update(Product $product, ProductUpdateRequest $request)
     {
         try {
+
+            if($request->hasfile('addedImages'))
+            {
+               foreach($request->file('addedImages') as $file)
+               {
+                   $name = time().'.'.$file->extension();
+                   return $this->errorResponse(["failed" => [$request] ]);
+                   $file->move(public_path().'/files/', $name);  
+                   $data[] = $name;  
+               }
+            }
+
             return $this->errorResponse(["failed" => [$request] ]);
             $product->fill($request->validated());
             $product->save();
