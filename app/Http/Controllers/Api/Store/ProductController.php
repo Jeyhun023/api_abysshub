@@ -49,15 +49,12 @@ class ProductController extends Controller
     {
         try {
 
-            if($request->hasfile('addedImages'))
+            foreach($request->addedImages as $file)
             {
-               foreach($request->file('addedImages') as $file)
-               {
-                   $name = time().'.'.$file->extension();
-                   return $this->errorResponse(["failed" => "SAdsad" ]);
-                   $file->move(public_path().'/files/', $name);  
-                   $data[] = $name;  
-               }
+                $name = time().'.'.$file->extension();
+                return $this->errorResponse(["failed" => $name ]);
+                // $file->move(public_path().'/files/', $name);  
+                // $data[] = $name;  
             }
 
             return $this->errorResponse(["failed" => [$request->all()] ]);
