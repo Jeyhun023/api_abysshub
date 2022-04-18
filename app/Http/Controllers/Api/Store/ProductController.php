@@ -82,7 +82,7 @@ class ProductController extends Controller
                 return $this->errorResponse([
                     '$_FILES' => $_FILES,
                     'RequestAll' => $request->all(),
-                    'isValid' => $request->file('addedImages')->isValid(),
+                    // 'isValid' => $request->file('addedImages')->isValid(),
                     'Direct' => $request->addedImages,
                     'test' => input()->file('addedImages')
                 ]);  
