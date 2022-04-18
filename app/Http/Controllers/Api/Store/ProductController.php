@@ -48,28 +48,6 @@ class ProductController extends Controller
     public function update(Product $product, ProductUpdateRequest $request)
     {
         try {
-            return $this->errorResponse([
-                '$_FILES' => $_FILES,
-                'RequestAll' => $request->all(),
-                'isValid' => $request->file('addedImages')->isValid(),
-                'Direct' => $request->addedImages,
-                'test' => Input::file('addedImages')
-            ]); 
-
-            $uploadedImage = $request->file('addedImages')->store('/app/storage/products');
-            return $this->errorResponse(["failed" => $uploadedImage ]); 
-
-            if($request->hasfile('addedImages'))
-            {
-               return $this->errorResponse(["failed" => "SAdsad" ]); 
-               foreach($request->file('addedImages') as $file)
-               {
-                   return $this->errorResponse(["failed" => "SAdsad" ]); 
-               }
-            }
-
-
-            return $this->errorResponse(["failed" => [$request->all()] ]);
             $product->fill($request->validated());
             $product->save();
 
@@ -88,6 +66,27 @@ class ProductController extends Controller
             return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
         } catch (Exception $e) {
             return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+    }
+
+    public function imageUpload(Product $product, Request $request)
+    {
+        $validated = $request->validate([
+            'addedImages' => 'sometimes|array|max:10|mimes:jpeg,png,gif,jpg'
+        ]);
+
+        if($request->hasfile('addedImages'))
+        {
+            foreach($request->file('addedImages') as $file)
+            {
+                return $this->errorResponse([
+                    '$_FILES' => $_FILES,
+                    'RequestAll' => $request->all(),
+                    'isValid' => $request->file('addedImages')->isValid(),
+                    'Direct' => $request->addedImages,
+                    'test' => input()->file('addedImages')
+                ]);  
+            }
         }
     }
 

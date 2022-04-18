@@ -53,9 +53,7 @@ class ProductUpdateRequest extends FormRequest
             'details.*' => 'sometimes|min:50|max:5000|string',
             'tags' => 'sometimes|array|min:3|max:5',
             'is_public' => 'sometimes|nullable|boolean',
-            'is_free' => 'sometimes|nullable|boolean',
-            
-            'addedImages' => 'required|mimes:jpeg,png,gif,jpg'
+            'is_free' => 'sometimes|nullable|boolean'
         ];
     }
 

@@ -116,7 +116,8 @@ Route::group(['prefix' => 'store'], function () {
         Route::post('/{product}/product/fullreview', [ProductController::class, 'fullReview']); 
         
         Route::post('/create', [ProductController::class, 'store']);
-        Route::post('/{product}/product/edit', [ProductController::class, 'update']);
+        Route::put('/{product}/product/edit', [ProductController::class, 'update']);
+        Route::post('/{product}/product/images', [ProductController::class, 'imageUpload']);
 
         Route::post('/{product}/iterate', [IterationController::class, 'store']);
         Route::delete('/{product}/product/delete', [ProductController::class, 'delete']);
