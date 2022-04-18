@@ -49,6 +49,7 @@ class ProductController extends Controller
     {
         try {
             
+            return $this->errorResponse(["failed" => $_FILES ]); 
             $uploadedImage = $request->file('addedImages')->store('/app/storage/products');
             return $this->errorResponse(["failed" => $uploadedImage ]); 
 
