@@ -15,6 +15,8 @@ use App\Http\Requests\Api\Store\Product\FullRatingRequest;
 use App\Http\Requests\Api\Store\Product\ProductUpdateRequest;
 use App\Http\Requests\Api\Store\Product\ProductDeleteRequest;
 
+use File;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
 use Illuminate\Http\JsonResponse;
@@ -71,18 +73,35 @@ class ProductController extends Controller
 
     public function imageUpload(Product $product, Request $request)
     {
-        // $validated = $request->validate([
-        //     'addedImages' => 'sometimes|array|max:10|mimes:jpeg,png,gif,jpg'
-        // ]);
+        $validated = $request->validate([
+            'images' => 'required|array|max:10',
+            'images.*' => 'mimes:jpeg,png,gif,jpg'
+        ]);
 
-        if($request->hasfile('addedImages'))
+        if($request->hasfile('images'))
         {
-            foreach($request->file('addedImages') as $file)
+            $product->images->delete();
+            File::deleteDirectory(storage_path('public/products/'.$product->id));
+            
+            foreach($request->file('images') as $key => $image)
             {
-                $uploadedImage = $file->store('storage/public/products');
-                return $this->errorResponse(['$filePath' => $uploadedImage]);  
+                $imageName = Str::random(40).$image->extension();
+                $imagePath = $image->store('public/products/'.$product->id.'/'.$imageName);
+                $uploadedImages[] = Image::create([
+                    'imageable_type' => Product::class,
+                    'imageable_id' => $product->id,
+                    'title' => $image->getClientOriginalName(),
+                    'path' => $imagePath,
+                    'order_id' => $key
+                ]);
+                
+                return $this->successResponse($uploadedImages, null);
             }
+
+            return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
         }
+
+        return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
     }
 
     private function imagesApply(Product $product, $request)
