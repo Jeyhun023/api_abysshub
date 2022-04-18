@@ -83,7 +83,7 @@ class ProductController extends Controller
             // File::deleteDirectory(storage_path('public/products/'.$product->id));
             foreach($request->file('images') as $key => $image)
             {
-                $imageName = Str::random(40).$image->extension();
+                $imageName = Str::random(40).'.'.$image->extension();
                 $imagePath = $image->store('public/products/'.$product->id.'/'.$imageName);
                 $uploadedImages[] = Image::create([
                     'imageable_type' => Product::class,
