@@ -71,9 +71,9 @@ class ProductController extends Controller
 
     public function imageUpload(Product $product, Request $request)
     {
-        $validated = $request->validate([
-            'addedImages' => 'sometimes|array|max:10|mimes:jpeg,png,gif,jpg'
-        ]);
+        // $validated = $request->validate([
+        //     'addedImages' => 'sometimes|array|max:10|mimes:jpeg,png,gif,jpg'
+        // ]);
 
         if($request->hasfile('addedImages'))
         {
