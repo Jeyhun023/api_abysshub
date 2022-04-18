@@ -84,6 +84,10 @@ class ProductController extends Controller
             foreach($request->file('images') as $key => $image)
             {
                 $imageName = Str::random(40).'.'.$image->extension();
+                return $this->errorResponse([
+                    "imageName" => $imageName,
+                    "extension" =>  $image->extension(),
+                ]);
                 $imagePath = $image->store('public/products/'.$product->id.'/'.$imageName);
                 $uploadedImages[] = Image::create([
                     'imageable_type' => Product::class,
