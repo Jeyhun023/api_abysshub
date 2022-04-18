@@ -84,7 +84,7 @@ class ProductController extends Controller
                     'RequestAll' => $request->all(),
                     // 'isValid' => $request->file('addedImages')->isValid(),
                     'Direct' => $request->addedImages,
-                    'test' => input()->file('addedImages')
+                    // 'test' => input()->file('addedImages')
                 ]);  
             }
         }
