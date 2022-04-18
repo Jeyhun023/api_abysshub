@@ -54,6 +54,8 @@ class ProductUpdateRequest extends FormRequest
             'tags' => 'sometimes|array|min:3|max:5',
             'is_public' => 'sometimes|nullable|boolean',
             'is_free' => 'sometimes|nullable|boolean',
+            
+            'addedImages' => 'sometimes|mimes:jpeg,png,gif,jpg'
         ];
     }
 
