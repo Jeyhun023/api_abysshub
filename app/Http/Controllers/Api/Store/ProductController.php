@@ -48,13 +48,14 @@ class ProductController extends Controller
     public function update(Product $product, ProductUpdateRequest $request)
     {
         try {
-            return $this->errorResponse(["failed" => gettype($request->addedImages) ]);
+
+            return $this->errorResponse(["failed" => $request->file('addedImages') ]);
             foreach($request->addedImages as $file)
             {
                 $name = time().'.'.$file->extension();
-                return $this->errorResponse(["failed" => $name ]);
-                // $file->move(public_path().'/files/', $name);  
-                // $data[] = $name;  
+                return $this->errorResponse(["failed" => "SAdsad" ]);
+                $file->move(public_path().'/files/', $name);  
+                $data[] = $name;  
             }
 
             return $this->errorResponse(["failed" => [$request->all()] ]);
