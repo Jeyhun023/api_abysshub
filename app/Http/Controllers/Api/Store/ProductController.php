@@ -48,7 +48,6 @@ class ProductController extends Controller
     public function update(Product $product, ProductUpdateRequest $request)
     {
         try {
-            return $this->errorResponse(["failed" => [$request->file('addedImages')] ]);
             if($request->hasfile('addedImages'))
             {
                return $this->errorResponse(["failed" => "SAdsad" ]); 
