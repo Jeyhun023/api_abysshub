@@ -1,4 +1,5 @@
-
+<?php phpinfo() ?>
+{{-- 
 <input id="card-holder-name" type="text">
  
 <!-- Stripe Elements Placeholder -->
@@ -42,4 +43,4 @@ cardButton.addEventListener('click', async (e) => {
 });
 </script>
 
-
+ --}}
