@@ -48,8 +48,14 @@ class ProductController extends Controller
     public function update(Product $product, ProductUpdateRequest $request)
     {
         try {
-            
-            return $this->errorResponse(["failed" => $_FILES ]); 
+            return $this->errorResponse([
+                '$_FILES' => $_FILES,
+                'RequestAll' => $request->all(),
+                'isValid' => $request->file('addedImages')->isValid(),
+                'Direct' => $request->addedImages,
+                'test' => Input::file('addedImages')
+            ]); 
+
             $uploadedImage = $request->file('addedImages')->store('/app/storage/products');
             return $this->errorResponse(["failed" => $uploadedImage ]); 
 
