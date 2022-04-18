@@ -17,4 +17,9 @@ class Image extends Model
     {
         return $this->morphTo();
     }
+
+    public function getPathSrcAttribute()
+    {
+        return config('app.url').$this->path;
+    }
 }

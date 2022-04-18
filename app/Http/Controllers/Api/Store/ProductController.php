@@ -10,6 +10,7 @@ use App\Events\StoreElasticEvent;
 use App\Http\Resources\Store\RatingResource;
 use App\Http\Resources\Store\ProductResource;
 use App\Http\Resources\Store\ProductCollection;
+use App\Http\Resources\Other\ImageCollection;
 use App\Http\Requests\Api\Store\Product\RatingRequest;
 use App\Http\Requests\Api\Store\Product\FullRatingRequest;
 use App\Http\Requests\Api\Store\Product\ProductUpdateRequest;
@@ -91,7 +92,7 @@ class ProductController extends Controller
                     'order_id' => $key
                 ]);
             }
-            return $this->successResponse($uploadedImages, null);
+            return $this->successResponse(new ImageCollection($uploadedImages), null);
         }
 
         return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
