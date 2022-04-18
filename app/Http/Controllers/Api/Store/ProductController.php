@@ -79,7 +79,7 @@ class ProductController extends Controller
         ]);
         if($request->hasfile('images'))
         {
-            $product->images->delete();
+            $product->images()->delete();
             // File::deleteDirectory(storage_path('public/products/'.$product->id));
             foreach($request->file('images') as $key => $image)
             {
