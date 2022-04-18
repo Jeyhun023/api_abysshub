@@ -77,12 +77,10 @@ class ProductController extends Controller
             'images' => 'required|array|max:10',
             'images.*' => 'mimes:jpeg,png,gif,jpg'
         ]);
-
         if($request->hasfile('images'))
         {
             $product->images->delete();
             File::deleteDirectory(storage_path('public/products/'.$product->id));
-            
             foreach($request->file('images') as $key => $image)
             {
                 $imageName = Str::random(40).$image->extension();
@@ -94,13 +92,9 @@ class ProductController extends Controller
                     'path' => $imagePath,
                     'order_id' => $key
                 ]);
-                
-                return $this->successResponse($uploadedImages, null);
             }
-
-            return $this->successResponse(new ProductResource($product), trans('messages.product_update_success'));
+            return $this->successResponse($uploadedImages, null);
         }
-
         return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
     }
 
