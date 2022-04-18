@@ -79,13 +79,8 @@ class ProductController extends Controller
         {
             foreach($request->file('addedImages') as $file)
             {
-                return $this->errorResponse([
-                    '$_FILES' => $_FILES,
-                    'RequestAll' => $request->all(),
-                    // 'isValid' => $request->file('addedImages')->isValid(),
-                    'Direct' => $request->addedImages,
-                    // 'test' => input()->file('addedImages')
-                ]);  
+                $uploadedImage = $file->store('storage/public/products');
+                return $this->errorResponse(['$filePath' => $uploadedImage]);  
             }
         }
     }
