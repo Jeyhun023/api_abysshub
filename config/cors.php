@@ -15,7 +15,7 @@ return [
     |
     */
 
-    // 'paths' => ['api/*', 'sanctum/csrf-cookie'], TODOLIST
+    // 'paths' => ['api/*', 'sanctum/csrf-cookie'], TODOLIST uncomment it and delete the next line
     'paths' => ['*'],
 
     'allowed_methods' => ['*'],
