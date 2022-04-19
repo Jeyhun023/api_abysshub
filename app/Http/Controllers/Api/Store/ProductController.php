@@ -156,7 +156,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with(['user', 'userCave', 'iterations.user'])->findOrFail($id);
+        $product = Product::with(['user', 'userCave', 'iterations.user', 'images'])->findOrFail($id);
         $product->increment('view_count');
 
         activity('product')

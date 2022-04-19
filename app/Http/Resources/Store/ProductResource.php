@@ -4,6 +4,7 @@ namespace App\Http\Resources\Store;
 
 use App\Http\Resources\Auth\UserResource;
 use App\Http\Resources\Forum\ThreadCollection;
+use App\Http\Resources\Other\ImageCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
@@ -15,6 +16,7 @@ class ProductResource extends JsonResource
             'user' => new UserResource($this->whenLoaded('user')),
             'iterations' => new ProductCollection($this->whenLoaded('iterations')),
             'threads' => new ThreadCollection($this->whenLoaded('threads')),
+            'images' => new ImageCollection($this->whenLoaded('images')),
             'name' => $this->name,
             'slug' => $this->slug,
             'extension' => $this->extension,
