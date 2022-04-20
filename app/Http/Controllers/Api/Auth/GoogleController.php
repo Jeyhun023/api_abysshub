@@ -26,11 +26,7 @@ class GoogleController extends Controller
     public function loginCallback()
     {
         // try {
-            $googleUser = Socialite::driver('google')->stateless()->fields([
-                'first_name',
-                'last_name',
-                'email'
-            ])->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
            
             $user = User::where('email', $googleUser->getEmail())
                 ->where('type_id', '!=', '1')
