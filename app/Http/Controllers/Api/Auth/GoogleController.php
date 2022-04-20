@@ -25,7 +25,7 @@ class GoogleController extends Controller
 
     public function loginCallback()
     {
-        try {
+        // try {
             $googleUser = Socialite::driver('google')->stateless()->fields([
                 'first_name',
                 'last_name',
@@ -65,8 +65,8 @@ class GoogleController extends Controller
             $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
             
             return $this->successResponse($success, trans('messages.register_success'));
-        } catch (\Throwable $errors) {
-            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-        }
+        // } catch (\Throwable $errors) {
+        //     return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        // }
     }
 }
