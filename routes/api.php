@@ -1,6 +1,7 @@
 <?php
 //Auth
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Auth\GoogleController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\Auth\VerificationController;
 //Forum
@@ -36,14 +37,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/content-check', [CheckController::class, 'contentCheck']); 
-
+//TODOLIST Delete 2 lines above
 Route::get('threads/search', [ThreadController::class, 'search']); 
 Route::get('products/search', [ProductController::class, 'search']); 
 //Auth
 
 Route::post('/register', [AuthController::class, 'register']); 
 Route::post('/login', [AuthController::class, 'login']); 
+
+Route::get('/auth/google/url', [GoogleController::class, 'loginUrl']); 
+Route::get('/auth/google/callback', [GoogleController::class, 'loginCallback']); 
 
 Route::group(['prefix' => 'password'], function () {
     Route::post('/create', [PasswordResetController::class, 'create'])->middleware('throttle:2,1');
@@ -109,6 +112,7 @@ Route::group(['prefix' => 'chat', 'middleware' => ['auth:api','verified']], func
 //Product
 Route::group(['prefix' => 'store'], function () {
     Route::get('/search', [StoreSearchController::class, 'index']); 
+    //TODOLIST add middleware if product not submitted only owner should see
     Route::get('/{product}', [ProductController::class, 'show']); 
 
     Route::group(['middleware' => ['auth:api','verified']], function ($router) {
@@ -118,7 +122,7 @@ Route::group(['prefix' => 'store'], function () {
         Route::post('/create', [ProductController::class, 'store']);
         Route::put('/{product}/product/edit', [ProductController::class, 'update']);
         Route::post('/{product}/product/images', [ProductController::class, 'imageUpload']);
-
+        //TODOLIST Make it working iteration
         Route::post('/{product}/iterate', [IterationController::class, 'store']);
         Route::delete('/{product}/product/delete', [ProductController::class, 'delete']);
     });

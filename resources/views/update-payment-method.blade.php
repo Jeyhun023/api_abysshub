@@ -1,5 +1,8 @@
+
 <?php phpinfo() ?>
+
 {{-- 
+//TODOLIST DELETE THIS FILE
 <input id="card-holder-name" type="text">
  
 <!-- Stripe Elements Placeholder -->

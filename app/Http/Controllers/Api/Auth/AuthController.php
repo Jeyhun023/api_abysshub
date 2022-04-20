@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Shop;
-use App\Traits\ApiResponser;
-use App\Http\Resources\Auth\UserResource;
-use App\Http\Requests\Api\Auth\LoginRequest;
-use App\Http\Requests\Api\Auth\RegisterRequest;
-use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Auth\UserResource;
+use App\Http\Requests\Api\Auth\LoginRequest;
+use App\Http\Requests\Api\Auth\RegisterRequest;
 
 class AuthController extends Controller
 {

@@ -73,14 +73,15 @@ class ProductController extends Controller
     public function imageUpload(Product $product, Request $request)
     {
         $validated = $request->validate([
-            'images' => 'required|array|max:10',
-            'images.*' => 'mimes:jpeg,png,gif,jpg'
+            'images' => 'sometimes|array|max:10',
+            'images.*' => 'sometimes|nullable|mimes:jpeg,png,gif,jpg'
         ]);
+
+        $product->images()->delete();
+        Storage::deleteDirectory('public/products/'.$product->id);
 
         if($request->hasfile('images'))
         {
-            $product->images()->delete();
-            Storage::deleteDirectory('public/products/'.$product->id);
             foreach($request->file('images') as $key => $image)
             {
                 $imagePath = $image->store('public/products/'.$product->id);
