@@ -96,7 +96,7 @@ class ProductController extends Controller
             return $this->successResponse(new ImageCollection($uploadedImages), null);
         }
 
-        return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        return $this->successResponse(null, trans('messages.images_deleted'));
     }
 
     private function imagesApply(Product $product, $request)
