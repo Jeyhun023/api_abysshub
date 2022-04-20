@@ -17,7 +17,7 @@ class GoogleController extends Controller
 {
     use ApiResponser;
     private $pac = "Abyss Personal Access Client";
-    
+
     public function loginUrl()
     {
         return $this->successResponse([
@@ -27,7 +27,7 @@ class GoogleController extends Controller
 
     public function loginCallback()
     {
-        // try {
+        try {
             $googleUser = Socialite::driver('google')->stateless()->user();
            
             $user = User::where('email', $googleUser->getEmail())
@@ -46,7 +46,8 @@ class GoogleController extends Controller
                 'email' => $googleUser->getEmail(),
                 'password' => Hash::make(Str::random(40).'@'.$googleUser->getId()),
                 'socialite_token' => $googleUser->token,
-                'socialite_refresh_token' => $googleUser->refreshToken
+                'socialite_refresh_token' => $googleUser->refreshToken,
+                'email_verified_at' => Carbon::now()
             ]);
 
             $shop = new Shop();
@@ -63,8 +64,8 @@ class GoogleController extends Controller
             $success['expires_at'] = Carbon::parse($tokenResult->token?->expires_at)->toDateTimeString();
             
             return $this->successResponse($success, trans('messages.register_success'));
-        // } catch (\Throwable $errors) {
-        //     return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-        // }
+        } catch (\Throwable $errors) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
     }
 }
