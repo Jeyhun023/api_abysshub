@@ -34,7 +34,7 @@ class AuthController extends Controller
             $shop = new Shop();
             $shop->user_id = $user->id;
             $shop->name = $user->fullname."'s shop";
-            $shop->slug = Str::slug($shop->fullname);
+            $shop->slug = Str::slug($shop->name);
             $shop->save();
 
             $tokenResult = $user->createToken($this->pac);
