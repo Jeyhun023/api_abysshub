@@ -16,6 +16,8 @@ use App\Http\Resources\Auth\UserResource;
 class GoogleController extends Controller
 {
     use ApiResponser;
+    private $pac = "Abyss Personal Access Client";
+    
     public function loginUrl()
     {
         return $this->successResponse([
