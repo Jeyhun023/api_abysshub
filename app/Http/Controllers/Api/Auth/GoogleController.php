@@ -19,7 +19,7 @@ class GoogleController extends Controller
     public function loginUrl()
     {
         return $this->successResponse([
-            'url' => Socialite::driver('google')->stateless()->redirect(),
+            'url' => Socialite::driver('google')->stateless()->redirect()->getTargetUrl(),
         ], null);
     }
 
