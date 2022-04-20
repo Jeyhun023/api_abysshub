@@ -118,7 +118,7 @@ class ProductController extends Controller
             return $this->errorResponse(["plagiarismDetected" => [trans('messages.plagiat_error')]]);
         }
         if($product->draft !== null){
-            $product->file = $product->draft;
+            $product->file = $product->replicate()->draft;
             $product->draft = null;
             $product->is_plagiat = true;
         }
