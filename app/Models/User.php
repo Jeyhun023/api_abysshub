@@ -28,6 +28,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'skills',
         'email',
         'password',
+        'socialite_id',
+        'socialite_token',
+        'socialite_refresh_token',
+        'socialite_type'
     ];
 
     /**

@@ -29,7 +29,7 @@ class GoogleController extends Controller
             $googleUser = Socialite::driver('google')->stateless()->user();
            
             $user = User::where('email', $googleUser->getEmail())
-                ->where('type_id', '!=', '1')
+                ->where('socialite_type', '!=', '1')
                 ->exists();
             if ($user) {
                 return $this->errorResponse(["failed" => [trans('auth.email.exist')]]);
