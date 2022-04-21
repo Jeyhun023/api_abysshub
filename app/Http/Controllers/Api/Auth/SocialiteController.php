@@ -33,16 +33,15 @@ class SocialiteController extends Controller
         if(!in_array($social, User::SOCIAL_TYPES)){
             abort(404);
         }
+        $user = User::where('email', $socialUser->getEmail())
+            ->where('socialite_type', '!=', array_search($social, User::SOCIAL_TYPES))
+            ->exists();
+        if ($user) {
+            return $this->errorResponse(["failed" => [trans('auth.email.exist')]]);
+        }
         try {
             $socialUser = Socialite::driver($social)->stateless()->user();
            
-            $user = User::where('email', $socialUser->getEmail())
-                ->where('socialite_type', '!=', '1')
-                ->exists();
-            if ($user) {
-                return $this->errorResponse(["failed" => [trans('auth.email.exist')]]);
-            }
-
             $user = User::updateOrCreate([
                 'socialite_id' => $socialUser->getId(),
                 'socialite_type' => array_search($social, User::SOCIAL_TYPES)
