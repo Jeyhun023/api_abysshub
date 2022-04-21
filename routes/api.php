@@ -1,7 +1,7 @@
 <?php
 //Auth
 use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\Api\Auth\GoogleController;
+use App\Http\Controllers\Api\Auth\SocialiteController;
 use App\Http\Controllers\Api\Auth\PasswordResetController;
 use App\Http\Controllers\Api\Auth\VerificationController;
 //Forum
@@ -45,8 +45,8 @@ Route::get('products/search', [ProductController::class, 'search']);
 Route::post('/register', [AuthController::class, 'register']); 
 Route::post('/login', [AuthController::class, 'login']); 
 
-Route::get('/auth/google/url', [GoogleController::class, 'loginUrl']); 
-Route::get('/auth/google/callback', [GoogleController::class, 'loginCallback']); 
+Route::get('/auth/{social}/url', [SocialiteController::class, 'loginUrl']); 
+Route::get('/auth/{social}/callback', [SocialiteController::class, 'loginCallback']); 
 
 Route::group(['prefix' => 'password'], function () {
     Route::post('/create', [PasswordResetController::class, 'create'])->middleware('throttle:2,1');
@@ -148,7 +148,7 @@ Route::group(['prefix' => 'other'], function () {
     Route::get('/skills/{skill}', [SkillController::class, 'search']); 
 });
 
-
+//TODOLIST DELETE THESE STAFF
 Route::post('/user/subscribe', function (Request $request) {
     $user = auth('api')->user();
     return $user->newSubscription(

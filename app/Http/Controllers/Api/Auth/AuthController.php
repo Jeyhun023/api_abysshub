@@ -54,6 +54,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         try {
+            //TODOLIST if there scoialite id dont give error password incorrect
             $credentials = request()->only(['email', 'password']);
 
             if (!Auth::attempt($credentials)) {

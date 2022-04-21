@@ -13,24 +13,30 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Resources\Auth\UserResource;
 
-class GoogleController extends Controller
+class SocialiteController extends Controller
 {
     use ApiResponser;
     private $pac = "Abyss Personal Access Client";
 
-    public function loginUrl()
+    public function loginUrl($social)
     {
+        if(!in_array($social, User::SOCIAL_TYPES)){
+            abort(404);
+        }
         return $this->successResponse([
-            'url' => Socialite::driver('google')->stateless()->redirect()->getTargetUrl(),
+            'url' => Socialite::driver($social)->stateless()->redirect()->getTargetUrl(),
         ], null);
     }
 
-    public function loginCallback()
+    public function loginCallback($social)
     {
+        if(!in_array($social, User::SOCIAL_TYPES)){
+            abort(404);
+        }
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $socialUser = Socialite::driver($social)->stateless()->user();
            
-            $user = User::where('email', $googleUser->getEmail())
+            $user = User::where('email', $socialUser->getEmail())
                 ->where('socialite_type', '!=', '1')
                 ->exists();
             if ($user) {
@@ -38,15 +44,16 @@ class GoogleController extends Controller
             }
 
             $user = User::updateOrCreate([
-                'socialite_id' => $googleUser->getId(),
-                'socialite_type' => '1'
+                'socialite_id' => $socialUser->getId(),
+                'socialite_type' => array_search($social, User::SOCIAL_TYPES)
             ], [
-                'fullname' => $googleUser->getName(),
-                'username' => strtolower(str_replace(' ', '', $googleUser->getName())),
-                'email' => $googleUser->getEmail(),
-                'password' => Hash::make(Str::random(40).'@'.$googleUser->getId()),
-                'socialite_token' => $googleUser->token,
-                'socialite_refresh_token' => $googleUser->refreshToken,
+                'fullname' => $socialUser->getName(),
+                //TODOLIST Check if username exist or not
+                'username' => strtolower(str_replace(' ', '', $socialUser->getName())),
+                'email' => $socialUser->getEmail(),
+                'password' => Hash::make(Str::random(40).'@'.$socialUser->getId()),
+                'socialite_token' => $socialUser->token,
+                'socialite_refresh_token' => $socialUser->refreshToken,
                 'email_verified_at' => Carbon::now()
             ]);
 

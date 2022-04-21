@@ -15,11 +15,6 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Billable, Notifiable, HasApiTokens, LogsActivity;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'username',
         'fullname',
@@ -35,21 +30,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'socialite_type'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime'
     ];
@@ -60,6 +45,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected static $recordEvents = ['created', 'updated'];
     
+    public const SOCIAL_TYPES = [
+        '1' => 'google',
+        '2' => 'github'
+    ];
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

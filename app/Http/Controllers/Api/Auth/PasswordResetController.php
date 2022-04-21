@@ -34,6 +34,7 @@ class PasswordResetController extends Controller
         $user = User::where('email', $request->email)->first();
         
         try {
+            //TODOLIST look if its exist in default 
             $passwordReset = PasswordReset::updateOrCreate([
                 'email' => $request->email,
                 'token' => Str::random(128)
