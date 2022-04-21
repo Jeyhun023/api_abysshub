@@ -34,11 +34,11 @@ class SocialiteController extends Controller
             abort(404);
         }
         
-        // try {
+        try {
             $socialUser = Socialite::driver($social)->stateless()->user();
-        // } catch (\Throwable $errors) {
-        //     return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
-        // }
+        } catch (\Throwable $errors) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
            
         $user = User::where('email', $socialUser->getEmail())
             ->where('socialite_type', '!=', array_search($social, User::SOCIAL_TYPES))
