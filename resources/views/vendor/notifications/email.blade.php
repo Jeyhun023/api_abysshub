@@ -1,6 +1,6 @@
 @php 
-$displayableActionUrl = str_replace("https://api.abysshub.com/api/","http://localhost:3001/verify-email/", $displayableActionUrl);
-$actionUrl = str_replace("https://api.abysshub.com/api/","http://localhost:3001/verify-email/", $actionUrl);
+$displayableActionUrl = str_replace("https://api.abysshub.com/api/","http://localhost:3001/", $displayableActionUrl);
+$actionUrl = str_replace("https://api.abysshub.com/api/","http://localhost:3001/", $actionUrl);
 @endphp
 
 @component('mail::message')
