@@ -85,8 +85,7 @@ class PasswordResetController extends Controller
     public function reset(PasswordResetRequest $request)
     {
         $passwordReset = PasswordReset::where([
-            'token' => $request->token,
-            'email'=> $request->email
+            'token' => $request->token
         ])->first();
         $user = User::where('email', $request->email)->first();
 
