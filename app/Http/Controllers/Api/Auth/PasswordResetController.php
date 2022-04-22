@@ -31,7 +31,14 @@ class PasswordResetController extends Controller
         $request->validate([
             'email' => 'required|string|max:255|exists:users,email',
         ]);
-        $user = User::where('email', $request->email)->first();
+        $user = User::where([
+            'email' => $request->email,
+            'socialite_type' => '0'
+        ])->first();
+        
+        if (!$user) {
+            return $this->errorResponse(["token" => [trans('messages.user_wrong')] ]);
+        }
         
         try {
             //TODOLIST look if its exist in default 
