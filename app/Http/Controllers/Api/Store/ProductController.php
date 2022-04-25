@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Models\Activity;
 use App\Models\Image;
 use App\Models\Rating;
 use App\Models\Product;
@@ -170,12 +171,17 @@ class ProductController extends Controller
 
         $product->increment('view_count');
 
-        activity('product')
-            ->event('show')
-            ->causedBy($this->user)
-            ->performedOn($product)
-            ->withProperties(['query' => request()->query('query'), 'ref' => request()->query('ref')])
-            ->log( request()->ip() );
+        Activity::create([
+            'log_name' => 'salam agdamli qaqas',
+            'description' => 'salam alekum',
+            'properties' => 'sad'
+        ])
+        // activity('product')
+        //     ->event('show')
+        //     ->causedBy($this->user)
+        //     ->performedOn($product)
+        //     ->withProperties(['query' => request()->query('query'), 'ref' => request()->query('ref')])
+        //     ->log( request()->ip() );
 
         return $this->successResponse(new ProductResource($product));
     }
