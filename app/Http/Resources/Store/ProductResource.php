@@ -33,9 +33,12 @@ class ProductResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];
-        
-        $response["draft"] = $this->draft;
-        $response["source_code"] = $this->file;
+        if($this->draft){
+            $response["draft"] = $this->draft;
+        }
+        if($this->file){
+            $response["source_code"] = $this->file;
+        }
 
         return $response;
     }

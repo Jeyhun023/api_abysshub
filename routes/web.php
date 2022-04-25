@@ -17,9 +17,10 @@ use App\Models\User;
 Route::get('/', function () {
     return view('welcome');
 });
-
+//TODOLIST delete route
 Route::get('/update', function () {
-    return view('update-payment-method', [
-        'intent' => User::find(1)->createSetupIntent()
-    ]);
+    return view('update-payment-method');
 });
+Route::get('phpmyinfo', function () {
+    phpinfo(); 
+})->name('phpmyinfo');

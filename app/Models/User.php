@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use Laravel\Cashier\Billable;
+use Spatie\Activitylog\LogOptions;
+use Laravel\Passport\HasApiTokens;
+use App\Models\Cashier\Subscription;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Spatie\Activitylog\LogOptions;
-use Laravel\Cashier\Billable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -53,9 +54,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['name', 'email'])
-        ->useLogName('user')
-        ->setDescriptionForEvent(fn(string $eventName) => request()->ip() );
+            ->logOnly(['name', 'email'])
+            ->useLogName('user')
+            ->setDescriptionForEvent(fn(string $eventName) => request()->ip() );
     }
 
     public function getInAdminroles()
@@ -81,5 +82,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function shop()
     {
         return $this->hasOne(Shop::class);
+    }
+
+    public function subscribed()
+    {
+        return $this->hasOne(Subscription::class)->where('ends_at', '>', now());
     }
 }

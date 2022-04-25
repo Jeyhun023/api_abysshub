@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('socialite_id')->nullable();
             $table->string('socialite_token')->nullable();
             $table->string('socialite_refresh_token')->nullable();
-            $table->enum('socialite_type', [0, 1])->default(0);
+            $table->enum('socialite_type', [0, 1, 2])->default(0);
 
             $table->rememberToken();
             $table->timestamps();

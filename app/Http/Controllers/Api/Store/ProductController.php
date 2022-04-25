@@ -158,6 +158,16 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::with(['user', 'userCave', 'iterations.user', 'images'])->findOrFail($id);
+        
+        if($this->user?->id !== $product->user_id){
+            $product->offsetUnset('draft');
+            if (!$this->user?->subscribed) {
+                $product->offsetUnset('file');
+            }else{
+                $product->increment('download_count'); //TODOLIST switch it to queue check everything
+            }
+        }
+
         $product->increment('view_count');
 
         activity('product')
@@ -198,6 +208,7 @@ class ProductController extends Controller
         }
     }
 
+    //TODOLIST delete this function 
     public function search()
     {
         $products = Product::with('user')->withCount(['iterations', 'linkedProducts'])

@@ -1,5 +1,4 @@
-
-<?php phpinfo() ?>
+<?php return  phpinfo() ?>
 
 {{-- 
 //TODOLIST DELETE THIS FILE
