@@ -71,7 +71,7 @@ return [
             'username' => env('MONGO_DB_USERNAME'),
             'password' => env('MONGO_DB_PASSWORD'),
             'options'  => [],
-            'dsn' => 'mongodb://abyss:888ceki2001@abysshub-mongo.cluster-c1q2slfio3cj.us-east-2.docdb.amazonaws.com:27017/?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false',
+            'dsn' => 'mongodb://abyss:888ceki2001@abysshub-mongo.cluster-c1q2slfio3cj.us-east-2.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=~/rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false',
         ],
     
         'pgsql' => [
