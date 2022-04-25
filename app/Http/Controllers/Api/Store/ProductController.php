@@ -175,7 +175,7 @@ class ProductController extends Controller
             'log_name' => 'salam agdamli qaqas',
             'description' => 'salam alekum',
             'properties' => 'sad'
-        ])
+        ]);
         // activity('product')
         //     ->event('show')
         //     ->causedBy($this->user)
