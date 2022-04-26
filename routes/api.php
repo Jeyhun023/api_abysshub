@@ -21,6 +21,8 @@ use App\Http\Controllers\Api\Profile\LibraryController;
 //Other
 use App\Http\Controllers\Api\Other\SkillController;
 use App\Http\Controllers\Api\Other\TagController;
+//Checkout
+use App\Http\Controllers\Api\Checkout\CheckoutController;
 
 use App\Http\Controllers\Api\CheckController;
 use Illuminate\Support\Facades\Route;
@@ -40,13 +42,15 @@ use Illuminate\Http\Request;
 //TODOLIST Delete 2 lines above
 Route::get('threads/search', [ThreadController::class, 'search']); 
 Route::get('products/search', [ProductController::class, 'search']); 
-//Auth
 
+//Auth
 Route::post('/register', [AuthController::class, 'register']); 
 Route::post('/login', [AuthController::class, 'login']); 
 
 Route::get('/auth/{social}/url', [SocialiteController::class, 'loginUrl']); 
 Route::get('/auth/{social}/callback', [SocialiteController::class, 'loginCallback']); 
+
+Route::get('/payment/plans', [CheckoutController::class, 'index']);
 
 Route::group(['prefix' => 'password'], function () {
     Route::post('/create', [PasswordResetController::class, 'create'])->middleware('throttle:2,1');
