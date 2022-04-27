@@ -32,7 +32,7 @@ class CheckoutController extends Controller
 
         $checkout_session = \Stripe\Checkout\Session::create([
             'line_items' => [[
-                'price' => $request->price_id,
+                'price' => $request->priceId,
                 'quantity' => 1,
             ]],
             'mode' => 'subscription',
@@ -52,7 +52,7 @@ class CheckoutController extends Controller
         \Stripe\Stripe::setApiKey(config('services.stripe'));
         
         try {
-            $session = \Stripe\Checkout\Session::retrieve($request->get('session_id'));
+            $session = \Stripe\Checkout\Session::retrieve($request->get('sessionId'));
         } catch(\Stripe\Exception\InvalidRequestException $es) {
             return $this->errorResponse(["failed" => [trans('messages.session_wrong')] ]);
         } catch (Exception $e) {
