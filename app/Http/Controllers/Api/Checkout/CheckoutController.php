@@ -30,19 +30,25 @@ class CheckoutController extends Controller
 
         $domain = 'http://localhost:3000';
 
-        $checkout_session = \Stripe\Checkout\Session::create([
-            'line_items' => [[
-                'price' => $request->priceId,
-                'quantity' => 1,
-            ]],
-            'mode' => 'subscription',
-            'success_url' => $domain . 'subscription/status/{CHECKOUT_SESSION_ID}',
-            'cancel_url' => $domain . 'subscription/status/{CHECKOUT_SESSION_ID}',
-            'automatic_tax' => [
-                'enabled' => false,
-            ],
-            'customer' => $stripeCustomer->id
-        ]);
+        try {
+            $checkout_session = \Stripe\Checkout\Session::create([
+                'line_items' => [[
+                    'price' => $request->priceId,
+                    'quantity' => 1,
+                ]],
+                'mode' => 'subscription',
+                'success_url' => $domain . '/subscription/status/{CHECKOUT_SESSION_ID}',
+                'cancel_url' => $domain . '/subscription/status/{CHECKOUT_SESSION_ID}',
+                'automatic_tax' => [
+                    'enabled' => false,
+                ],
+                'customer' => $stripeCustomer->id
+            ]);
+        } catch(\Stripe\Exception\InvalidRequestException $es) {
+            return $this->errorResponse(["failed" => [trans('messages.invalid_price')] ]);
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
 
         return $this->successResponse($checkout_session, null);
     }

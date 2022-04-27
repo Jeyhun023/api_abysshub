@@ -60,4 +60,5 @@ return [
     'images_deleted' => 'Images deleted successfully',
     'user_wrong' => 'User could not find',
     'session_wrong' => 'Your session is wrong',
+    'invalid_price' => 'Invalid Price id',
 ];
