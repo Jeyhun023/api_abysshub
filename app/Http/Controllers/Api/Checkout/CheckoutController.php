@@ -27,7 +27,7 @@ class CheckoutController extends Controller
     {
         \Stripe\Stripe::setApiKey(config('services.stripe'));
 
-        $YOUR_DOMAIN = 'http://localhost:3002';
+        $YOUR_DOMAIN = 'http://localhost:3000';
 
         $checkout_session = \Stripe\Checkout\Session::create([
             'line_items' => [[
