@@ -23,26 +23,42 @@ class CheckoutController extends Controller
         return $this->successResponse($plans, null);
     }
 
-    public function session()
+    public function session(Request $request)
     {
+        $stripeCustomer = $this->user->createOrGetStripeCustomer();
         \Stripe\Stripe::setApiKey(config('services.stripe'));
 
-        $YOUR_DOMAIN = 'http://localhost:3000';
+        $domain = 'http://localhost:3000';
 
         $checkout_session = \Stripe\Checkout\Session::create([
             'line_items' => [[
-                # Provide the exact Price ID (e.g. pr_1234) of the product you want to sell
-                'price' => 'price_1Kne6cJIjCailGvpK1w0HTin',
+                'price' => $request->price_id,
                 'quantity' => 1,
             ]],
             'mode' => 'subscription',
-            'success_url' => $YOUR_DOMAIN . '?success=true',
-            'cancel_url' => $YOUR_DOMAIN . '?canceled=true',
+            'success_url' => $domain . 'subscription/status/{CHECKOUT_SESSION_ID}',
+            'cancel_url' => $domain . 'subscription/status/{CHECKOUT_SESSION_ID}',
             'automatic_tax' => [
                 'enabled' => false,
             ],
+            'customer' => $stripeCustomer->id
         ]);
 
         return $this->successResponse($checkout_session, null);
+    }
+    
+    public function status(Request $request)
+    {
+        \Stripe\Stripe::setApiKey(config('services.stripe'));
+        
+        try {
+            $session = \Stripe\Checkout\Session::retrieve($request->get('session_id'));
+        } catch(\Stripe\Exception\InvalidRequestException $es) {
+            return $this->errorResponse(["failed" => [trans('messages.session_wrong')] ]);
+        } catch (Exception $e) {
+            return $this->errorResponse(["failed" => [trans('messages.failed')] ]);
+        }
+
+        return $this->successResponse($session, null);
     }
 }

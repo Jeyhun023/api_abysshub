@@ -52,6 +52,7 @@ Route::get('/auth/{social}/callback', [SocialiteController::class, 'loginCallbac
 
 Route::get('/payment/plans', [CheckoutController::class, 'index']);
 Route::post('/payment/session', [CheckoutController::class, 'session'])->middleware('auth:api');
+Route::post('/payment/status', [CheckoutController::class, 'status'])->middleware('auth:api');
 
 Route::group(['prefix' => 'password'], function () {
     Route::post('/create', [PasswordResetController::class, 'create'])->middleware('throttle:2,1');

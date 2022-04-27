@@ -58,5 +58,6 @@ return [
     'inventory_delete_success' => 'Product deleted from your cave',
     'not_checked' => 'Your product plagiarism did not checked',
     'images_deleted' => 'Images deleted successfully',
-    'user_wrong' => 'User could not find'
+    'user_wrong' => 'User could not find',
+    'session_wrong' => 'Your session is wrong',
 ];
