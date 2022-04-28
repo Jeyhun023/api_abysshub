@@ -207,7 +207,7 @@ class AnswerController extends Controller
         }
         $loadAnswers = $loadAnswers->paginate(5);
         
-        return $this->successResponse(new AnswerCollection($loadAnswers));
+        return new AnswerCollection($loadAnswers);
     }
 
     public function loadProducts($thread)
@@ -224,7 +224,7 @@ class AnswerController extends Controller
             ->groupBy('product_id')
             ->paginate(5);
         
-        return $this->successResponse(new LinkedProductCollection($loadProducts));
+        return new LinkedProductCollection($loadProducts);
     }
     
     public function getAnswers($thread, $product)
@@ -238,7 +238,7 @@ class AnswerController extends Controller
             })
             ->paginate(5);
         
-        return $this->successResponse(new AnswerCollection($getAnswers));
+        return new AnswerCollection($getAnswers);
     }
 
 }
