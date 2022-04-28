@@ -205,9 +205,9 @@ class AnswerController extends Controller
         if(auth('api')->check()){
             $loadAnswers = $loadAnswers->orderByRaw("CASE WHEN user_id = ".auth('api')->id()." THEN 1 ELSE 0 END DESC");
         }
-        $loadAnswers->paginate(5);
+        $loadAnswers = $loadAnswers->paginate(5);
         
-        return new AnswerCollection($loadAnswers);
+        return $this->successResponse(new AnswerCollection($loadAnswers));
     }
 
     public function loadProducts($thread)
@@ -224,7 +224,7 @@ class AnswerController extends Controller
             ->groupBy('product_id')
             ->paginate(5);
         
-        return new LinkedProductCollection($loadProducts);
+        return $this->successResponse(new LinkedProductCollection($loadProducts));
     }
     
     public function getAnswers($thread, $product)
@@ -238,7 +238,7 @@ class AnswerController extends Controller
             })
             ->paginate(5);
         
-        return new AnswerCollection($getAnswers);
+        return $this->successResponse(new AnswerCollection($getAnswers));
     }
 
 }
