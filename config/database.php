@@ -72,6 +72,7 @@ return [
             'password' => env('MONGO_DB_PASSWORD'),
             'options' => [
                 'tls' => true,
+                'retryWrites' => false,
                 'tlsCAFile' => '/var/www/.ssh/rds-combined-ca-bundle.pem'
             ],
         ],
