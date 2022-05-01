@@ -36,7 +36,7 @@ return [
      * and extend Illuminate\Database\Eloquent\Model.
      */
     // 'activity_model' => \Spatie\Activitylog\Models\Activity::class,
-    'activity_model' => \App\Models\ActivityLog::class,
+    'activity_model' => \App\Models\Activity::class,
 
     /*
      * This is the name of the table that will be created by the migration and
