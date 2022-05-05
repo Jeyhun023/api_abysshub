@@ -57,6 +57,8 @@ class StoreElasticListener implements ShouldQueue
         $params['body']['rate'] = $event->data->rate;
         $params['body']['vector'] = json_decode($response->body());
         $params['body']['download_count'] = $event->data->download_count;
+        $params['body']['view_count'] = $event->data->view_count;
+        $params['body']['is_free'] = $event->data->is_free;
         $params['body']['created_at'] = $event->data->created_at;
         $params['body']['updated_at'] = $event->data->updated_at;
         $params['body']['deleted_at'] = $event->data->deleted_at;
