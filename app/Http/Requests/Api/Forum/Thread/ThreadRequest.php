@@ -40,7 +40,7 @@ class ThreadRequest extends FormRequest
             'description' => ['required', 'string', 'min:50', new ProfanityCheck()],
             'content' => ['required'],
             'type' => ['required', Rule::in(['1', '2', '3'])],
-            'tags' => ['required', 'array', 'max:10', 'min:5'],
+            'tags' => ['required', 'array'], //TODOLIST Add it to validate, 'max:10', 'min:5'
             'product_id' => ['required_if:type,==,3', 'exists:products,id'],
             'linked_products.*' => ['required', 'integer', 'exists:products,id'],
         ];
